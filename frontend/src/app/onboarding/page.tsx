@@ -2,11 +2,11 @@
 
 import { Button } from "@/core/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
 } from "@/core/components/ui/card";
 import { Progress } from "@/core/components/ui/progress";
 import { AcademicStep } from "@/modules/onboarding/components/academic-step";

@@ -1,25 +1,25 @@
 "use client";
 
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
 } from "@/core/components/ui/avatar";
 import { Badge } from "@/core/components/ui/badge";
 import { Button } from "@/core/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
 } from "@/core/components/ui/card";
 import { Separator } from "@/core/components/ui/separator";
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
+	Tabs,
+	TabsContent,
+	TabsList,
+	TabsTrigger,
 } from "@/core/components/ui/tabs";
 import { CVUploadModal } from "@/modules/profile/components/cv-upload-modal";
 import { DocumentsTab } from "@/modules/profile/components/documents-tab";
@@ -30,15 +30,15 @@ import { PersonalInfoTab } from "@/modules/profile/components/personal-info-tab"
 import { PublicationsTab } from "@/modules/profile/components/publications-tab";
 import { TestsTab } from "@/modules/profile/components/tests-tab";
 import {
-  Award,
-  BookOpen,
-  Briefcase,
-  Download,
-  Edit,
-  FileCheck,
-  GraduationCap,
-  Upload,
-  User,
+	Award,
+	BookOpen,
+	Briefcase,
+	Download,
+	Edit,
+	FileCheck,
+	GraduationCap,
+	Upload,
+	User,
 } from "lucide-react";
 import { useState } from "react";
 

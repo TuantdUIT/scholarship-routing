@@ -3,34 +3,34 @@
 import { Badge } from "@/core/components/ui/badge";
 import { Button } from "@/core/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
 } from "@/core/components/ui/card";
 import { Progress } from "@/core/components/ui/progress";
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
+	Tabs,
+	TabsContent,
+	TabsList,
+	TabsTrigger,
 } from "@/core/components/ui/tabs";
 import { Textarea } from "@/core/components/ui/textarea";
 import { ApplicationDocuments } from "@/modules/applications/components/application-documents";
 import { ApplicationReminders } from "@/modules/applications/components/application-reminders";
 import { ApplicationTimeline } from "@/modules/applications/components/application-timeline";
 import {
-  ArrowLeft,
-  Bell,
-  Calendar,
-  CheckCircle,
-  Download,
-  Edit,
-  ExternalLink,
-  FileText,
-  History,
-  MessageSquare,
-  Upload,
+	ArrowLeft,
+	Bell,
+	Calendar,
+	CheckCircle,
+	Download,
+	Edit,
+	ExternalLink,
+	FileText,
+	History,
+	MessageSquare,
+	Upload,
 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";

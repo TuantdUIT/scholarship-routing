@@ -1,22 +1,22 @@
 import { Badge } from "@/core/components/ui/badge";
 import { Button } from "@/core/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
 } from "@/core/components/ui/card";
 import {
-  ArrowRight,
-  Calendar,
-  CheckCircle,
-  FileText,
-  Globe,
-  Search,
-  Target,
-  TrendingUp,
-  Users,
+	ArrowRight,
+	Calendar,
+	CheckCircle,
+	FileText,
+	Globe,
+	Search,
+	Target,
+	TrendingUp,
+	Users,
 } from "lucide-react";
 import Link from "next/link";
 

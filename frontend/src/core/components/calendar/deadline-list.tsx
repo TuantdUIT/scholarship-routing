@@ -4,19 +4,19 @@ import { Badge } from "@/core/components/ui/badge";
 import { Button } from "@/core/components/ui/button";
 import { Card, CardContent } from "@/core/components/ui/card";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
 } from "@/core/components/ui/dropdown-menu";
 import {
-  AlertTriangle,
-  Calendar,
-  CheckCircle,
-  Clock,
-  Edit,
-  ExternalLink,
-  MoreHorizontal,
+	AlertTriangle,
+	Calendar,
+	CheckCircle,
+	Clock,
+	Edit,
+	ExternalLink,
+	MoreHorizontal,
 } from "lucide-react";
 import Link from "next/link";
 

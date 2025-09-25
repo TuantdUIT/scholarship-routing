@@ -3,18 +3,18 @@
 import { Badge } from "@/core/components/ui/badge";
 import { Button } from "@/core/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
 } from "@/core/components/ui/card";
 import {
-  BookmarkCheck,
-  Calendar,
-  ExternalLink,
-  MapPin,
-  Trash2,
+	BookmarkCheck,
+	Calendar,
+	ExternalLink,
+	MapPin,
+	Trash2,
 } from "lucide-react";
 import { useState } from "react";
 

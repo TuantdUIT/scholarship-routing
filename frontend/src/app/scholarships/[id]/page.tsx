@@ -3,32 +3,32 @@
 import { Badge } from "@/core/components/ui/badge";
 import { Button } from "@/core/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
 } from "@/core/components/ui/card";
 import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
+	Tabs,
+	TabsContent,
+	TabsList,
+	TabsTrigger,
 } from "@/core/components/ui/tabs";
 import { ApplicationTimeline } from "@/modules/scholarships/components/application-timeline";
 import { DocumentsChecklist } from "@/modules/scholarships/components/documents-checklist";
 import { EligibilityPanel } from "@/modules/scholarships/components/eligibility-panel";
 import { RelatedScholarships } from "@/modules/scholarships/components/related-scholarships";
 import {
-  ArrowLeft,
-  Award,
-  BookmarkPlus,
-  Calendar,
-  CheckCircle,
-  DollarSign,
-  ExternalLink,
-  FileText,
-  MapPin,
-  Users,
+	ArrowLeft,
+	Award,
+	BookmarkPlus,
+	Calendar,
+	CheckCircle,
+	DollarSign,
+	ExternalLink,
+	FileText,
+	MapPin,
+	Users,
 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";

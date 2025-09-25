@@ -1,18 +1,18 @@
 "use client";
 
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
 } from "@/core/components/ui/card";
 import { Progress } from "@/core/components/ui/progress";
 import {
-  AlertTriangle,
-  Calendar,
-  CheckCircle,
-  Clock,
-  TrendingUp,
+	AlertTriangle,
+	Calendar,
+	CheckCircle,
+	Clock,
+	TrendingUp,
 } from "lucide-react";
 
 interface DeadlineStatsProps {

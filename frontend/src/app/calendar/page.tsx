@@ -7,11 +7,11 @@ import { UpcomingDeadlines } from "@/core/components/calendar/upcoming-deadlines
 import { Button } from "@/core/components/ui/button";
 import { Card, CardContent } from "@/core/components/ui/card";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
 } from "@/core/components/ui/select";
 import { Calendar, Filter, List, Plus } from "lucide-react";
 import { useState } from "react";

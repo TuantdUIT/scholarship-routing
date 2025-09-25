@@ -6,11 +6,11 @@ import { Input } from "@/core/components/ui/input";
 import { Progress } from "@/core/components/ui/progress";
 import { Separator } from "@/core/components/ui/separator";
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
+	Sheet,
+	SheetContent,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger,
 } from "@/core/components/ui/sheet";
 import { ScholarshipCard } from "@/modules/scholarships/components/scholarship-card";
 import { ScholarshipFilters } from "@/modules/scholarships/components/scholarship-filters";

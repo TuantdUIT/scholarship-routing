@@ -3,18 +3,18 @@
 import { Badge } from "@/core/components/ui/badge";
 import { Button } from "@/core/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
 } from "@/core/components/ui/card";
 import {
-  AlertTriangle,
-  Bell,
-  Calendar,
-  CheckCircle,
-  Clock,
-  ExternalLink,
+	AlertTriangle,
+	Bell,
+	Calendar,
+	CheckCircle,
+	Clock,
+	ExternalLink,
 } from "lucide-react";
 import Link from "next/link";
 
