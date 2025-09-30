@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "preinstall": "npx npm@9 install --legacy-peer-deps",
     "build": "next build --turbo",
     "dev": "next dev --turbo",
     "lint": "next lint",
