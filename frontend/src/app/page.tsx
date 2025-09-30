@@ -18,44 +18,44 @@ import {
 	TrendingUp,
 	Users,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 export default function HomePage() {
+	const t = useTranslations("home");
+
 	const features = [
 		{
 			icon: Search,
-			title: "Smart Scholarship Discovery",
-			description:
-				"AI-powered matching based on your academic profile and preferences",
+			title: t("feature_1_title"),
+			description: t("feature_1_description"),
 			color: "text-blue-600",
 		},
 		{
 			icon: Target,
-			title: "Application Assistant",
-			description: "Grammar checking, SOP templates, and personalized guidance",
+			title: t("feature_2_title"),
+			description: t("feature_2_description"),
 			color: "text-green-600",
 		},
 		{
 			icon: Calendar,
-			title: "Deadline Management",
-			description:
-				"Never miss a deadline with smart reminders and calendar integration",
+			title: t("feature_3_title"),
+			description: t("feature_3_description"),
 			color: "text-orange-600",
 		},
 		{
 			icon: FileText,
-			title: "Progress Tracking",
-			description:
-				"Monitor your application status across multiple scholarships",
+			title: t("feature_4_title"),
+			description: t("feature_4_description"),
 			color: "text-purple-600",
 		},
 	];
 
 	const stats = [
-		{ label: "Active Scholarships", value: "2,500+", icon: Globe },
-		{ label: "Success Rate", value: "78%", icon: TrendingUp },
-		{ label: "Students Helped", value: "15,000+", icon: Users },
-		{ label: "Countries Covered", value: "45+", icon: CheckCircle },
+		{ label: t("active_scholarships"), value: "2,500+", icon: Globe },
+		{ label: t("success_rate"), value: "78%", icon: TrendingUp },
+		{ label: t("students_helped"), value: "15,000+", icon: Users },
+		{ label: t("countries_covered"), value: "45+", icon: CheckCircle },
 	];
 
 	return (
@@ -65,26 +65,24 @@ export default function HomePage() {
 				<div className="container mx-auto max-w-6xl">
 					<div className="text-center space-y-6">
 						<Badge variant="secondary" className="mb-4">
-							🎓 Your Gateway to Global Education
+							🎓 {t("badge")}
 						</Badge>
 						<h1 className="text-4xl md:text-6xl font-bold text-balance">
-							Find Your Perfect
-							<span className="text-accent"> Scholarship</span>
+							{t("title")}
+							<span className="text-accent"> {t("title_highlight")}</span>
 						</h1>
 						<p className="text-xl text-muted-foreground max-w-2xl mx-auto text-balance">
-							Discover graduate study abroad scholarships tailored to your
-							profile with AI-powered matching and comprehensive application
-							support.
+							{t("description")}
 						</p>
 						<div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
 							<Button size="lg" asChild>
 								<Link href="/onboarding">
-									Get Started
+									{t("get_started")}
 									<ArrowRight className="ml-2 h-4 w-4" />
 								</Link>
 							</Button>
 							<Button variant="outline" size="lg" asChild>
-								<Link href="/scholarships">Browse Scholarships</Link>
+								<Link href="/scholarships">{t("browse_scholarships")}</Link>
 							</Button>
 						</div>
 					</div>
@@ -117,11 +115,10 @@ export default function HomePage() {
 				<div className="container mx-auto max-w-6xl">
 					<div className="text-center mb-16">
 						<h2 className="text-3xl md:text-4xl font-bold mb-4">
-							Everything You Need to Succeed
+							{t("features_title")}
 						</h2>
 						<p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-							Our comprehensive platform guides you through every step of your
-							scholarship journey.
+							{t("features_description")}
 						</p>
 					</div>
 
@@ -152,15 +149,12 @@ export default function HomePage() {
 			<section className="py-20 px-4 bg-primary text-primary-foreground">
 				<div className="container mx-auto max-w-4xl text-center">
 					<h2 className="text-3xl md:text-4xl font-bold mb-4">
-						Ready to Start Your Journey?
+						{t("cta_title")}
 					</h2>
-					<p className="text-xl mb-8 opacity-90">
-						Join thousands of students who have found their perfect scholarship
-						match.
-					</p>
+					<p className="text-xl mb-8 opacity-90">{t("cta_description")}</p>
 					<Button size="lg" variant="secondary" asChild>
 						<Link href="/onboarding">
-							Create Your Profile
+							{t("create_profile")}
 							<ArrowRight className="ml-2 h-4 w-4" />
 						</Link>
 					</Button>

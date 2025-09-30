@@ -32,6 +32,7 @@ import {
 	MessageSquare,
 	Upload,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -124,6 +125,7 @@ const mockApplicationData = {
 };
 
 export default function ApplicationDetailPage() {
+	const t = useTranslations("application");
 	const params = useParams();
 	const applicationId = params.id as string;
 	const application =
@@ -138,13 +140,13 @@ export default function ApplicationDetailPage() {
 				<Card className="max-w-md">
 					<CardContent className="text-center py-8">
 						<h2 className="text-xl font-semibold mb-2">
-							Application Not Found
+							{t("application_not_found")}
 						</h2>
 						<p className="text-muted-foreground mb-4">
-							The application you're looking for doesn't exist.
+							{t("application_not_found_description")}
 						</p>
 						<Button asChild>
-							<Link href="/applications">Back to Applications</Link>
+							<Link href="/applications">{t("back_to_applications")}</Link>
 						</Button>
 					</CardContent>
 				</Card>
@@ -166,11 +168,11 @@ export default function ApplicationDetailPage() {
 
 	const getStatusBadge = (status: string) => {
 		const statusConfig = {
-			"not-started": { label: "Not Started", variant: "outline" as const },
-			"in-progress": { label: "In Progress", variant: "secondary" as const },
-			submitted: { label: "Submitted", variant: "default" as const },
-			interview: { label: "Interview", variant: "default" as const },
-			result: { label: "Result", variant: "default" as const },
+			"not-started": { label: t("not_started"), variant: "outline" as const },
+			"in-progress": { label: t("in_progress"), variant: "secondary" as const },
+			submitted: { label: t("submitted"), variant: "default" as const },
+			interview: { label: t("interview"), variant: "default" as const },
+			result: { label: t("result"), variant: "default" as const },
 		};
 
 		const config = statusConfig[status as keyof typeof statusConfig] || {
@@ -188,7 +190,7 @@ export default function ApplicationDetailPage() {
 					<Button variant="ghost" asChild className="mb-4">
 						<Link href="/applications" className="flex items-center">
 							<ArrowLeft className="mr-2 h-4 w-4" />
-							Back to Applications
+							{t("back_to_applications")}
 						</Link>
 					</Button>
 				</div>
@@ -204,11 +206,11 @@ export default function ApplicationDetailPage() {
 									</CardTitle>
 									{getStatusBadge(application.status)}
 									{isUrgent && !isExpired && (
-										<Badge variant="destructive">Urgent</Badge>
+										<Badge variant="destructive">{t("urgent")}</Badge>
 									)}
 									{isExpired && (
 										<Badge variant="outline" className="text-muted-foreground">
-											Expired
+											{t("expired")}
 										</Badge>
 									)}
 								</div>
@@ -228,7 +230,7 @@ export default function ApplicationDetailPage() {
 									<div className="text-3xl font-bold text-primary">
 										{application.progress}%
 									</div>
-									<div className="text-sm text-muted-foreground">Complete</div>
+									<div className="text-sm text-muted-foreground">{t("complete")}</div>
 									<Progress
 										value={application.progress}
 										className="w-20 h-2 mt-1"
@@ -239,12 +241,12 @@ export default function ApplicationDetailPage() {
 									<Button variant="outline" asChild>
 										<Link href={`/scholarships/${application.scholarshipId}`}>
 											<ExternalLink className="mr-2 h-4 w-4" />
-											View Scholarship
+											{t("view_scholarship")}
 										</Link>
 									</Button>
 									<Button>
 										<Edit className="mr-2 h-4 w-4" />
-										Edit Application
+										{t("edit_application")}
 									</Button>
 								</div>
 							</div>
@@ -259,13 +261,13 @@ export default function ApplicationDetailPage() {
 									<Calendar className="h-5 w-5 text-blue-600" />
 								</div>
 								<div>
-									<div className="font-medium">Application Deadline</div>
+									<div className="font-medium">{t("application_deadline")}</div>
 									<div
 										className={`text-sm ${isUrgent && !isExpired ? "text-orange-600" : "text-muted-foreground"}`}
 									>
 										{new Date(application.deadline).toLocaleDateString()}
 										{!isExpired && (
-											<span className="ml-1">({daysLeft} days left)</span>
+											<span className="ml-1">({t("days_left", { daysLeft })})</span>
 										)}
 									</div>
 								</div>
@@ -276,14 +278,14 @@ export default function ApplicationDetailPage() {
 									<FileText className="h-5 w-5 text-green-600" />
 								</div>
 								<div>
-									<div className="font-medium">Documents</div>
+									<div className="font-medium">{t("documents")}</div>
 									<div className="text-sm text-muted-foreground">
-										{
-											application.documents.required.filter(
+										{t("uploaded_docs", {
+											uploaded: application.documents.required.filter(
 												(doc) => doc.status === "uploaded",
-											).length
-										}
-										/{application.documents.required.length} uploaded
+											).length,
+											total: application.documents.required.length,
+										})}
 									</div>
 								</div>
 							</div>
@@ -293,10 +295,12 @@ export default function ApplicationDetailPage() {
 									<Bell className="h-5 w-5 text-orange-600" />
 								</div>
 								<div>
-									<div className="font-medium">Active Reminders</div>
+									<div className="font-medium">{t("active_reminders")}</div>
 									<div className="text-sm text-muted-foreground">
-										{application.reminders.filter((r) => r.isActive).length}{" "}
-										pending
+										{t("pending_reminders", {
+											count: application.reminders.filter((r) => r.isActive)
+												.length,
+										})}
 									</div>
 								</div>
 							</div>
@@ -305,15 +309,17 @@ export default function ApplicationDetailPage() {
 						{/* Quick Actions */}
 						<div className="flex flex-col sm:flex-row gap-3">
 							<Button size="lg" className="flex-1" disabled={isExpired}>
-								{isExpired ? "Application Closed" : "Continue Application"}
+								{isExpired
+									? t("application_closed")
+									: t("continue_application")}
 							</Button>
 							<Button variant="outline" size="lg">
 								<Upload className="mr-2 h-4 w-4" />
-								Upload Documents
+								{t("upload_documents")}
 							</Button>
 							<Button variant="outline" size="lg">
 								<Download className="mr-2 h-4 w-4" />
-								Download Progress
+								{t("download_progress")}
 							</Button>
 						</div>
 					</CardContent>
@@ -326,11 +332,11 @@ export default function ApplicationDetailPage() {
 					className="space-y-6"
 				>
 					<TabsList className="grid w-full grid-cols-2 lg:grid-cols-5">
-						<TabsTrigger value="overview">Overview</TabsTrigger>
-						<TabsTrigger value="documents">Documents</TabsTrigger>
-						<TabsTrigger value="timeline">Timeline</TabsTrigger>
-						<TabsTrigger value="reminders">Reminders</TabsTrigger>
-						<TabsTrigger value="notes">Notes</TabsTrigger>
+						<TabsTrigger value="overview">{t("overview")}</TabsTrigger>
+						<TabsTrigger value="documents">{t("documents")}</TabsTrigger>
+						<TabsTrigger value="timeline">{t("timeline")}</TabsTrigger>
+						<TabsTrigger value="reminders">{t("reminders")}</TabsTrigger>
+						<TabsTrigger value="notes">{t("notes")}</TabsTrigger>
 					</TabsList>
 
 					<TabsContent value="overview" className="space-y-6">
@@ -340,13 +346,13 @@ export default function ApplicationDetailPage() {
 								<CardHeader>
 									<CardTitle className="flex items-center gap-2">
 										<CheckCircle className="h-5 w-5" />
-										Application Progress
+										{t("application_progress")}
 									</CardTitle>
 								</CardHeader>
 								<CardContent className="space-y-4">
 									<div className="space-y-2">
 										<div className="flex justify-between text-sm">
-											<span>Overall Completion</span>
+											<span>{t("overall_completion")}</span>
 											<span className="font-medium">
 												{application.progress}%
 											</span>
@@ -356,7 +362,7 @@ export default function ApplicationDetailPage() {
 
 									<div className="space-y-2 text-sm">
 										<div className="flex justify-between">
-											<span>Documents Uploaded</span>
+											<span>{t("documents_uploaded")}</span>
 											<span>
 												{
 													application.documents.required.filter(
@@ -367,11 +373,11 @@ export default function ApplicationDetailPage() {
 											</span>
 										</div>
 										<div className="flex justify-between">
-											<span>Status</span>
+											<span>{t("status")}</span>
 											<span>{getStatusBadge(application.status)}</span>
 										</div>
 										<div className="flex justify-between">
-											<span>Last Updated</span>
+											<span>{t("last_updated_at")}</span>
 											<span>
 												{new Date(application.lastUpdated).toLocaleDateString()}
 											</span>
@@ -385,7 +391,7 @@ export default function ApplicationDetailPage() {
 								<CardHeader>
 									<CardTitle className="flex items-center gap-2">
 										<History className="h-5 w-5" />
-										Recent Activity
+										{t("recent_activity")}
 									</CardTitle>
 								</CardHeader>
 								<CardContent>
@@ -450,18 +456,18 @@ export default function ApplicationDetailPage() {
 							<CardHeader>
 								<CardTitle className="flex items-center gap-2">
 									<MessageSquare className="h-5 w-5" />
-									Application Notes
+									{t("application_notes")}
 								</CardTitle>
 							</CardHeader>
 							<CardContent>
 								<div className="space-y-4">
 									<Textarea
-										placeholder="Add your notes about this application..."
+										placeholder={t("add_notes_placeholder")}
 										value={notes}
 										onChange={(e) => setNotes(e.target.value)}
 										className="min-h-32"
 									/>
-									<Button>Save Notes</Button>
+									<Button>{t("save_notes")}</Button>
 								</div>
 							</CardContent>
 						</Card>

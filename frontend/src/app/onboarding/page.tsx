@@ -15,6 +15,7 @@ import { LanguageTestsStep } from "@/modules/onboarding/components/language-test
 import { PreferencesStep } from "@/modules/onboarding/components/preferences-step";
 import { ReviewStep } from "@/modules/onboarding/components/review-step";
 import { ArrowLeft, ArrowRight, CheckCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 export interface OnboardingData {
@@ -45,15 +46,36 @@ export interface OnboardingData {
 	cvFile?: File;
 }
 
-const steps = [
-	{ id: 1, title: "Basic Info", description: "Personal details" },
-	{ id: 2, title: "Academic", description: "Education background" },
-	{ id: 3, title: "Tests", description: "Language & standardized tests" },
-	{ id: 4, title: "Preferences", description: "Study preferences" },
-	{ id: 5, title: "Review", description: "Confirm details" },
-];
-
 export default function OnboardingPage() {
+	const t = useTranslations("onboarding");
+	const steps = [
+		{
+			id: 1,
+			title: t("basic_info"),
+			description: t("personal_details"),
+		},
+		{
+			id: 2,
+			title: t("academic"),
+			description: t("education_background"),
+		},
+		{
+			id: 3,
+			title: t("tests"),
+			description: t("language_standardized_tests"),
+		},
+		{
+			id: 4,
+			title: t("preferences"),
+			description: t("study_preferences"),
+		},
+		{
+			id: 5,
+			title: t("review"),
+			description: t("confirm_details"),
+		},
+	];
+
 	const [currentStep, setCurrentStep] = useState(1);
 	const [data, setData] = useState<OnboardingData>({
 		name: "",
@@ -133,9 +155,9 @@ export default function OnboardingPage() {
 			<div className="container mx-auto max-w-4xl px-4">
 				{/* Header */}
 				<div className="text-center mb-8">
-					<h1 className="text-3xl font-bold mb-2">Welcome to ScholarSearch</h1>
+					<h1 className="text-3xl font-bold mb-2">{t("welcome")}</h1>
 					<p className="text-muted-foreground">
-						Let's set up your profile to find the perfect scholarships for you
+						{t("setup_profile_message")}
 					</p>
 				</div>
 
@@ -143,10 +165,13 @@ export default function OnboardingPage() {
 				<div className="mb-8">
 					<div className="flex justify-between items-center mb-4">
 						<span className="text-sm font-medium">
-							Step {currentStep} of {steps.length}
+							{t("step", {
+								currentStep: currentStep,
+								totalSteps: steps.length,
+							})}
 						</span>
 						<span className="text-sm text-muted-foreground">
-							{Math.round(progress)}% complete
+							{t("complete", { progress: Math.round(progress) })}
 						</span>
 					</div>
 					<Progress value={progress} className="h-2" />
@@ -208,12 +233,12 @@ export default function OnboardingPage() {
 						className="flex items-center bg-transparent"
 					>
 						<ArrowLeft className="mr-2 h-4 w-4" />
-						Previous
+						{t("previous")}
 					</Button>
 
 					{currentStep === steps.length ? (
 						<Button className="flex items-center" disabled={!isStepValid()}>
-							Complete Setup
+							{t("complete_setup")}
 							<CheckCircle className="ml-2 h-4 w-4" />
 						</Button>
 					) : (
@@ -222,7 +247,7 @@ export default function OnboardingPage() {
 							disabled={!isStepValid()}
 							className="flex items-center"
 						>
-							Next
+							{t("next")}
 							<ArrowRight className="ml-2 h-4 w-4" />
 						</Button>
 					)}

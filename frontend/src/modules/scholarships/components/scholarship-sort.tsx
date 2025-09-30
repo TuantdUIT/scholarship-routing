@@ -8,6 +8,7 @@ import {
 	SelectValue,
 } from "@/core/components/ui/select";
 import { ArrowUpDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface ScholarshipSortProps {
 	sortBy: string;
@@ -18,6 +19,8 @@ export function ScholarshipSort({
 	sortBy,
 	onSortChange,
 }: ScholarshipSortProps) {
+	const t = useTranslations("scholarship");
+
 	return (
 		<Select value={sortBy} onValueChange={onSortChange}>
 			<SelectTrigger className="w-48">
@@ -25,10 +28,10 @@ export function ScholarshipSort({
 				<SelectValue />
 			</SelectTrigger>
 			<SelectContent>
-				<SelectItem value="match-score">Best Match</SelectItem>
-				<SelectItem value="deadline">Deadline (Soonest)</SelectItem>
-				<SelectItem value="amount">Scholarship Amount</SelectItem>
-				<SelectItem value="alphabetical">Alphabetical</SelectItem>
+				<SelectItem value="match-score">{t("best_match")}</SelectItem>
+				<SelectItem value="deadline">{t("deadline_soonest")}</SelectItem>
+				<SelectItem value="amount">{t("scholarship_amount")}</SelectItem>
+				<SelectItem value="alphabetical">{t("alphabetical")}</SelectItem>
 			</SelectContent>
 		</Select>
 	);

@@ -14,12 +14,15 @@ import {
 	Clock,
 	TrendingUp,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface DeadlineStatsProps {
 	deadlines: any[];
 }
 
 export function DeadlineStats({ deadlines }: DeadlineStatsProps) {
+	const t = useTranslations("deadline");
+
 	const totalDeadlines = deadlines.length;
 	const urgentDeadlines = deadlines.filter(
 		(d) => d.daysLeft <= 7 && d.daysLeft > 0,
@@ -39,28 +42,28 @@ export function DeadlineStats({ deadlines }: DeadlineStatsProps) {
 
 	const stats = [
 		{
-			title: "Total Deadlines",
+			title: t("total_deadlines"),
 			value: totalDeadlines,
 			icon: Calendar,
 			color: "text-blue-600",
 			bgColor: "bg-blue-100",
 		},
 		{
-			title: "Urgent (≤7 days)",
+			title: t("urgent_deadlines"),
 			value: urgentDeadlines,
 			icon: AlertTriangle,
 			color: "text-red-600",
 			bgColor: "bg-red-100",
 		},
 		{
-			title: "Upcoming (≤30 days)",
+			title: t("upcoming_deadlines"),
 			value: upcomingDeadlines,
 			icon: Clock,
 			color: "text-orange-600",
 			bgColor: "bg-orange-100",
 		},
 		{
-			title: "Completed",
+			title: t("completed"),
 			value: completedDeadlines,
 			icon: CheckCircle,
 			color: "text-green-600",
@@ -91,19 +94,23 @@ export function DeadlineStats({ deadlines }: DeadlineStatsProps) {
 				<CardHeader className="pb-3">
 					<CardTitle className="text-sm font-medium flex items-center gap-2">
 						<TrendingUp className="h-4 w-4" />
-						Completion Progress
+						{t("completion_progress")}
 					</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<div className="space-y-2">
 						<div className="flex justify-between text-sm">
-							<span>Overall Completion Rate</span>
+							<span>{t("overall_completion_rate")}</span>
 							<span className="font-medium">{completionRate}%</span>
 						</div>
 						<Progress value={completionRate} className="h-2" />
 						<div className="flex justify-between text-xs text-muted-foreground">
-							<span>{overdueDeadlines} overdue</span>
-							<span>{urgentDeadlines + upcomingDeadlines} pending</span>
+							<span>
+								{overdueDeadlines} {t("overdue")}
+							</span>
+							<span>
+								{urgentDeadlines + upcomingDeadlines} {t("pending_tasks")}
+							</span>
 						</div>
 					</div>
 				</CardContent>

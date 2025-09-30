@@ -17,45 +17,46 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/core/components/ui/select";
+import { useTranslations } from "next-intl";
 
 interface PreferencesStepProps {
 	data: OnboardingData;
 	updateData: (data: Partial<OnboardingData>) => void;
 }
 
-const countries = [
-	"United States",
-	"United Kingdom",
-	"Canada",
-	"Australia",
-	"Germany",
-	"Netherlands",
-	"Sweden",
-	"Norway",
-	"Denmark",
-	"Switzerland",
-	"France",
-	"Japan",
-	"South Korea",
-	"Singapore",
-	"New Zealand",
-];
-
-const degreeTypes = [
-	"Master's Degree",
-	"PhD",
-	"Professional Degree",
-	"Research Fellowship",
-];
-
-const scholarshipAmounts = [
-	"Partial Tuition",
-	"Full Tuition",
-	"Full Tuition + Living Expenses",
-	"Any Amount",
-];
-
 export function PreferencesStep({ data, updateData }: PreferencesStepProps) {
+	const t = useTranslations("onboarding");
+	const countries = [
+		"united_states",
+		"united_kingdom",
+		"canada",
+		"australia",
+		"germany",
+		"netherlands",
+		"sweden",
+		"norway",
+		"denmark",
+		"switzerland",
+		"france",
+		"japan",
+		"south_korea",
+		"singapore",
+		"new_zealand",
+	];
+
+	const degreeTypes = [
+		"masters_degree",
+		"phd",
+		"professional_degree",
+		"research_fellowship",
+	];
+
+	const scholarshipAmounts = [
+		"partial_tuition",
+		"full_tuition",
+		"full_tuition_living_expenses",
+		"any_amount",
+	];
 	const handleCountryChange = (country: string, checked: boolean) => {
 		const updatedCountries = checked
 			? [...data.desiredCountries, country]
@@ -67,9 +68,9 @@ export function PreferencesStep({ data, updateData }: PreferencesStepProps) {
 		<div className="space-y-6">
 			<Card>
 				<CardHeader>
-					<CardTitle className="text-lg">Study Destinations</CardTitle>
+					<CardTitle className="text-lg">{t("study_destinations")}</CardTitle>
 					<CardDescription>
-						Select countries where you'd like to study (select multiple)
+						{t("select_study_destinations")}
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
@@ -87,7 +88,7 @@ export function PreferencesStep({ data, updateData }: PreferencesStepProps) {
 									htmlFor={country}
 									className="text-sm font-normal cursor-pointer"
 								>
-									{country}
+									{t(country)}
 								</Label>
 							</div>
 						))}
@@ -97,18 +98,18 @@ export function PreferencesStep({ data, updateData }: PreferencesStepProps) {
 
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 				<div className="space-y-2">
-					<Label htmlFor="desiredDegree">Desired Degree Type *</Label>
+					<Label htmlFor="desiredDegree">{t("desired_degree_type")}</Label>
 					<Select
 						value={data.desiredDegree}
 						onValueChange={(value) => updateData({ desiredDegree: value })}
 					>
 						<SelectTrigger>
-							<SelectValue placeholder="Select degree type" />
+							<SelectValue placeholder={t("select_degree_type")} />
 						</SelectTrigger>
 						<SelectContent>
 							{degreeTypes.map((degree) => (
-								<SelectItem key={degree} value={degree}>
-									{degree}
+								<SelectItem key={degree} value={t(degree)}>
+									{t(degree)}
 								</SelectItem>
 							))}
 						</SelectContent>
@@ -116,18 +117,18 @@ export function PreferencesStep({ data, updateData }: PreferencesStepProps) {
 				</div>
 
 				<div className="space-y-2">
-					<Label htmlFor="scholarshipAmount">Scholarship Coverage *</Label>
+					<Label htmlFor="scholarshipAmount">{t("scholarship_coverage")}</Label>
 					<Select
 						value={data.scholarshipAmount}
 						onValueChange={(value) => updateData({ scholarshipAmount: value })}
 					>
 						<SelectTrigger>
-							<SelectValue placeholder="Select preferred coverage" />
+							<SelectValue placeholder={t("select_preferred_coverage")} />
 						</SelectTrigger>
 						<SelectContent>
 							{scholarshipAmounts.map((amount) => (
-								<SelectItem key={amount} value={amount}>
-									{amount}
+								<SelectItem key={amount} value={t(amount)}>
+									{t(amount)}
 								</SelectItem>
 							))}
 						</SelectContent>
@@ -137,9 +138,7 @@ export function PreferencesStep({ data, updateData }: PreferencesStepProps) {
 
 			<div className="bg-green-50 border border-green-200 rounded-lg p-4">
 				<p className="text-sm text-green-800">
-					<strong>Smart Matching:</strong> We'll use these preferences to
-					prioritize scholarships that best match your goals, but you'll still
-					see all relevant opportunities.
+					<strong>{t("smart_matching_message")}</strong>
 				</p>
 			</div>
 		</div>

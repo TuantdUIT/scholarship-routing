@@ -1,11 +1,16 @@
 import { Header } from "@/core/components/layout/header";
 import { Analytics } from "@vercel/analytics/next";
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
+import { Be_Vietnam_Pro } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
 import type React from "react";
 import { Suspense } from "react";
 import "./globals.css";
+
+const beVietnamPro = Be_Vietnam_Pro({
+	subsets: ["latin", "vietnamese"],
+	weight: ["400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
 	title: "ScholarSearch - Graduate Study Abroad Scholarship Platform",
@@ -21,14 +26,16 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-				<div className="min-h-screen bg-background">
-					<Suspense fallback={<div>Loading...</div>}>
-						<Header />
-						<main className="flex-1">{children}</main>
-					</Suspense>
-				</div>
-				<Analytics />
+			<body className={beVietnamPro.className}>
+				<NextIntlClientProvider>
+					<div className="min-h-screen bg-background">
+						<Suspense fallback={<div>Loading...</div>}>
+							<Header />
+							<main className="flex-1">{children}</main>
+						</Suspense>
+					</div>
+					<Analytics />
+				</NextIntlClientProvider>
 			</body>
 		</html>
 	);

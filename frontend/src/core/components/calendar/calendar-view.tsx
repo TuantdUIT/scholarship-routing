@@ -24,6 +24,7 @@ import {
 	ChevronRight,
 	Clock,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 interface CalendarViewProps {
@@ -35,20 +36,22 @@ interface CalendarViewProps {
 	onStatusChange: (deadlineId: string, newStatus: string) => void;
 }
 
-const monthNames = [
-	"January",
-	"February",
-	"March",
-	"April",
-	"May",
-	"June",
-	"July",
-	"August",
-	"September",
-	"October",
-	"November",
-	"December",
-];
+const monthKeys = [
+	"january",
+	"february",
+	"march",
+	"april",
+	"may",
+	"june",
+	"july",
+	"august",
+	"september",
+	"october",
+	"november",
+	"december",
+] as const;
+
+const dayKeys = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
 
 export function CalendarView({
 	deadlines,
@@ -58,6 +61,7 @@ export function CalendarView({
 	onYearChange,
 	onStatusChange,
 }: CalendarViewProps) {
+	const t = useTranslations("deadline");
 	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
 	const getDeadlinesForDate = (date: Date) => {
@@ -133,7 +137,7 @@ export function CalendarView({
 						))}
 						{dayDeadlines.length > 2 && (
 							<div className="text-xs text-muted-foreground">
-								+{dayDeadlines.length - 2} more
+								{t("more", { count: dayDeadlines.length - 2 })}
 							</div>
 						)}
 					</div>
@@ -181,7 +185,7 @@ export function CalendarView({
 				<CardHeader>
 					<div className="flex items-center justify-between">
 						<CardTitle className="text-xl">
-							{monthNames[selectedMonth]} {selectedYear}
+							{t(monthKeys[selectedMonth])} {selectedYear}
 						</CardTitle>
 						<div className="flex items-center gap-2">
 							<Button
@@ -207,7 +211,7 @@ export function CalendarView({
 									onYearChange(today.getFullYear());
 								}}
 							>
-								Today
+								{t("today")}
 							</Button>
 						</div>
 					</div>
@@ -219,12 +223,12 @@ export function CalendarView({
 				<CardContent className="p-0">
 					{/* Day Headers */}
 					<div className="grid grid-cols-7 border-b">
-						{["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+						{dayKeys.map((day) => (
 							<div
 								key={day}
 								className="p-3 text-center font-medium text-sm bg-muted"
 							>
-								{day}
+								{t(day)}
 							</div>
 						))}
 					</div>
@@ -243,16 +247,18 @@ export function CalendarView({
 					<DialogContent className="max-w-2xl">
 						<DialogHeader>
 							<DialogTitle>
-								Deadlines for {selectedDate.toLocaleDateString()}
+								{t("deadlines_for_date", {
+									date: selectedDate.toLocaleDateString(),
+								})}
 							</DialogTitle>
 							<DialogDescription>
-								All deadlines and events scheduled for this date
+								{t("deadlines_for_date_description")}
 							</DialogDescription>
 						</DialogHeader>
 						<div className="space-y-4 max-h-96 overflow-y-auto">
 							{getDeadlinesForDate(selectedDate).length === 0 ? (
 								<div className="text-center py-8 text-muted-foreground">
-									No deadlines scheduled for this date
+									{t("no_deadlines_for_date")}
 								</div>
 							) : (
 								getDeadlinesForDate(selectedDate).map((deadline) => (
@@ -275,7 +281,11 @@ export function CalendarView({
 															<span>•</span>
 															<span>{deadline.time}</span>
 															<span>•</span>
-															<span>{deadline.daysLeft} days left</span>
+															<span>
+																{t("days_left", {
+																	daysLeft: deadline.daysLeft,
+																})}
+															</span>
 														</div>
 													</div>
 												</div>

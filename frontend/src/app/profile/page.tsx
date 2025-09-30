@@ -105,14 +105,6 @@ export default function ProfilePage() {
 								</div>
 							</div>
 							<div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
-								<div className="text-center">
-									<div className="text-2xl font-bold text-accent">
-										{mockUser.matchScore}%
-									</div>
-									<div className="text-sm text-muted-foreground">
-										Match Score
-									</div>
-								</div>
 								<Separator
 									orientation="vertical"
 									className="hidden sm:block h-12"

@@ -11,6 +11,7 @@ import {
 } from "@/core/components/ui/card";
 import { Input } from "@/core/components/ui/input";
 import { Label } from "@/core/components/ui/label";
+import { useTranslations } from "next-intl";
 
 interface LanguageTestsStepProps {
 	data: OnboardingData;
@@ -21,28 +22,28 @@ export function LanguageTestsStep({
 	data,
 	updateData,
 }: LanguageTestsStepProps) {
+	const t = useTranslations("onboarding");
 	return (
 		<div className="space-y-6">
 			<div className="text-sm text-muted-foreground mb-4">
-				Please provide scores for at least one English proficiency test.
-				Standardized tests are optional.
+				{t("tip_update_scores_later")}
 			</div>
 
 			{/* English Proficiency Tests */}
 			<Card>
 				<CardHeader>
-					<CardTitle className="text-lg">English Proficiency Tests</CardTitle>
-					<CardDescription>
-						Required for most international scholarships
-					</CardDescription>
+					<CardTitle className="text-lg">
+						{t("english_proficiency_tests")}
+					</CardTitle>
+					<CardDescription>{t("required_for_scholarships")}</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div className="space-y-2">
 							<Label htmlFor="ielts">
-								IELTS Score
+								{t("ielts_score")}
 								<Badge variant="secondary" className="ml-2">
-									Overall Band
+									{t("overall_band")}
 								</Badge>
 							</Label>
 							<Input
@@ -60,9 +61,9 @@ export function LanguageTestsStep({
 
 						<div className="space-y-2">
 							<Label htmlFor="toefl">
-								TOEFL Score
+								{t("toefl_score")}
 								<Badge variant="secondary" className="ml-2">
-									iBT
+									{t("ibt")}
 								</Badge>
 							</Label>
 							<Input
@@ -83,18 +84,16 @@ export function LanguageTestsStep({
 			{/* Standardized Tests */}
 			<Card>
 				<CardHeader>
-					<CardTitle className="text-lg">Standardized Tests</CardTitle>
-					<CardDescription>
-						Optional - Required for some programs
-					</CardDescription>
+					<CardTitle className="text-lg">{t("standardized_tests")}</CardTitle>
+					<CardDescription>{t("optional_for_programs")}</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div className="space-y-2">
 							<Label htmlFor="gre">
-								GRE Score
+								{t("gre_score")}
 								<Badge variant="outline" className="ml-2">
-									Optional
+									{t("optional")}
 								</Badge>
 							</Label>
 							<Input
@@ -111,9 +110,9 @@ export function LanguageTestsStep({
 
 						<div className="space-y-2">
 							<Label htmlFor="gmat">
-								GMAT Score
+								{t("gmat_score")}
 								<Badge variant="outline" className="ml-2">
-									Optional
+									{t("optional")}
 								</Badge>
 							</Label>
 							<Input
@@ -133,9 +132,7 @@ export function LanguageTestsStep({
 
 			<div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
 				<p className="text-sm text-blue-800">
-					<strong>Tip:</strong> If you haven't taken these tests yet, you can
-					update your scores later. We'll help you find scholarships that match
-					your current qualifications.
+					<strong>{t("tip_update_scores_later")}</strong>
 				</p>
 			</div>
 		</div>

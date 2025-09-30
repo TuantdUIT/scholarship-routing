@@ -14,6 +14,7 @@ import {
 	SelectValue,
 } from "@/core/components/ui/select";
 import { Calendar, Filter, List, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 // Mock deadline data combining scholarships and applications
@@ -129,7 +130,7 @@ const mockDeadlines = [
 	{
 		id: "d8",
 		title: "Fulbright Result Notification",
-		type: "result",
+		type: "Interview",
 		date: "2024-02-10",
 		time: "09:00",
 		status: "waiting",
@@ -144,6 +145,7 @@ const mockDeadlines = [
 ];
 
 export default function CalendarPage() {
+	const t = useTranslations("deadline");
 	const [deadlines, setDeadlines] = useState(mockDeadlines);
 	const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar");
 	const [filterType, setFilterType] = useState("all");
@@ -179,15 +181,14 @@ export default function CalendarPage() {
 				<div className="mb-8">
 					<div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
 						<div>
-							<h1 className="text-3xl font-bold mb-2">Deadline Tracker</h1>
+							<h1 className="text-3xl font-bold mb-2">{t("deadline_tracker")}</h1>
 							<p className="text-muted-foreground">
-								Stay on top of all your scholarship deadlines and important
-								dates
+								{t("deadline_tracker_description")}
 							</p>
 						</div>
 						<Button>
 							<Plus className="mr-2 h-4 w-4" />
-							Add Custom Deadline
+							{t("add_custom_deadline")}
 						</Button>
 					</div>
 
@@ -215,7 +216,7 @@ export default function CalendarPage() {
 											size="sm"
 										>
 											<Calendar className="mr-2 h-4 w-4" />
-											Calendar
+											{t("calendar")}
 										</Button>
 										<Button
 											variant={viewMode === "list" ? "default" : "outline"}
@@ -223,7 +224,7 @@ export default function CalendarPage() {
 											size="sm"
 										>
 											<List className="mr-2 h-4 w-4" />
-											List
+											{t("list")}
 										</Button>
 									</div>
 
@@ -231,16 +232,16 @@ export default function CalendarPage() {
 									<div className="flex gap-2 flex-1">
 										<Select value={filterType} onValueChange={setFilterType}>
 											<SelectTrigger className="w-40">
-												<SelectValue placeholder="Type" />
+												<SelectValue placeholder={t("type")} />
 											</SelectTrigger>
 											<SelectContent>
-												<SelectItem value="all">All Types</SelectItem>
+												<SelectItem value="all">{t("all_types")}</SelectItem>
 												<SelectItem value="application">
-													Applications
+													{t("applications")}
 												</SelectItem>
-												<SelectItem value="task">Tasks</SelectItem>
-												<SelectItem value="interview">Interviews</SelectItem>
-												<SelectItem value="result">Results</SelectItem>
+												<SelectItem value="task">{t("tasks")}</SelectItem>
+												<SelectItem value="interview">{t("interviews")}</SelectItem>
+												<SelectItem value="result">{t("results")}</SelectItem>
 											</SelectContent>
 										</Select>
 
@@ -248,21 +249,21 @@ export default function CalendarPage() {
 											value={filterStatus}
 											onValueChange={setFilterStatus}
 										>
-											<SelectTrigger className="w-40">
-												<SelectValue placeholder="Status" />
+											<SelectTrigger className="w-[180px]">
+												<SelectValue placeholder={t("status")} />
 											</SelectTrigger>
-											<SelectContent>
-												<SelectItem value="all">All Status</SelectItem>
-												<SelectItem value="urgent">Urgent</SelectItem>
-												<SelectItem value="upcoming">Upcoming</SelectItem>
-												<SelectItem value="pending">Pending</SelectItem>
-												<SelectItem value="completed">Completed</SelectItem>
+											<SelectContent style={{ maxHeight: "unset" }}>
+												<SelectItem value="all">{t("all_status")}</SelectItem>
+												<SelectItem value="urgent">{t("urgent")}</SelectItem>
+												<SelectItem value="upcoming">{t("upcoming")}</SelectItem>
+												<SelectItem value="pending">{t("pending")}</SelectItem>
+												<SelectItem value="completed">{t("completed")}</SelectItem>
 											</SelectContent>
 										</Select>
 
 										<Button variant="outline" size="sm">
 											<Filter className="mr-2 h-4 w-4" />
-											More Filters
+											{t("more_filters")}
 										</Button>
 									</div>
 								</div>

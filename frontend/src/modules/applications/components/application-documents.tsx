@@ -26,6 +26,7 @@ import {
 	FileText,
 	Upload,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 interface ApplicationDocumentsProps {
@@ -35,6 +36,7 @@ interface ApplicationDocumentsProps {
 export function ApplicationDocuments({
 	application,
 }: ApplicationDocumentsProps) {
+	const t = useTranslations("application");
 	const [uploadProgress, setUploadProgress] = useState<{
 		[key: string]: number;
 	}>({});
@@ -57,18 +59,18 @@ export function ApplicationDocuments({
 			case "uploaded":
 				return (
 					<Badge className="bg-green-100 text-green-800 border-0">
-						Uploaded
+						{t("uploaded")}
 					</Badge>
 				);
 			case "pending":
 				return (
 					<Badge className="bg-orange-100 text-orange-800 border-0">
-						Pending
+						{t("pending")}
 					</Badge>
 				);
 			case "required":
 				return (
-					<Badge className="bg-red-100 text-red-800 border-0">Required</Badge>
+					<Badge className="bg-red-100 text-red-800 border-0">{t("required")}</Badge>
 				);
 			default:
 				return <Badge variant="outline">{status}</Badge>;
@@ -102,20 +104,25 @@ export function ApplicationDocuments({
 			{/* Documents Overview */}
 			<Card>
 				<CardHeader>
-					<CardTitle>Document Upload Progress</CardTitle>
+					<CardTitle>{t("document_upload_progress")}</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<div className="space-y-4">
 						<div className="flex justify-between items-center">
-							<span className="text-sm font-medium">Overall Progress</span>
+							<span className="text-sm font-medium">{t("overall_progress")}</span>
 							<span className="text-sm text-muted-foreground">
-								{uploadedCount}/{totalCount} documents
+								{t("documents_count", {
+									uploaded: uploadedCount,
+									total: totalCount,
+								})}
 							</span>
 						</div>
 						<Progress value={completionPercentage} className="h-2" />
 						<div className="flex justify-between text-xs text-muted-foreground">
-							<span>{uploadedCount} uploaded</span>
-							<span>{totalCount - uploadedCount} remaining</span>
+							<span>{t("uploaded_count", { count: uploadedCount })}</span>
+							<span>
+								{t("remaining_count", { count: totalCount - uploadedCount })}
+							</span>
 						</div>
 					</div>
 				</CardContent>
@@ -136,13 +143,17 @@ export function ApplicationDocuments({
 										<h3 className="font-medium">{document.name}</h3>
 										{document.status === "uploaded" && (
 											<div className="text-sm text-muted-foreground">
-												{document.fileName} • {document.fileSize} • Uploaded{" "}
-												{new Date(document.uploadDate).toLocaleDateString()}
+												{document.fileName} • {document.fileSize} •{" "}
+												{t("uploaded_on", {
+													date: new Date(
+														document.uploadDate,
+													).toLocaleDateString(),
+												})}
 											</div>
 										)}
 										{document.status === "pending" && (
 											<div className="text-sm text-muted-foreground">
-												Required document - not yet uploaded
+												{t("required_doc_not_uploaded")}
 											</div>
 										)}
 									</div>
@@ -155,15 +166,15 @@ export function ApplicationDocuments({
 										<div className="flex gap-1">
 											<Button variant="outline" size="sm">
 												<Eye className="h-4 w-4 mr-1" />
-												View
+												{t("view")}
 											</Button>
 											<Button variant="outline" size="sm">
 												<Download className="h-4 w-4 mr-1" />
-												Download
+												{t("download")}
 											</Button>
 											<Button variant="outline" size="sm">
 												<Upload className="h-4 w-4 mr-1" />
-												Replace
+												{t("replace")}
 											</Button>
 										</div>
 									) : (
@@ -171,30 +182,33 @@ export function ApplicationDocuments({
 											<DialogTrigger asChild>
 												<Button size="sm">
 													<Upload className="h-4 w-4 mr-1" />
-													Upload
+													{t("upload")}
 												</Button>
 											</DialogTrigger>
 											<DialogContent>
 												<DialogHeader>
-													<DialogTitle>Upload {document.name}</DialogTitle>
+													<DialogTitle>
+														{t("upload_doc_title", {
+															documentName: document.name,
+														})}
+													</DialogTitle>
 													<DialogDescription>
-														Select the file you want to upload for this document
-														requirement.
+														{t("upload_doc_description")}
 													</DialogDescription>
 												</DialogHeader>
 												<div className="space-y-4">
 													<div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center">
 														<Upload className="h-8 w-8 mx-auto mb-4 text-muted-foreground" />
 														<p className="text-sm text-muted-foreground mb-2">
-															Drag and drop your file here, or click to browse
+															{t("drag_and_drop")}
 														</p>
-														<Button variant="outline">Choose File</Button>
+														<Button variant="outline">{t("choose_file")}</Button>
 													</div>
 
 													{uploadProgress[document.name] !== undefined && (
 														<div className="space-y-2">
 															<div className="flex justify-between text-sm">
-																<span>Uploading...</span>
+																<span>{t("uploading")}</span>
 																<span>{uploadProgress[document.name]}%</span>
 															</div>
 															<Progress
@@ -217,20 +231,15 @@ export function ApplicationDocuments({
 			{/* Upload Tips */}
 			<Card>
 				<CardHeader>
-					<CardTitle>Upload Guidelines</CardTitle>
+					<CardTitle>{t("upload_guidelines")}</CardTitle>
 				</CardHeader>
 				<CardContent>
 					<div className="space-y-2 text-sm text-muted-foreground">
-						<p>• Accepted formats: PDF, DOC, DOCX (max 10MB per file)</p>
-						<p>
-							• Ensure all documents are clearly readable and properly formatted
-						</p>
-						<p>• Official transcripts should be sealed or certified copies</p>
-						<p>• Reference letters must be on official letterhead</p>
-						<p>
-							• Personal statements should follow the specified word count
-							limits
-						</p>
+						<p>{t("guideline_1")}</p>
+						<p>{t("guideline_2")}</p>
+						<p>{t("guideline_3")}</p>
+						<p>{t("guideline_4")}</p>
+						<p>{t("guideline_5")}</p>
 					</div>
 				</CardContent>
 			</Card>

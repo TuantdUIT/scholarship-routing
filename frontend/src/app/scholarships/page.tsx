@@ -16,6 +16,7 @@ import { ScholarshipCard } from "@/modules/scholarships/components/scholarship-c
 import { ScholarshipFilters } from "@/modules/scholarships/components/scholarship-filters";
 import { ScholarshipSort } from "@/modules/scholarships/components/scholarship-sort";
 import { Filter, Search } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 // Mock scholarship data
@@ -136,6 +137,7 @@ interface ScholarFilter {
 }
 
 export default function ScholarshipsPage() {
+	const t = useTranslations("scholarships_page");
 	const [searchQuery, setSearchQuery] = useState("");
 	const [showFilters, setShowFilters] = useState(false);
 	const [sortBy, setSortBy] = useState("match-score");
@@ -196,12 +198,9 @@ export default function ScholarshipsPage() {
 			<div className="container mx-auto max-w-7xl px-4 py-8">
 				{/* Header */}
 				<div className="mb-8">
-					<h1 className="text-2xl md:text-3xl font-bold mb-2">
-						Scholarship Discovery
-					</h1>
+					<h1 className="text-2xl md:text-3xl font-bold mb-2">{t("title")}</h1>
 					<p className="text-muted-foreground text-sm md:text-base">
-						Find scholarships that match your profile with AI-powered
-						recommendations
+						{t("description")}
 					</p>
 				</div>
 
@@ -213,7 +212,7 @@ export default function ScholarshipsPage() {
 							<div className="relative">
 								<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
 								<Input
-									placeholder="Search scholarships by name, university, country..."
+									placeholder={t("search_placeholder")}
 									value={searchQuery}
 									onChange={(e) => setSearchQuery(e.target.value)}
 									className="pl-10 min-h-[44px]"
@@ -230,12 +229,12 @@ export default function ScholarshipsPage() {
 												className="w-full min-h-[44px] bg-transparent"
 											>
 												<Filter className="mr-2 h-4 w-4" />
-												Filters
+												{t("filters")}
 											</Button>
 										</SheetTrigger>
 										<SheetContent side="left" className="w-full sm:w-80">
 											<SheetHeader>
-												<SheetTitle>Filter Scholarships</SheetTitle>
+												<SheetTitle>{t("filter_scholarships")}</SheetTitle>
 											</SheetHeader>
 											<div className="mt-6">
 												<ScholarshipFilters
@@ -254,7 +253,7 @@ export default function ScholarshipsPage() {
 										className="min-h-[44px]"
 									>
 										<Filter className="mr-2 h-4 w-4" />
-										Filters
+										{t("filters")}
 									</Button>
 								</div>
 
@@ -267,24 +266,30 @@ export default function ScholarshipsPage() {
 							<div className="space-y-4">
 								<div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-muted-foreground">
 									<div className="flex flex-wrap items-center gap-2 sm:gap-4">
-										<span>{totalCount} scholarships found</span>
-										<Separator
-											orientation="vertical"
-											className="h-4 hidden sm:block"
-										/>
-										<span className="text-green-600">
-											{passedCount} match your profile
+										<span>
+											{t("scholarships_found", { totalCount: totalCount })}
 										</span>
 										<Separator
 											orientation="vertical"
 											className="h-4 hidden sm:block"
 										/>
-										<span>{totalCount - passedCount} need improvement</span>
+										<span className="text-green-600">
+											{t("match_your_profile", { passedCount: passedCount })}
+										</span>
+										<Separator
+											orientation="vertical"
+											className="h-4 hidden sm:block"
+										/>
+										<span>
+											{t("need_improvement", {
+												improvementCount: totalCount - passedCount,
+											})}
+										</span>
 									</div>
 								</div>
 								<div className="flex items-center space-x-2">
 									<span className="text-sm text-muted-foreground">
-										Match Rate:
+										{t("match_rate")}
 									</span>
 									<Progress
 										value={(passedCount / totalCount) * 100}
@@ -316,11 +321,10 @@ export default function ScholarshipsPage() {
 								<CardContent>
 									<Search className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
 									<h3 className="text-lg font-semibold mb-2">
-										No scholarships found
+										{t("no_scholarships_found")}
 									</h3>
 									<p className="text-muted-foreground mb-4 text-sm md:text-base">
-										Try adjusting your search criteria or filters to find more
-										opportunities.
+										{t("no_scholarships_found_description")}
 									</p>
 									<Button
 										variant="outline"
@@ -338,7 +342,7 @@ export default function ScholarshipsPage() {
 											})
 										}
 									>
-										Clear All Filters
+										{t("clear_all_filters")}
 									</Button>
 								</CardContent>
 							</Card>

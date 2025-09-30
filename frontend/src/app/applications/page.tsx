@@ -153,7 +153,10 @@ const mockApplications = [
 	},
 ];
 
+import { useTranslations } from "next-intl";
+
 export default function ApplicationsPage() {
+	const t = useTranslations("application");
 	const [applications, setApplications] = useState(mockApplications);
 	const [viewMode, setViewMode] = useState<"kanban" | "table">("kanban");
 	const [searchQuery, setSearchQuery] = useState("");
@@ -216,14 +219,14 @@ export default function ApplicationsPage() {
 				<div className="mb-8">
 					<div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
 						<div>
-							<h1 className="text-3xl font-bold mb-2">My Applications</h1>
+							<h1 className="text-3xl font-bold mb-2">{t("my_applications")}</h1>
 							<p className="text-muted-foreground">
-								Track and manage your scholarship applications
+								{t("track_and_manage")}
 							</p>
 						</div>
 						<Button className="w-fit">
 							<Plus className="mr-2 h-4 w-4" />
-							Add New Application
+							{t("add_new_application")}
 						</Button>
 					</div>
 
@@ -239,7 +242,7 @@ export default function ApplicationsPage() {
 							<div className="flex-1 relative">
 								<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
 								<Input
-									placeholder="Search applications..."
+									placeholder={t("search_applications")}
 									value={searchQuery}
 									onChange={(e) => setSearchQuery(e.target.value)}
 									className="pl-10"
@@ -250,26 +253,26 @@ export default function ApplicationsPage() {
 							<div className="flex gap-2">
 								<Select value={statusFilter} onValueChange={setStatusFilter}>
 									<SelectTrigger className="w-40">
-										<SelectValue placeholder="Status" />
+										<SelectValue placeholder={t("status")} />
 									</SelectTrigger>
 									<SelectContent>
-										<SelectItem value="all">All Status</SelectItem>
-										<SelectItem value="not-started">Not Started</SelectItem>
-										<SelectItem value="in-progress">In Progress</SelectItem>
-										<SelectItem value="submitted">Submitted</SelectItem>
-										<SelectItem value="interview">Interview</SelectItem>
-										<SelectItem value="result">Result</SelectItem>
+										<SelectItem value="all">{t("all_status")}</SelectItem>
+										<SelectItem value="not-started">{t("not_started")}</SelectItem>
+										<SelectItem value="in-progress">{t("in_progress")}</SelectItem>
+										<SelectItem value="submitted">{t("submitted")}</SelectItem>
+										<SelectItem value="interview">{t("interview")}</SelectItem>
+										<SelectItem value="result">{t("result")}</SelectItem>
 									</SelectContent>
 								</Select>
 
 								<Select value={sortBy} onValueChange={setSortBy}>
 									<SelectTrigger className="w-40">
-										<SelectValue placeholder="Sort by" />
+										<SelectValue placeholder={t("sort_by")} />
 									</SelectTrigger>
 									<SelectContent>
-										<SelectItem value="deadline">Deadline</SelectItem>
-										<SelectItem value="progress">Progress</SelectItem>
-										<SelectItem value="updated">Last Updated</SelectItem>
+										<SelectItem value="deadline">{t("deadline")}</SelectItem>
+										<SelectItem value="progress">{t("progress")}</SelectItem>
+										<SelectItem value="updated">{t("last_updated")}</SelectItem>
 									</SelectContent>
 								</Select>
 
@@ -278,14 +281,14 @@ export default function ApplicationsPage() {
 									onClick={() => setViewMode("kanban")}
 									size="sm"
 								>
-									Kanban
+									{t("kanban")}
 								</Button>
 								<Button
 									variant={viewMode === "table" ? "default" : "outline"}
 									onClick={() => setViewMode("table")}
 									size="sm"
 								>
-									Table
+									{t("table")}
 								</Button>
 							</div>
 						</div>

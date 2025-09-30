@@ -21,6 +21,7 @@ import {
 } from "@/core/components/ui/select";
 import { Slider } from "@/core/components/ui/slider";
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface Filters {
 	countries: string[];
@@ -76,6 +77,8 @@ export function ScholarshipFilters({
 	filters,
 	onFiltersChange,
 }: ScholarshipFiltersProps) {
+	const t = useTranslations("scholarship");
+
 	const updateFilter = (key: keyof Filters, value: any) => {
 		onFiltersChange({ ...filters, [key]: value });
 	};
@@ -117,10 +120,10 @@ export function ScholarshipFilters({
 			<Card>
 				<CardHeader className="pb-3">
 					<div className="flex justify-between items-center">
-						<CardTitle className="text-base">Filters</CardTitle>
+						<CardTitle className="text-base">{t("filters")}</CardTitle>
 						{hasActiveFilters && (
 							<Button variant="ghost" size="sm" onClick={clearAllFilters}>
-								Clear All
+								{t("clear_all")}
 							</Button>
 						)}
 					</div>
@@ -130,34 +133,23 @@ export function ScholarshipFilters({
 			{/* Hard Conditions */}
 			<Card>
 				<CardHeader className="pb-3">
-					<CardTitle className="text-base">Hard Requirements</CardTitle>
+					<CardTitle className="text-base">{t("hard_requirements")}</CardTitle>
 					<CardDescription>
-						Filter by minimum eligibility criteria
+						{t("hard_requirements_description")}
 					</CardDescription>
 				</CardHeader>
-				<CardContent className="space-y-4">
-					<div className="flex items-center space-x-2">
-						<Checkbox
-							id="onlyPassed"
-							checked={filters.onlyPassed}
-							onCheckedChange={(checked) => updateFilter("onlyPassed", checked)}
-						/>
-						<Label htmlFor="onlyPassed" className="text-sm">
-							Only show scholarships I qualify for
-						</Label>
-					</div>
-
+				<CardContent className="space-y-2">
 					<div className="space-y-2">
-						<Label className="text-sm">Degree Level</Label>
+						<Label className="text-sm">{t("degree_level")}</Label>
 						<Select
 							value={filters.degreeLevel}
 							onValueChange={(value) => updateFilter("degreeLevel", value)}
 						>
 							<SelectTrigger>
-								<SelectValue placeholder="Any degree level" />
+								<SelectValue placeholder={t("any_degree_level")} />
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value="any">Any degree level</SelectItem>
+								<SelectItem value="any">{t("any_degree_level")}</SelectItem>
 								{degreeLevels.map((level) => (
 									<SelectItem key={level} value={level}>
 										{level}
@@ -169,17 +161,17 @@ export function ScholarshipFilters({
 
 					<div className="grid grid-cols-2 gap-2">
 						<div className="space-y-2">
-							<Label className="text-sm">Max GPA Required</Label>
+							<Label className="text-sm">{t("max_gpa_required")}</Label>
 							<Input
 								type="number"
 								step="0.1"
-								placeholder="4.0"
+								placeholder="3.2"
 								value={filters.maxGpa}
 								onChange={(e) => updateFilter("maxGpa", e.target.value)}
 							/>
 						</div>
 						<div className="space-y-2">
-							<Label className="text-sm">Min IELTS Required</Label>
+							<Label className="text-sm">{t("min_ielts_required")}</Label>
 							<Input
 								type="number"
 								step="0.5"
@@ -195,8 +187,8 @@ export function ScholarshipFilters({
 			{/* Countries */}
 			<Card>
 				<CardHeader className="pb-3">
-					<CardTitle className="text-base">Countries</CardTitle>
-					<CardDescription>Select preferred study destinations</CardDescription>
+					<CardTitle className="text-base">{t("countries")}</CardTitle>
+					<CardDescription>{t("countries_description")}</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<div className="space-y-3">
@@ -236,8 +228,10 @@ export function ScholarshipFilters({
 			{/* Fields of Study */}
 			<Card>
 				<CardHeader className="pb-3">
-					<CardTitle className="text-base">Fields of Study</CardTitle>
-					<CardDescription>Filter by academic disciplines</CardDescription>
+					<CardTitle className="text-base">{t("fields_of_study")}</CardTitle>
+					<CardDescription>
+						{t("fields_of_study_description")}
+					</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<div className="space-y-3">
@@ -277,8 +271,12 @@ export function ScholarshipFilters({
 			{/* Deadline */}
 			<Card>
 				<CardHeader className="pb-3">
-					<CardTitle className="text-base">Application Deadline</CardTitle>
-					<CardDescription>Filter by deadline urgency</CardDescription>
+					<CardTitle className="text-base">
+						{t("application_deadline")}
+					</CardTitle>
+					<CardDescription>
+						{t("application_deadline_description")}
+					</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<Select
@@ -286,14 +284,18 @@ export function ScholarshipFilters({
 						onValueChange={(value) => updateFilter("deadlineRange", value)}
 					>
 						<SelectTrigger>
-							<SelectValue placeholder="Any deadline" />
+							<SelectValue placeholder={t("any_deadline")} />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="any">Any deadline</SelectItem>
-							<SelectItem value="next-month">Next 30 days</SelectItem>
-							<SelectItem value="next-3-months">Next 3 months</SelectItem>
-							<SelectItem value="next-6-months">Next 6 months</SelectItem>
-							<SelectItem value="next-year">Next year</SelectItem>
+							<SelectItem value="any">{t("any_deadline")}</SelectItem>
+							<SelectItem value="next-month">{t("next_30_days")}</SelectItem>
+							<SelectItem value="next-3-months">
+								{t("next_3_months")}
+							</SelectItem>
+							<SelectItem value="next-6-months">
+								{t("next_6_months")}
+							</SelectItem>
+							<SelectItem value="next-year">{t("next_year")}</SelectItem>
 						</SelectContent>
 					</Select>
 				</CardContent>
@@ -302,16 +304,18 @@ export function ScholarshipFilters({
 			{/* Soft Weights Customization */}
 			<Card>
 				<CardHeader className="pb-3">
-					<CardTitle className="text-base">Matching Preferences</CardTitle>
+					<CardTitle className="text-base">
+						{t("matching_preferences")}
+					</CardTitle>
 					<CardDescription>
-						Adjust how we calculate your match score
+						{t("matching_preferences_description")}
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4">
 					<div className="space-y-3">
 						<div className="space-y-2">
 							<div className="flex justify-between text-sm">
-								<Label>GPA Weight</Label>
+								<Label>{t("gpa_weight")}</Label>
 								<span>30%</span>
 							</div>
 							<Slider
@@ -323,7 +327,7 @@ export function ScholarshipFilters({
 						</div>
 						<div className="space-y-2">
 							<div className="flex justify-between text-sm">
-								<Label>Publications Weight</Label>
+								<Label>{t("publications_weight")}</Label>
 								<span>25%</span>
 							</div>
 							<Slider
@@ -335,7 +339,7 @@ export function ScholarshipFilters({
 						</div>
 						<div className="space-y-2">
 							<div className="flex justify-between text-sm">
-								<Label>Experience Weight</Label>
+								<Label>{t("experience_weight")}</Label>
 								<span>25%</span>
 							</div>
 							<Slider
@@ -347,7 +351,7 @@ export function ScholarshipFilters({
 						</div>
 						<div className="space-y-2">
 							<div className="flex justify-between text-sm">
-								<Label>Activities Weight</Label>
+								<Label>{t("activities_weight")}</Label>
 								<span>20%</span>
 							</div>
 							<Slider
@@ -359,8 +363,7 @@ export function ScholarshipFilters({
 						</div>
 					</div>
 					<div className="text-xs text-muted-foreground">
-						Adjust these weights to prioritize what matters most for your
-						scholarship matching.
+						{t("weights_description")}
 					</div>
 				</CardContent>
 			</Card>

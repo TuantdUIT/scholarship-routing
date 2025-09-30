@@ -26,6 +26,7 @@ import {
 	MapPin,
 	XCircle,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 interface Scholarship {
@@ -49,6 +50,8 @@ interface ScholarshipCardProps {
 }
 
 export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
+	const t = useTranslations("scholarship");
+
 	const getMatchScoreColor = (score: number) => {
 		if (score >= 80) return "text-green-600";
 		if (score >= 60) return "text-yellow-600";
@@ -87,7 +90,7 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 							<div className="flex gap-2">
 								{isUrgent && !isExpired && (
 									<Badge variant="destructive" className="text-xs">
-										Urgent
+										{t("urgent")}
 									</Badge>
 								)}
 								{isExpired && (
@@ -95,7 +98,7 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 										variant="outline"
 										className="text-xs text-muted-foreground"
 									>
-										Expired
+										{t("expired")}
 									</Badge>
 								)}
 							</div>
@@ -107,16 +110,6 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 								{scholarship.country}
 							</span>
 						</CardDescription>
-					</div>
-
-					{/* Match Score */}
-					<div className="text-center sm:text-right">
-						<div
-							className={`text-2xl font-bold ${getMatchScoreColor(scholarship.matchScore)}`}
-						>
-							{scholarship.matchScore}%
-						</div>
-						<div className="text-xs text-muted-foreground">Match</div>
 					</div>
 				</div>
 
@@ -141,7 +134,7 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 					<div className="flex items-center gap-2">
 						<DollarSign className="h-4 w-4 text-green-600 flex-shrink-0" />
 						<div className="min-w-0">
-							<div className="font-medium">Amount</div>
+							<div className="font-medium">{t("amount")}</div>
 							<div className="text-muted-foreground truncate">
 								{scholarship.amount}
 							</div>
@@ -150,7 +143,7 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 					<div className="flex items-center gap-2">
 						<Calendar className="h-4 w-4 text-blue-600 flex-shrink-0" />
 						<div className="min-w-0">
-							<div className="font-medium">Deadline</div>
+							<div className="font-medium">{t("deadline")}</div>
 							<div
 								className={`${isUrgent && !isExpired ? "text-orange-600" : "text-muted-foreground"}`}
 							>
@@ -159,7 +152,7 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 								</div>
 								{!isExpired && (
 									<div className="text-xs">
-										({daysLeft} day{daysLeft !== 1 ? "s" : ""} left)
+										({t("days_left", { daysLeft: daysLeft })})
 									</div>
 								)}
 							</div>
@@ -174,81 +167,12 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 
 				<Separator />
 
-				{/* Match Analysis */}
-				<div className="space-y-3">
-					<div className="flex items-center justify-between">
-						<span className="text-sm font-medium">Eligibility Status</span>
-						<div className="flex items-center gap-2">
-							{scholarship.hardConditionsPassed ? (
-								<>
-									<CheckCircle className="h-4 w-4 text-green-600" />
-									<span className="text-sm text-green-600">
-										All requirements met
-									</span>
-								</>
-							) : (
-								<>
-									<XCircle className="h-4 w-4 text-red-600" />
-									<span className="text-sm text-red-600">
-										Requirements not met
-									</span>
-								</>
-							)}
-							<Popover>
-								<PopoverTrigger asChild>
-									<Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-										<Info className="h-3 w-3" />
-									</Button>
-								</PopoverTrigger>
-								<PopoverContent className="w-80" align="end">
-									<div className="space-y-2">
-										<h4 className="font-medium text-sm">Match Breakdown</h4>
-										{scholarship.hardConditionsPassed ? (
-											<div className="text-sm text-green-600">
-												✓ All hard requirements satisfied
-											</div>
-										) : (
-											<div className="space-y-1">
-												<div className="text-sm text-red-600 font-medium">
-													Failed Requirements:
-												</div>
-												{scholarship.failedConditions.map(
-													(condition, index) => (
-														<div key={index} className="text-sm text-red-600">
-															• {condition}
-														</div>
-													),
-												)}
-											</div>
-										)}
-										<div className="text-xs text-muted-foreground mt-2">
-											Soft factors contribute to the overall match score based
-											on your profile strength.
-										</div>
-									</div>
-								</PopoverContent>
-							</Popover>
-						</div>
-					</div>
-
-					{/* Match Score Progress */}
-					<div className="space-y-1">
-						<div className="flex justify-between text-xs">
-							<span>Overall Match Score</span>
-							<span className={getMatchScoreColor(scholarship.matchScore)}>
-								{scholarship.matchScore}%
-							</span>
-						</div>
-						<Progress value={scholarship.matchScore} className="h-2" />
-					</div>
-				</div>
-
-				<Separator />
-
 				{/* Actions */}
 				<div className="flex flex-col gap-2">
 					<Button asChild className="w-full min-h-[44px]">
-						<Link href={`/scholarships/${scholarship.id}`}>View Details</Link>
+						<Link href={`/scholarships/${scholarship.id}`}>
+							{t("view_details")}
+						</Link>
 					</Button>
 					<div className="flex flex-col sm:flex-row gap-2">
 						<Button
@@ -256,7 +180,7 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 							className="flex-1 min-h-[44px] bg-transparent"
 						>
 							<BookmarkPlus className="mr-2 h-4 w-4" />
-							Save
+							{t("save")}
 						</Button>
 						<Button
 							variant="outline"
@@ -270,7 +194,7 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 								className="flex items-center justify-center"
 							>
 								<ExternalLink className="mr-2 h-4 w-4" />
-								Official Site
+								{t("official_site")}
 							</a>
 						</Button>
 					</div>

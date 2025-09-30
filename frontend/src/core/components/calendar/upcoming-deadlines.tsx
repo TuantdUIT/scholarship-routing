@@ -16,6 +16,7 @@ import {
 	Clock,
 	ExternalLink,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 interface UpcomingDeadlinesProps {
@@ -23,6 +24,8 @@ interface UpcomingDeadlinesProps {
 }
 
 export function UpcomingDeadlines({ deadlines }: UpcomingDeadlinesProps) {
+	const t = useTranslations("deadline");
+
 	const getDeadlineIcon = (type: string) => {
 		switch (type) {
 			case "application":
@@ -51,14 +54,14 @@ export function UpcomingDeadlines({ deadlines }: UpcomingDeadlinesProps) {
 			<CardHeader>
 				<CardTitle className="text-lg flex items-center gap-2">
 					<Bell className="h-5 w-5" />
-					Upcoming Deadlines
+					{t("upcoming_deadlines_title")}
 				</CardTitle>
 			</CardHeader>
 			<CardContent className="space-y-4">
 				{deadlines.length === 0 ? (
 					<div className="text-center py-8 text-muted-foreground">
 						<Calendar className="h-8 w-8 mx-auto mb-2" />
-						<p className="text-sm">No upcoming deadlines</p>
+						<p className="text-sm">{t("no_upcoming_deadlines")}</p>
 					</div>
 				) : (
 					deadlines.map((deadline) => (
@@ -84,7 +87,7 @@ export function UpcomingDeadlines({ deadlines }: UpcomingDeadlinesProps) {
 										</Badge>
 										{deadline.priority === "critical" && (
 											<Badge variant="destructive" className="text-xs">
-												Critical
+												{t("critical")}
 											</Badge>
 										)}
 									</div>
@@ -105,8 +108,10 @@ export function UpcomingDeadlines({ deadlines }: UpcomingDeadlinesProps) {
 												)}
 											>
 												{deadline.daysLeft <= 0
-													? "Overdue"
-													: `${deadline.daysLeft} days left`}
+													? t("overdue")
+													: t("days_left", {
+															daysLeft: deadline.daysLeft,
+														})}
 											</span>
 										</div>
 									</div>
@@ -119,7 +124,7 @@ export function UpcomingDeadlines({ deadlines }: UpcomingDeadlinesProps) {
 											asChild
 										>
 											<Link href={`/applications/${deadline.applicationId}`}>
-												View
+												{t("view")}
 											</Link>
 										</Button>
 										<Button variant="ghost" size="sm" className="h-7 w-7 p-0">
@@ -136,7 +141,7 @@ export function UpcomingDeadlines({ deadlines }: UpcomingDeadlinesProps) {
 					<Button variant="outline" className="w-full bg-transparent" asChild>
 						<Link href="/calendar">
 							<ExternalLink className="mr-2 h-4 w-4" />
-							View All Deadlines
+							{t("view_all_deadlines")}
 						</Link>
 					</Button>
 				)}

@@ -13,6 +13,7 @@ import {
 	CardTitle,
 } from "@/core/components/ui/card";
 import { Edit, FileText, Upload } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface ReviewStepProps {
 	data: OnboardingData;
@@ -20,6 +21,7 @@ interface ReviewStepProps {
 }
 
 export function ReviewStep({ data, updateData }: ReviewStepProps) {
+	const t = useTranslations("onboarding");
 	const handleCVUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
 		if (file) {
@@ -30,20 +32,21 @@ export function ReviewStep({ data, updateData }: ReviewStepProps) {
 	return (
 		<div className="space-y-6">
 			<div className="text-center mb-6">
-				<h3 className="text-lg font-semibold mb-2">Review Your Information</h3>
-				<p className="text-muted-foreground">
-					Please review your details before completing the setup. You can edit
-					any section later.
-				</p>
+				<h3 className="text-lg font-semibold mb-2">
+					{t("review_your_information")}
+				</h3>
+				<p className="text-muted-foreground">{t("review_details_message")}</p>
 			</div>
 
 			{/* Basic Information */}
 			<Card>
 				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 					<div>
-						<CardTitle className="text-base">Basic Information</CardTitle>
+						<CardTitle className="text-base">
+							{t("basic_information")}
+						</CardTitle>
 						<CardDescription>
-							Personal details and education level
+							{t("personal_details_education")}
 						</CardDescription>
 					</div>
 					<Button variant="ghost" size="sm">
@@ -53,17 +56,17 @@ export function ReviewStep({ data, updateData }: ReviewStepProps) {
 				<CardContent className="space-y-2">
 					<div className="grid grid-cols-2 gap-4 text-sm">
 						<div>
-							<span className="font-medium">Name:</span> {data.name}
+							<span className="font-medium">{t("name")}</span> {data.name}
 						</div>
 						<div>
-							<span className="font-medium">Email:</span> {data.email}
+							<span className="font-medium">{t("email")}</span> {data.email}
 						</div>
 						<div>
-							<span className="font-medium">Nationality:</span>{" "}
+							<span className="font-medium">{t("nationality")}</span>{" "}
 							{data.nationality}
 						</div>
 						<div>
-							<span className="font-medium">Current Level:</span>{" "}
+							<span className="font-medium">{t("current_education_level")}</span>{" "}
 							{data.currentLevel}
 						</div>
 					</div>
@@ -74,8 +77,10 @@ export function ReviewStep({ data, updateData }: ReviewStepProps) {
 			<Card>
 				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 					<div>
-						<CardTitle className="text-base">Academic Background</CardTitle>
-						<CardDescription>GPA and field of study</CardDescription>
+						<CardTitle className="text-base">
+							{t("academic_background")}
+						</CardTitle>
+						<CardDescription>{t("gpa_field_of_study")}</CardDescription>
 					</div>
 					<Button variant="ghost" size="sm">
 						<Edit className="h-4 w-4" />
@@ -84,16 +89,16 @@ export function ReviewStep({ data, updateData }: ReviewStepProps) {
 				<CardContent className="space-y-2">
 					<div className="grid grid-cols-2 gap-4 text-sm">
 						<div>
-							<span className="font-medium">GPA:</span> {data.gpa} /{" "}
+							<span className="font-medium">{t("gpa")}</span> {data.gpa} /{" "}
 							{data.gpaScale}
 						</div>
 						<div>
-							<span className="font-medium">Major:</span> {data.major}
+							<span className="font-medium">{t("major")}</span> {data.major}
 						</div>
 					</div>
 					{data.transcriptFile && (
 						<div className="text-sm">
-							<span className="font-medium">Transcript:</span>{" "}
+							<span className="font-medium">{t("transcript")}</span>{" "}
 							{data.transcriptFile.name}
 						</div>
 					)}
@@ -104,9 +109,9 @@ export function ReviewStep({ data, updateData }: ReviewStepProps) {
 			<Card>
 				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 					<div>
-						<CardTitle className="text-base">Test Scores</CardTitle>
+						<CardTitle className="text-base">{t("test_scores")}</CardTitle>
 						<CardDescription>
-							Language and standardized test results
+							{t("language_standardized_results")}
 						</CardDescription>
 					</div>
 					<Button variant="ghost" size="sm">
@@ -116,16 +121,24 @@ export function ReviewStep({ data, updateData }: ReviewStepProps) {
 				<CardContent className="space-y-2">
 					<div className="flex flex-wrap gap-2">
 						{data.ieltsScore && (
-							<Badge variant="secondary">IELTS: {data.ieltsScore}</Badge>
+							<Badge variant="secondary">
+								{t("ielts")}: {data.ieltsScore}
+							</Badge>
 						)}
 						{data.toeflScore && (
-							<Badge variant="secondary">TOEFL: {data.toeflScore}</Badge>
+							<Badge variant="secondary">
+								{t("toefl")}: {data.toeflScore}
+							</Badge>
 						)}
 						{data.greScore && (
-							<Badge variant="outline">GRE: {data.greScore}</Badge>
+							<Badge variant="outline">
+								{t("gre")}: {data.greScore}
+							</Badge>
 						)}
 						{data.gmatScore && (
-							<Badge variant="outline">GMAT: {data.gmatScore}</Badge>
+							<Badge variant="outline">
+								{t("gmat")}: {data.gmatScore}
+							</Badge>
 						)}
 					</div>
 				</CardContent>
@@ -135,9 +148,11 @@ export function ReviewStep({ data, updateData }: ReviewStepProps) {
 			<Card>
 				<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
 					<div>
-						<CardTitle className="text-base">Study Preferences</CardTitle>
+						<CardTitle className="text-base">
+							{t("study_preferences_title")}
+						</CardTitle>
 						<CardDescription>
-							Desired destinations and degree type
+							{t("desired_destinations_degree")}
 						</CardDescription>
 					</div>
 					<Button variant="ghost" size="sm">
@@ -146,7 +161,7 @@ export function ReviewStep({ data, updateData }: ReviewStepProps) {
 				</CardHeader>
 				<CardContent className="space-y-3">
 					<div>
-						<span className="font-medium text-sm">Countries:</span>
+						<span className="font-medium text-sm">{t("countries")}</span>
 						<div className="flex flex-wrap gap-1 mt-1">
 							{data.desiredCountries.map((country) => (
 								<Badge key={country} variant="outline" className="text-xs">
@@ -157,10 +172,11 @@ export function ReviewStep({ data, updateData }: ReviewStepProps) {
 					</div>
 					<div className="grid grid-cols-2 gap-4 text-sm">
 						<div>
-							<span className="font-medium">Degree:</span> {data.desiredDegree}
+							<span className="font-medium">{t("degree")}</span>{" "}
+							{data.desiredDegree}
 						</div>
 						<div>
-							<span className="font-medium">Coverage:</span>{" "}
+							<span className="font-medium">{t("coverage")}</span>{" "}
 							{data.scholarshipAmount}
 						</div>
 					</div>
@@ -170,10 +186,8 @@ export function ReviewStep({ data, updateData }: ReviewStepProps) {
 			{/* CV Upload */}
 			<Card>
 				<CardHeader>
-					<CardTitle className="text-base">CV Upload (Optional)</CardTitle>
-					<CardDescription>
-						Upload your CV for better profile matching
-					</CardDescription>
+					<CardTitle className="text-base">{t("cv_upload_optional")}</CardTitle>
+					<CardDescription>{t("upload_cv_for_matching")}</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6">
@@ -183,7 +197,7 @@ export function ReviewStep({ data, updateData }: ReviewStepProps) {
 								<Button variant="outline" asChild>
 									<label htmlFor="cv-upload" className="cursor-pointer">
 										<FileText className="mr-2 h-4 w-4" />
-										{data.cvFile ? "Replace CV" : "Upload CV"}
+										{data.cvFile ? t("replace_cv") : t("upload_cv")}
 									</label>
 								</Button>
 								<input
@@ -195,11 +209,11 @@ export function ReviewStep({ data, updateData }: ReviewStepProps) {
 								/>
 							</div>
 							<p className="mt-2 text-sm text-muted-foreground">
-								PDF, DOC, or DOCX files up to 10MB
+								{t("transcript_file_types")}
 							</p>
 							{data.cvFile && (
 								<p className="mt-2 text-sm text-green-600">
-									✓ {data.cvFile.name} uploaded
+									{t("file_uploaded", { fileName: data.cvFile.name })}
 								</p>
 							)}
 						</div>

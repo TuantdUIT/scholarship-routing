@@ -18,6 +18,7 @@ import {
 	ExternalLink,
 	MoreHorizontal,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 interface DeadlineListProps {
@@ -26,6 +27,8 @@ interface DeadlineListProps {
 }
 
 export function DeadlineList({ deadlines, onStatusChange }: DeadlineListProps) {
+	const t = useTranslations("deadline");
+
 	const getDeadlineIcon = (type: string) => {
 		switch (type) {
 			case "application":
@@ -35,7 +38,7 @@ export function DeadlineList({ deadlines, onStatusChange }: DeadlineListProps) {
 			case "task":
 				return <CheckCircle className="h-5 w-5 text-green-600" />;
 			case "result":
-				return <AlertTriangle className="h-5 w-5 text-orange-600" />;
+				return <Clock className="h-5 w-5 text-orange-600" />;
 			default:
 				return <Calendar className="h-5 w-5 text-muted-foreground" />;
 		}
@@ -45,19 +48,27 @@ export function DeadlineList({ deadlines, onStatusChange }: DeadlineListProps) {
 		switch (priority) {
 			case "critical":
 				return (
-					<Badge className="bg-red-100 text-red-800 border-0">Critical</Badge>
+					<Badge className="bg-red-100 text-red-800 border-0">
+						{t("critical_priority")}
+					</Badge>
 				);
 			case "high":
 				return (
-					<Badge className="bg-orange-100 text-orange-800 border-0">High</Badge>
+					<Badge className="bg-orange-100 text-orange-800 border-0">
+						{t("high_priority")}
+					</Badge>
 				);
 			case "medium":
 				return (
-					<Badge className="bg-blue-100 text-blue-800 border-0">Medium</Badge>
+					<Badge className="bg-blue-100 text-blue-800 border-0">
+						{t("medium_priority")}
+					</Badge>
 				);
 			case "low":
 				return (
-					<Badge className="bg-green-100 text-green-800 border-0">Low</Badge>
+					<Badge className="bg-green-100 text-green-800 border-0">
+						{t("low_priority")}
+					</Badge>
 				);
 			default:
 				return <Badge variant="outline">{priority}</Badge>;
@@ -67,25 +78,25 @@ export function DeadlineList({ deadlines, onStatusChange }: DeadlineListProps) {
 	const getStatusBadge = (status: string) => {
 		switch (status) {
 			case "urgent":
-				return <Badge variant="destructive">Urgent</Badge>;
+				return <Badge variant="destructive">{t("urgent")}</Badge>;
 			case "upcoming":
 				return (
 					<Badge className="bg-orange-100 text-orange-800 border-0">
-						Upcoming
+						{t("upcoming")}
 					</Badge>
 				);
 			case "pending":
-				return <Badge variant="secondary">Pending</Badge>;
+				return <Badge variant="secondary">{t("pending")}</Badge>;
 			case "completed":
 				return (
 					<Badge className="bg-green-100 text-green-800 border-0">
-						Completed
+						{t("completed")}
 					</Badge>
 				);
 			case "waiting":
 				return (
 					<Badge className="bg-purple-100 text-purple-800 border-0">
-						Waiting
+						{t("waiting")}
 					</Badge>
 				);
 			default:
@@ -114,10 +125,11 @@ export function DeadlineList({ deadlines, onStatusChange }: DeadlineListProps) {
 				<Card>
 					<CardContent className="text-center py-12">
 						<Calendar className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-						<h3 className="text-lg font-semibold mb-2">No Deadlines Found</h3>
+						<h3 className="text-lg font-semibold mb-2">
+							{t("no_deadlines_found")}
+						</h3>
 						<p className="text-muted-foreground">
-							No deadlines match your current filters. Try adjusting your search
-							criteria.
+							{t("no_deadlines_found_description")}
 						</p>
 					</CardContent>
 				</Card>
@@ -125,13 +137,12 @@ export function DeadlineList({ deadlines, onStatusChange }: DeadlineListProps) {
 				deadlines.map((deadline) => (
 					<Card
 						key={deadline.id}
-						className={`hover:shadow-md transition-shadow ${
-							deadline.daysLeft <= 7
+						className={`hover:shadow-md transition-shadow ${deadline.daysLeft <= 7
 								? "border-red-200"
 								: deadline.daysLeft <= 14
 									? "border-orange-200"
 									: ""
-						}`}
+							}`}
 					>
 						<CardContent className="p-6">
 							<div className="flex items-start justify-between">
@@ -180,17 +191,18 @@ export function DeadlineList({ deadlines, onStatusChange }: DeadlineListProps) {
 											</div>
 											<div className="flex items-center gap-2">
 												<span
-													className={`font-medium ${
-														deadline.daysLeft <= 0
+													className={`font-medium ${deadline.daysLeft <= 0
 															? "text-red-600"
 															: deadline.daysLeft <= 7
 																? "text-orange-600"
 																: "text-muted-foreground"
-													}`}
+														}`}
 												>
 													{deadline.daysLeft <= 0
-														? "Overdue"
-														: `${deadline.daysLeft} days left`}
+														? t("overdue")
+														: t("days_left", {
+															daysLeft: deadline.daysLeft,
+														})}
 												</span>
 											</div>
 											{deadline.amount && (
@@ -203,25 +215,24 @@ export function DeadlineList({ deadlines, onStatusChange }: DeadlineListProps) {
 										{/* Urgency Progress */}
 										<div className="space-y-1">
 											<div className="flex justify-between text-xs">
-												<span>Urgency Level</span>
+												<span>{t("urgency_level")}</span>
 												<span
-													className={`font-medium ${
-														deadline.daysLeft <= 7
+													className={`font-medium ${deadline.daysLeft <= 7
 															? "text-red-600"
 															: deadline.daysLeft <= 14
 																? "text-orange-600"
 																: "text-muted-foreground"
-													}`}
+														}`}
 												>
 													{deadline.daysLeft <= 0
-														? "Overdue"
+														? t("overdue")
 														: deadline.daysLeft <= 7
-															? "Critical"
+															? t("critical_priority")
 															: deadline.daysLeft <= 14
-																? "High"
+																? t("high_priority")
 																: deadline.daysLeft <= 30
-																	? "Medium"
-																	: "Low"}
+																	? t("medium_priority")
+																	: t("low_priority")}
 												</span>
 											</div>
 											<div className="w-full bg-muted rounded-full h-2">
@@ -242,7 +253,7 @@ export function DeadlineList({ deadlines, onStatusChange }: DeadlineListProps) {
 														href={`/applications/${deadline.applicationId}`}
 													>
 														<Edit className="mr-2 h-4 w-4" />
-														View Application
+														{t("view_application")}
 													</Link>
 												</Button>
 												<Button variant="outline" size="sm" asChild>
@@ -250,7 +261,7 @@ export function DeadlineList({ deadlines, onStatusChange }: DeadlineListProps) {
 														href={`/scholarships/${deadline.scholarshipId}`}
 													>
 														<ExternalLink className="mr-2 h-4 w-4" />
-														View Scholarship
+														{t("view_scholarship")}
 													</Link>
 												</Button>
 											</div>
@@ -271,17 +282,17 @@ export function DeadlineList({ deadlines, onStatusChange }: DeadlineListProps) {
 															onStatusChange(deadline.id, "completed")
 														}
 													>
-														Mark as Completed
+														{t("mark_as_completed")}
 													</DropdownMenuItem>
 													<DropdownMenuItem
 														onClick={() =>
 															onStatusChange(deadline.id, "pending")
 														}
 													>
-														Mark as Pending
+														{t("mark_as_pending")}
 													</DropdownMenuItem>
-													<DropdownMenuItem>Set Reminder</DropdownMenuItem>
-													<DropdownMenuItem>Edit Deadline</DropdownMenuItem>
+													<DropdownMenuItem>{t("set_reminder")}</DropdownMenuItem>
+													<DropdownMenuItem>{t("edit_deadline")}</DropdownMenuItem>
 												</DropdownMenuContent>
 											</DropdownMenu>
 										</div>
