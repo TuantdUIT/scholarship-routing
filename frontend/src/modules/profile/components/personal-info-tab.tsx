@@ -17,6 +17,7 @@ import {
 	SelectValue,
 } from "@/core/components/ui/select";
 import { Textarea } from "@/core/components/ui/textarea";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 interface PersonalInfoTabProps {
@@ -45,6 +46,7 @@ const currentLevels = [
 ];
 
 export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
+	const t = useTranslations("profile");
 	const [formData, setFormData] = useState({
 		name: "John Doe",
 		email: "john.doe@example.com",
@@ -64,15 +66,15 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 		<div className="space-y-6">
 			<Card>
 				<CardHeader>
-					<CardTitle>Basic Information</CardTitle>
+					<CardTitle>{t("basic_information")}</CardTitle>
 					<CardDescription>
-						Your personal details and contact information
+						{t("personal_details_contact")}
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 						<div className="space-y-2">
-							<Label htmlFor="name">Full Name</Label>
+							<Label htmlFor="name">{t("full_name")}</Label>
 							{isEditMode ? (
 								<Input
 									id="name"
@@ -85,7 +87,7 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 						</div>
 
 						<div className="space-y-2">
-							<Label htmlFor="email">Email Address</Label>
+							<Label htmlFor="email">{t("email_address")}</Label>
 							{isEditMode ? (
 								<Input
 									id="email"
@@ -99,7 +101,7 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 						</div>
 
 						<div className="space-y-2">
-							<Label htmlFor="phone">Phone Number</Label>
+							<Label htmlFor="phone">{t("phone_number")}</Label>
 							{isEditMode ? (
 								<Input
 									id="phone"
@@ -112,7 +114,7 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 						</div>
 
 						<div className="space-y-2">
-							<Label htmlFor="dateOfBirth">Date of Birth</Label>
+							<Label htmlFor="dateOfBirth">{t("date_of_birth")}</Label>
 							{isEditMode ? (
 								<Input
 									id="dateOfBirth"
@@ -128,7 +130,7 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 						</div>
 
 						<div className="space-y-2">
-							<Label htmlFor="nationality">Nationality</Label>
+							<Label htmlFor="nationality">{t("nationality")}</Label>
 							{isEditMode ? (
 								<Select
 									value={formData.nationality}
@@ -151,7 +153,9 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 						</div>
 
 						<div className="space-y-2">
-							<Label htmlFor="currentLevel">Current Education Level</Label>
+							<Label htmlFor="currentLevel">
+								{t("current_education_level")}
+							</Label>
 							{isEditMode ? (
 								<Select
 									value={formData.currentLevel}
@@ -175,7 +179,7 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 					</div>
 
 					<div className="space-y-2">
-						<Label htmlFor="address">Address</Label>
+						<Label htmlFor="address">{t("address")}</Label>
 						{isEditMode ? (
 							<Input
 								id="address"
@@ -188,14 +192,14 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 					</div>
 
 					<div className="space-y-2">
-						<Label htmlFor="bio">Bio / Personal Statement</Label>
+						<Label htmlFor="bio">{t("bio_personal_statement")}</Label>
 						{isEditMode ? (
 							<Textarea
 								id="bio"
 								rows={4}
 								value={formData.bio}
 								onChange={(e) => updateField("bio", e.target.value)}
-								placeholder="Tell us about yourself, your goals, and interests..."
+								placeholder={t("tell_us_about_yourself")}
 							/>
 						) : (
 							<div className="p-2 text-sm">{formData.bio}</div>

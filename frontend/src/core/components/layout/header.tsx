@@ -173,7 +173,7 @@ export function Header() {
 
 							<Avatar className="h-8 w-8">
 
-								<AvatarImage src="/diverse-user-avatars.png" alt="User" />
+								<AvatarImage src="/avatar.png" alt="User" />
 
 								<AvatarFallback>JD</AvatarFallback>
 

@@ -218,6 +218,7 @@ export default function ScholarshipDetailPage() {
 	const daysLeft = getDaysUntilDeadline(scholarship.deadline);
 	const isUrgent = daysLeft <= 30;
 	const isExpired = daysLeft < 0;
+	const notExpired = daysLeft > 0
 
 	return (
 		<div className="min-h-screen bg-background">
@@ -274,9 +275,9 @@ export default function ScholarshipDetailPage() {
 							{/* Match Score & Actions */}
 							<div className="flex flex-col items-center gap-4">
 								<div className="text-center">
-									<div className="text-3xl font-bold text-green-600">
+									{/* <div className="text-3xl font-bold text-green-600">
 										{scholarship.matchScore}%
-									</div>
+									</div> */}
 									<div className="text-sm text-muted-foreground">
 										Match Score
 									</div>

@@ -40,6 +40,7 @@ import {
 	Upload,
 	User,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 // Mock user data
@@ -54,24 +55,29 @@ const mockUser = {
 	gpaScale: 4.0,
 	ielts: 7.0,
 	gre: null,
-	avatar: "/diverse-user-avatars.png",
+	avatar: "/avatar.png",
 	matchScore: 78,
 	profileCompleteness: 85,
 };
 
 export default function ProfilePage() {
+	const t = useTranslations("profile");
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [showCVUpload, setShowCVUpload] = useState(false);
 	const [activeTab, setActiveTab] = useState("personal");
 
 	const tabs = [
-		{ id: "personal", label: "Personal", icon: User },
-		{ id: "education", label: "Education", icon: GraduationCap },
-		{ id: "tests", label: "Tests", icon: Award },
-		{ id: "experience", label: "Experience", icon: Briefcase },
-		{ id: "publications", label: "Publications", icon: BookOpen },
-		{ id: "extracurriculars", label: "Activities", icon: Award },
-		{ id: "documents", label: "Documents", icon: FileCheck },
+		{ id: "personal", label: t("personal"), icon: User },
+		{ id: "education", label: t("education"), icon: GraduationCap },
+		{ id: "tests", label: t("tests"), icon: Award },
+		{ id: "experience", label: t("experience"), icon: Briefcase },
+		{ id: "publications", label: t("publications"), icon: BookOpen },
+		{
+			id: "extracurriculars",
+			label: t("extracurriculars"),
+			icon: Award,
+		},
+		{ id: "documents", label: t("documents"), icon: FileCheck },
 	];
 
 	return (
@@ -113,7 +119,9 @@ export default function ProfilePage() {
 									<div className="text-2xl font-bold text-green-600">
 										{mockUser.profileCompleteness}%
 									</div>
-									<div className="text-sm text-muted-foreground">Complete</div>
+									<div className="text-sm text-muted-foreground">
+										{t("complete")}
+									</div>
 								</div>
 							</div>
 						</div>
@@ -126,7 +134,7 @@ export default function ProfilePage() {
 								className="flex items-center"
 							>
 								<Edit className="mr-2 h-4 w-4" />
-								{isEditMode ? "Save Changes" : "Edit Profile"}
+								{isEditMode ? t("save_changes") : t("edit_profile")}
 							</Button>
 							<Button
 								variant="outline"
@@ -134,14 +142,14 @@ export default function ProfilePage() {
 								className="flex items-center"
 							>
 								<Upload className="mr-2 h-4 w-4" />
-								Upload CV
+								{t("upload_cv")}
 							</Button>
 							<Button
 								variant="outline"
 								className="flex items-center bg-transparent"
 							>
 								<Download className="mr-2 h-4 w-4" />
-								Export PDF
+								{t("export_pdf")}
 							</Button>
 						</div>
 					</CardContent>
@@ -150,9 +158,9 @@ export default function ProfilePage() {
 				{/* Profile Tabs */}
 				<Card>
 					<CardHeader>
-						<CardTitle>Profile Details</CardTitle>
+						<CardTitle>{t("profile_details")}</CardTitle>
 						<CardDescription>
-							Manage your academic profile and documents
+							{t("manage_profile_documents")}
 						</CardDescription>
 					</CardHeader>
 					<CardContent>

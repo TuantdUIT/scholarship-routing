@@ -145,16 +145,16 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 						<div className="min-w-0">
 							<div className="font-medium">{t("deadline")}</div>
 							<div
-								className={`${isUrgent && !isExpired ? "text-orange-600" : "text-muted-foreground"}`}
+								className={`${isUrgent && !isExpired ? "text-black-600" : "text-muted-foreground"}`}
 							>
 								<div className="truncate">
-									{new Date(scholarship.deadline).toLocaleDateString()}
+									{new Date(scholarship.deadline).toLocaleDateString("en-GB")}
 								</div>
-								{!isExpired && (
+								{/* {!isExpired && (
 									<div className="text-xs">
 										({t("days_left", { daysLeft: daysLeft })})
 									</div>
-								)}
+								)} */}
 							</div>
 						</div>
 					</div>

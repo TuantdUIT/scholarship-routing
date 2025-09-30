@@ -248,7 +248,7 @@ export function CalendarView({
 						<DialogHeader>
 							<DialogTitle>
 								{t("deadlines_for_date", {
-									date: selectedDate.toLocaleDateString(),
+									date: selectedDate.toLocaleDateString("en-GB"),
 								})}
 							</DialogTitle>
 							<DialogDescription>

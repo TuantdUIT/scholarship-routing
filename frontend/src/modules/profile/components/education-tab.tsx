@@ -17,6 +17,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/core/components/ui/select";
+import { useTranslations } from "next-intl";
 import { Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 
@@ -47,6 +48,7 @@ const degreeTypes = [
 ];
 
 export function EducationTab({ isEditMode }: EducationTabProps) {
+	const t = useTranslations("profile");
 	const [educations, setEducations] = useState<Education[]>([
 		{
 			id: "1",
@@ -120,9 +122,9 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 		<div className="space-y-6">
 			<div className="flex justify-between items-center">
 				<div>
-					<h3 className="text-lg font-semibold">Education History</h3>
+					<h3 className="text-lg font-semibold">{t("education_history")}</h3>
 					<p className="text-sm text-muted-foreground">
-						Your academic background and qualifications
+						{t("academic_background_qualifications")}
 					</p>
 				</div>
 				{isEditMode && (
@@ -132,7 +134,7 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 						className="flex items-center"
 					>
 						<Plus className="mr-2 h-4 w-4" />
-						Add Education
+						{t("add_education")}
 					</Button>
 				)}
 			</div>
@@ -144,7 +146,7 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 							<div className="flex justify-between items-start">
 								<div className="flex items-center space-x-2">
 									<CardTitle className="text-base">
-										{education.institution || "New Institution"}
+										{education.institution || t("new_institution")}
 									</CardTitle>
 									<Badge variant={getStatusColor(education.status)}>
 										{education.status.replace("-", " ")}
@@ -165,7 +167,7 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 						<CardContent className="space-y-4">
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 								<div className="space-y-2">
-									<Label>Institution</Label>
+									<Label>{t("institution")}</Label>
 									{isEditMode ? (
 										<Input
 											value={education.institution}
@@ -176,7 +178,7 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 													e.target.value,
 												)
 											}
-											placeholder="University name"
+											placeholder={t("university_name")}
 										/>
 									) : (
 										<div className="p-2 text-sm">{education.institution}</div>
@@ -184,7 +186,7 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 								</div>
 
 								<div className="space-y-2">
-									<Label>Degree Type</Label>
+									<Label>{t("degree_type")}</Label>
 									{isEditMode ? (
 										<Select
 											value={education.degree}
@@ -193,7 +195,7 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 											}
 										>
 											<SelectTrigger>
-												<SelectValue placeholder="Select degree" />
+												<SelectValue placeholder={t("select_degree")} />
 											</SelectTrigger>
 											<SelectContent>
 												{degreeTypes.map((degree) => (
@@ -209,14 +211,14 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 								</div>
 
 								<div className="space-y-2">
-									<Label>Major / Field of Study</Label>
+									<Label>{t("major_field_of_study")}</Label>
 									{isEditMode ? (
 										<Input
 											value={education.major}
 											onChange={(e) =>
 												updateEducation(education.id, "major", e.target.value)
 											}
-											placeholder="Computer Science"
+											placeholder={t("computer_science")}
 										/>
 									) : (
 										<div className="p-2 text-sm">{education.major}</div>
@@ -224,7 +226,7 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 								</div>
 
 								<div className="space-y-2">
-									<Label>Status</Label>
+									<Label>{t("status")}</Label>
 									{isEditMode ? (
 										<Select
 											value={education.status}
@@ -240,9 +242,13 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 												<SelectValue />
 											</SelectTrigger>
 											<SelectContent>
-												<SelectItem value="completed">Completed</SelectItem>
-												<SelectItem value="in-progress">In Progress</SelectItem>
-												<SelectItem value="planned">Planned</SelectItem>
+												<SelectItem value="completed">
+													{t("completed")}
+												</SelectItem>
+												<SelectItem value="in-progress">
+													{t("in_progress")}
+												</SelectItem>
+												<SelectItem value="planned">{t("planned")}</SelectItem>
 											</SelectContent>
 										</Select>
 									) : (
@@ -253,7 +259,7 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 								</div>
 
 								<div className="space-y-2">
-									<Label>GPA</Label>
+									<Label>{t("gpa")}</Label>
 									{isEditMode ? (
 										<div className="flex space-x-2">
 											<Input
@@ -290,7 +296,7 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 								</div>
 
 								<div className="space-y-2">
-									<Label>Duration</Label>
+									<Label>{t("duration")}</Label>
 									{isEditMode ? (
 										<div className="flex space-x-2">
 											<Input
@@ -320,7 +326,7 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 										</div>
 									) : (
 										<div className="p-2 text-sm">
-											{education.startDate} - {education.endDate || "Present"}
+											{education.startDate} - {education.endDate || t("present")}
 										</div>
 									)}
 								</div>

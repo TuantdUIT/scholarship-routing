@@ -23,7 +23,7 @@ const mockDeadlines = [
 		id: "d1",
 		title: "University of Oxford Graduate Scholarship",
 		type: "application",
-		date: "2024-03-15",
+		date: "15/03/2024",
 		time: "23:59",
 		status: "pending",
 		priority: "high",
@@ -39,7 +39,7 @@ const mockDeadlines = [
 		id: "d2",
 		title: "MIT Graduate Fellowship",
 		type: "application",
-		date: "2024-02-01",
+		date: "01/02/2024",
 		time: "17:00",
 		status: "urgent",
 		priority: "critical",
@@ -55,7 +55,7 @@ const mockDeadlines = [
 		id: "d3",
 		title: "Personal Statement - Oxford",
 		type: "task",
-		date: "2024-02-15",
+		date: "15/02/2024",
 		time: "12:00",
 		status: "pending",
 		priority: "medium",
@@ -70,7 +70,7 @@ const mockDeadlines = [
 		id: "d4",
 		title: "Reference Letters - Cambridge",
 		type: "task",
-		date: "2024-02-20",
+		date: "20/02/2024",
 		time: "15:00",
 		status: "pending",
 		priority: "medium",
@@ -85,7 +85,7 @@ const mockDeadlines = [
 		id: "d5",
 		title: "DAAD Study Scholarship",
 		type: "application",
-		date: "2024-04-30",
+		date: "30/04/2024",
 		time: "23:59",
 		status: "future",
 		priority: "medium",
@@ -101,7 +101,7 @@ const mockDeadlines = [
 		id: "d6",
 		title: "Cambridge Interview",
 		type: "interview",
-		date: "2024-01-30",
+		date: "30/01/2024",
 		time: "14:00",
 		status: "upcoming",
 		priority: "critical",
@@ -116,7 +116,7 @@ const mockDeadlines = [
 		id: "d7",
 		title: "Language Certificate Upload",
 		type: "task",
-		date: "2024-03-01",
+		date: "01/03/2024",
 		time: "18:00",
 		status: "pending",
 		priority: "low",
@@ -131,7 +131,7 @@ const mockDeadlines = [
 		id: "d8",
 		title: "Fulbright Result Notification",
 		type: "Interview",
-		date: "2024-02-10",
+		date: "10/02/2024",
 		time: "09:00",
 		status: "waiting",
 		priority: "high",
@@ -141,6 +141,38 @@ const mockDeadlines = [
 		daysLeft: 21,
 		category: "Result",
 		provider: "Fulbright Commission",
+	},
+	{
+		id: "d9",
+		title: "Chevening Scholarship",
+		type: "application",
+		date: "01/11/2025",
+		time: "12:00",
+		status: "future",
+		priority: "high",
+		description: "Application deadline for Chevening scholarship",
+		applicationId: "app6",
+		scholarshipId: "s6",
+		daysLeft: 400,
+		category: "Application Deadline",
+		provider: "Chevening",
+		amount: "Full tuition + monthly stipend",
+	},
+	{
+		id: "d10",
+		title: "Erasmus Mundus Scholarship",
+		type: "application",
+		date: "15/01/2026",
+		time: "17:00",
+		status: "future",
+		priority: "high",
+		description: "Application deadline for Erasmus Mundus scholarship",
+		applicationId: "app7",
+		scholarshipId: "s7",
+		daysLeft: 800,
+		category: "Application Deadline",
+		provider: "Erasmus Mundus",
+		amount: "Full tuition + travel + living allowance",
 	},
 ];
 
@@ -161,7 +193,19 @@ export default function CalendarPage() {
 	});
 
 	const sortedDeadlines = [...filteredDeadlines].sort((a, b) => {
-		return new Date(a.date).getTime() - new Date(b.date).getTime();
+		const dateA = a.date.split("/");
+		const dateB = b.date.split("/");
+		const newDateA = new Date(
+			parseInt(dateA[2]),
+			parseInt(dateA[1]) - 1,
+			parseInt(dateA[0]),
+		);
+		const newDateB = new Date(
+			parseInt(dateB[2]),
+			parseInt(dateB[1]) - 1,
+			parseInt(dateB[0]),
+		);
+		return newDateA.getTime() - newDateB.getTime();
 	});
 
 	const updateDeadlineStatus = (deadlineId: string, newStatus: string) => {
