@@ -8,9 +8,10 @@ import {
 	CardTitle,
 } from "@/core/components/ui/card";
 import { AlertTriangle, CheckCircle, Clock, Info } from "lucide-react";
+import type { ApplicationDetail } from "@/modules/applications/data/application-types";
 
 interface ApplicationTimelineProps {
-	application: any;
+	application: Pick<ApplicationDetail, "timeline">;
 }
 
 export function ApplicationTimeline({ application }: ApplicationTimelineProps) {
@@ -47,7 +48,7 @@ export function ApplicationTimeline({ application }: ApplicationTimelineProps) {
 			</CardHeader>
 			<CardContent>
 				<div className="space-y-4">
-					{application.timeline.map((event: any, index: number) => (
+					{application.timeline.map((event, index) => (
 						<div key={index} className="flex gap-4">
 							{/* Timeline Line */}
 							<div className="flex flex-col items-center">

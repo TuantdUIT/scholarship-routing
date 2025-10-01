@@ -20,16 +20,21 @@ import { Input } from "@/core/components/ui/input";
 import { Textarea } from "@/core/components/ui/textarea";
 import { AlertTriangle, Bell, Clock, Edit, Plus, X } from "lucide-react";
 import { useState } from "react";
+import type { ApplicationDetail, ApplicationReminder, ApplicationReminderType } from "@/modules/applications/data/application-types";
 
 interface ApplicationRemindersProps {
-	application: any;
+	application: ApplicationDetail;
 }
 
 export function ApplicationReminders({
 	application,
 }: ApplicationRemindersProps) {
-	const [reminders, setReminders] = useState(application.reminders);
-	const [newReminder, setNewReminder] = useState({
+	const [reminders, setReminders] = useState<ApplicationReminder[]>(application.reminders);
+	const [newReminder, setNewReminder] = useState<{
+		date: string;
+		message: string;
+		type: ApplicationReminderType;
+	}>({
 		date: "",
 		message: "",
 		type: "deadline",
@@ -37,7 +42,7 @@ export function ApplicationReminders({
 
 	const addReminder = () => {
 		if (newReminder.date && newReminder.message) {
-			const reminder = {
+			const reminder: ApplicationReminder = {
 				id: `r${Date.now()}`,
 				...newReminder,
 				isActive: true,
@@ -48,12 +53,12 @@ export function ApplicationReminders({
 	};
 
 	const removeReminder = (id: string) => {
-		setReminders(reminders.filter((r: any) => r.id !== id));
+		setReminders(reminders.filter((r) => r.id !== id));
 	};
 
 	const toggleReminder = (id: string) => {
 		setReminders(
-			reminders.map((r: any) =>
+			reminders.map((r) =>
 				r.id === id ? { ...r, isActive: !r.isActive } : r,
 			),
 		);
@@ -180,7 +185,7 @@ export function ApplicationReminders({
 						</CardContent>
 					</Card>
 				) : (
-					reminders.map((reminder: any) => (
+					reminders.map((reminder) => (
 						<Card
 							key={reminder.id}
 							className={`${reminder.isActive ? "" : "opacity-60"}`}

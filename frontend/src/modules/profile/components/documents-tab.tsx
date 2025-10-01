@@ -20,71 +20,19 @@ import {
 	Upload,
 } from "lucide-react";
 import { useState } from "react";
+import { profileDocumentTypes, profileDocuments } from "@/modules/profile/data/profile-mocks";
+import type { DocumentRequirement, ProfileDocument } from "@/modules/profile/data/profile-types";
 
 interface DocumentsTabProps {
 	isEditMode: boolean;
 }
 
-interface Document {
-	id: string;
-	name: string;
-	type:
-		| "cv"
-		| "transcript"
-		| "sop"
-		| "recommendation"
-		| "certificate"
-		| "portfolio"
-		| "other";
-	status: "uploaded" | "processing" | "verified" | "rejected";
-	uploadDate: string;
-	size: string;
-	url?: string;
-}
-
 export function DocumentsTab({ isEditMode }: DocumentsTabProps) {
-	const [documents, setDocuments] = useState<Document[]>([
-		{
-			id: "1",
-			name: "John_Doe_CV_2024.pdf",
-			type: "cv",
-			status: "verified",
-			uploadDate: "2024-01-15",
-			size: "2.3 MB",
-			url: "#",
-		},
-		{
-			id: "2",
-			name: "Official_Transcript.pdf",
-			type: "transcript",
-			status: "verified",
-			uploadDate: "2024-01-10",
-			size: "1.8 MB",
-			url: "#",
-		},
-		{
-			id: "3",
-			name: "Statement_of_Purpose.docx",
-			type: "sop",
-			status: "processing",
-			uploadDate: "2024-01-20",
-			size: "0.5 MB",
-		},
-	]);
+	const [documents, setDocuments] = useState<ProfileDocument[]>(() =>
+		profileDocuments.map((document) => ({ ...document }))
+	);
 
-	const documentTypes = [
-		{ value: "cv", label: "CV/Resume", required: true },
-		{ value: "transcript", label: "Academic Transcript", required: true },
-		{ value: "sop", label: "Statement of Purpose", required: false },
-		{
-			value: "recommendation",
-			label: "Recommendation Letter",
-			required: false,
-		},
-		{ value: "certificate", label: "Certificate", required: false },
-		{ value: "portfolio", label: "Portfolio", required: false },
-		{ value: "other", label: "Other", required: false },
-	];
+	const documentTypes: DocumentRequirement[] = profileDocumentTypes;
 
 	const getStatusIcon = (status: string) => {
 		switch (status) {
@@ -118,7 +66,7 @@ export function DocumentsTab({ isEditMode }: DocumentsTabProps) {
 	};
 
 	const removeDocument = (id: string) => {
-		setDocuments(documents.filter((doc) => doc.id !== id));
+		setDocuments((prev) => prev.filter((doc) => doc.id !== id));
 	};
 
 	const requiredDocs = documentTypes.filter((dt) => dt.required);

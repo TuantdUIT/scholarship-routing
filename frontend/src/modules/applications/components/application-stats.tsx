@@ -14,25 +14,10 @@ import {
 	FileText,
 	TrendingUp,
 } from "lucide-react";
-
-interface Application {
-	id: string;
-	status: string;
-	progress: number;
-	deadline: string;
-	documents: {
-		required: string[];
-		uploaded: string[];
-		pending: string[];
-	};
-	reminders: Array<{
-		date: string;
-		message: string;
-	}>;
-}
+import type { ApplicationSummary } from "@/modules/applications/data/application-types";
 
 interface ApplicationStatsProps {
-	applications: Application[];
+	applications: ApplicationSummary[];
 }
 
 export function ApplicationStats({ applications }: ApplicationStatsProps) {

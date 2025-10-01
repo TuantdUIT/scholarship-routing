@@ -28,18 +28,17 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import type { ApplicationDetail } from "@/modules/applications/data/application-types";
 
 interface ApplicationDocumentsProps {
-	application: any;
+	application: ApplicationDetail;
 }
 
 export function ApplicationDocuments({
 	application,
 }: ApplicationDocumentsProps) {
 	const t = useTranslations("application");
-	const [uploadProgress, setUploadProgress] = useState<{
-		[key: string]: number;
-	}>({});
+	const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
 
 	const getDocumentStatusIcon = (status: string) => {
 		switch (status) {
@@ -94,7 +93,7 @@ export function ApplicationDocuments({
 	};
 
 	const uploadedCount = application.documents.required.filter(
-		(doc: any) => doc.status === "uploaded",
+		(doc) => doc.status === "uploaded",
 	).length;
 	const totalCount = application.documents.required.length;
 	const completionPercentage = Math.round((uploadedCount / totalCount) * 100);
@@ -130,7 +129,7 @@ export function ApplicationDocuments({
 
 			{/* Document List */}
 			<div className="grid gap-4">
-				{application.documents.required.map((document: any, index: number) => (
+				{application.documents.required.map((document, index) => (
 					<Card
 						key={index}
 						className={`${document.status === "uploaded" ? "border-green-200" : document.status === "required" ? "border-red-200" : ""}`}
@@ -143,12 +142,15 @@ export function ApplicationDocuments({
 										<h3 className="font-medium">{document.name}</h3>
 										{document.status === "uploaded" && (
 											<div className="text-sm text-muted-foreground">
-												{document.fileName} • {document.fileSize} •{" "}
-												{t("uploaded_on", {
-													date: new Date(
-														document.uploadDate,
-													).toLocaleDateString(),
-												})}
+												{document.fileName} • {document.fileSize}
+												{document.uploadDate && (
+													<>
+														{" • "}
+														{t("uploaded_on", {
+															date: new Date(document.uploadDate).toLocaleDateString(),
+														})}
+													</>
+												)}
 											</div>
 										)}
 										{document.status === "pending" && (
