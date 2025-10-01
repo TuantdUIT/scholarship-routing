@@ -22,6 +22,30 @@ import { AlertTriangle, Bell, Clock, Edit, Plus, X } from "lucide-react";
 import { useState } from "react";
 import type { ApplicationDetail, ApplicationReminder, ApplicationReminderType } from "@/modules/applications/data/application-types";
 
+// Helper function to safely format the date
+const formatDate = (dateString: string) => {
+	try {
+		// Handles "YYYY-MM-DD" format by splitting and creating a UTC date
+		const parts = dateString.split("-");
+		if (parts.length === 3) {
+			const year = parseInt(parts[0], 10);
+			const month = parseInt(parts[1], 10) - 1; // Month is 0-indexed
+			const day = parseInt(parts[2], 10);
+			const date = new Date(Date.UTC(year, month, day));
+			return date.toLocaleDateString("en-US", {
+				year: "numeric",
+				month: "long",
+				day: "numeric",
+				timeZone: "UTC",
+			});
+		}
+		return dateString; // Fallback to original string if format is unexpected
+	} catch (error) {
+		console.error("Invalid date format:", dateString, error);
+		return dateString; // Return original string on error
+	}
+};
+
 interface ApplicationRemindersProps {
 	application: ApplicationDetail;
 }
@@ -52,11 +76,13 @@ export function ApplicationReminders({
 		}
 	};
 
-	const removeReminder = (id: string) => {
+	const removeReminder = (id?: string) => {
+		if (!id) return;
 		setReminders(reminders.filter((r) => r.id !== id));
 	};
 
-	const toggleReminder = (id: string) => {
+	const toggleReminder = (id?: string) => {
+		if (!id) return;
 		setReminders(
 			reminders.map((r) =>
 				r.id === id ? { ...r, isActive: !r.isActive } : r,
@@ -193,12 +219,12 @@ export function ApplicationReminders({
 							<CardContent className="p-4">
 								<div className="flex items-start justify-between">
 									<div className="flex items-start gap-3">
-										{getReminderIcon(reminder.type)}
+										{getReminderIcon(reminder.type ?? "")}
 										<div className="flex-1">
 											<div className="flex items-center gap-2 mb-1">
-												{getReminderBadge(reminder.type)}
+												{getReminderBadge(reminder.type ?? "")}
 												<span className="text-sm text-muted-foreground">
-													{new Date(reminder.date).toLocaleDateString()}
+													{formatDate(reminder.date)}
 												</span>
 											</div>
 											<p className="text-sm">{reminder.message}</p>

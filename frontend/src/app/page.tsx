@@ -61,7 +61,7 @@ export default function HomePage() {
 	return (
 		<div className="flex flex-col">
 			{/* Hero Section */}
-			<section className="relative py-20 px-4 bg-gradient-to-br from-background to-muted">
+			<section className="relative py-20 px-4 bg-background">
 				<div className="container mx-auto max-w-6xl">
 					<div className="text-center space-y-6">
 						<Badge variant="secondary" className="mb-4">
