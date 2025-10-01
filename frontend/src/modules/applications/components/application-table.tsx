@@ -35,40 +35,18 @@ import {
 	Upload,
 } from "lucide-react";
 import Link from "next/link";
-
-interface Application {
-	id: string;
-	scholarshipId: string;
-	scholarshipTitle: string;
-	provider: string;
-	country: string;
-	amount: string;
-	deadline: string;
-	status: string;
-	progress: number;
-	lastUpdated: string;
-	documents: {
-		required: string[];
-		uploaded: string[];
-		pending: string[];
-	};
-	timeline: Array<{
-		date: string;
-		action: string;
-		type: string;
-	}>;
-	reminders: Array<{
-		date: string;
-		message: string;
-	}>;
-}
+import type { ApplicationStatus, ApplicationSummary } from "@/modules/applications/data/application-types";
 
 interface ApplicationTableProps {
-	applications: Application[];
-	onStatusChange: (appId: string, newStatus: string) => void;
+	applications: ApplicationSummary[];
+	onStatusChange: (appId: string, newStatus: ApplicationStatus) => void;
 }
 
-const statusOptions = [
+const statusOptions: Array<{
+	value: ApplicationStatus;
+	label: string;
+	color: string;
+}> = [
 	{
 		value: "not-started",
 		label: "Not Started",
@@ -104,7 +82,7 @@ export function ApplicationTable({
 		return diffDays;
 	};
 
-	const getStatusBadge = (status: string) => {
+	const getStatusBadge = (status: ApplicationStatus) => {
 		const statusOption = statusOptions.find(
 			(option) => option.value === status,
 		);

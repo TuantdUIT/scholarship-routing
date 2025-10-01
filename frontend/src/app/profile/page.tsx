@@ -29,6 +29,8 @@ import { ExtracurricularsTab } from "@/modules/profile/components/extracurricula
 import { PersonalInfoTab } from "@/modules/profile/components/personal-info-tab";
 import { PublicationsTab } from "@/modules/profile/components/publications-tab";
 import { TestsTab } from "@/modules/profile/components/tests-tab";
+import { mockUserProfile } from "@/modules/profile/data/profile-mocks";
+import type { UserProfileSummary } from "@/modules/profile/data/profile-types";
 import {
 	Award,
 	BookOpen,
@@ -43,28 +45,12 @@ import {
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
-// Mock user data
-const mockUser = {
-	id: "u1",
-	name: "John Doe",
-	email: "john.doe@example.com",
-	nationality: "Vietnam",
-	level: "Master's",
-	major: "Computer Science",
-	gpa: 3.4,
-	gpaScale: 4.0,
-	ielts: 7.0,
-	gre: null,
-	avatar: "/avatar.png",
-	matchScore: 78,
-	profileCompleteness: 85,
-};
-
 export default function ProfilePage() {
 	const t = useTranslations("profile");
 	const [isEditMode, setIsEditMode] = useState(false);
 	const [showCVUpload, setShowCVUpload] = useState(false);
 	const [activeTab, setActiveTab] = useState("personal");
+	const user: UserProfileSummary = mockUserProfile;
 
 	const tabs = [
 		{ id: "personal", label: t("personal"), icon: User },
@@ -90,23 +76,23 @@ export default function ProfilePage() {
 							<div className="flex items-center space-x-4">
 								<Avatar className="h-20 w-20">
 									<AvatarImage
-										src={mockUser.avatar || "/placeholder.svg"}
-										alt={mockUser.name}
+										src={user.avatar || "/placeholder.svg"}
+										alt={user.name}
 									/>
 									<AvatarFallback className="text-lg">
-										{mockUser.name
+										{user.name
 											.split(" ")
 											.map((n) => n[0])
 											.join("")}
 									</AvatarFallback>
 								</Avatar>
 								<div>
-									<h1 className="text-2xl font-bold">{mockUser.name}</h1>
-									<p className="text-muted-foreground">{mockUser.email}</p>
+									<h1 className="text-2xl font-bold">{user.name}</h1>
+									<p className="text-muted-foreground">{user.email}</p>
 									<div className="flex items-center space-x-2 mt-2">
-										<Badge variant="secondary">{mockUser.level}</Badge>
-										<Badge variant="outline">{mockUser.major}</Badge>
-										<Badge variant="outline">{mockUser.nationality}</Badge>
+										<Badge variant="secondary">{user.level}</Badge>
+										<Badge variant="outline">{user.major}</Badge>
+										<Badge variant="outline">{user.nationality}</Badge>
 									</div>
 								</div>
 							</div>
@@ -117,11 +103,9 @@ export default function ProfilePage() {
 								/>
 								<div className="text-center">
 									<div className="text-2xl font-bold text-green-600">
-										{mockUser.profileCompleteness}%
+										{user.profileCompleteness}%
 									</div>
-									<div className="text-sm text-muted-foreground">
-										{t("complete")}
-									</div>
+									<div className="text-sm text-muted-foreground">Complete</div>
 								</div>
 							</div>
 						</div>

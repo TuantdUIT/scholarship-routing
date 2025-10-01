@@ -19,44 +19,16 @@ import {
 import { Textarea } from "@/core/components/ui/textarea";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { personalInfoDefaults, profileCountries, profileCurrentLevels } from "@/modules/profile/data/profile-mocks";
+import type { PersonalInfo } from "@/modules/profile/data/profile-types";
 
 interface PersonalInfoTabProps {
 	isEditMode: boolean;
 }
 
-const countries = [
-	"Vietnam",
-	"Thailand",
-	"Singapore",
-	"Malaysia",
-	"Indonesia",
-	"Philippines",
-	"India",
-	"China",
-	"South Korea",
-	"Japan",
-	"Other",
-];
-
-const currentLevels = [
-	"Bachelor's Degree",
-	"Master's Degree",
-	"PhD",
-	"Professional Degree",
-];
-
 export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 	const t = useTranslations("profile");
-	const [formData, setFormData] = useState({
-		name: "John Doe",
-		email: "john.doe@example.com",
-		phone: "+84 123 456 789",
-		nationality: "Vietnam",
-		currentLevel: "Master's Degree",
-		dateOfBirth: "1995-06-15",
-		address: "Ho Chi Minh City, Vietnam",
-		bio: "Computer Science graduate student passionate about AI and machine learning research.",
-	});
+	const [formData, setFormData] = useState<PersonalInfo>(() => ({ ...personalInfoDefaults }));
 
 	const updateField = (field: string, value: string) => {
 		setFormData((prev) => ({ ...prev, [field]: value }));
@@ -140,7 +112,7 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 										<SelectValue />
 									</SelectTrigger>
 									<SelectContent>
-										{countries.map((country) => (
+										{profileCountries.map((country) => (
 											<SelectItem key={country} value={country}>
 												{country}
 											</SelectItem>
@@ -165,7 +137,7 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 										<SelectValue />
 									</SelectTrigger>
 									<SelectContent>
-										{currentLevels.map((level) => (
+										{profileCurrentLevels.map((level) => (
 											<SelectItem key={level} value={level}>
 												{level}
 											</SelectItem>

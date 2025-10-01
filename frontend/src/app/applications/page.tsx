@@ -13,154 +13,19 @@ import {
 import { ApplicationKanban } from "@/modules/applications/components/application-kanban";
 import { ApplicationStats } from "@/modules/applications/components/application-stats";
 import { ApplicationTable } from "@/modules/applications/components/application-table";
+import { mockApplicationSummaries } from "@/modules/applications/data/application-mocks";
+import type { ApplicationStatus, ApplicationSummary } from "@/modules/applications/data/application-types";
 import { Plus, Search } from "lucide-react";
 import { useState } from "react";
-
-// Mock application data
-const mockApplications = [
-	{
-		id: "app1",
-		scholarshipId: "s1",
-		scholarshipTitle: "University of Oxford Graduate Scholarship",
-		provider: "University of Oxford",
-		country: "United Kingdom",
-		amount: "Full tuition + £15,000 stipend",
-		deadline: "2024-03-15",
-		status: "in-progress",
-		progress: 65,
-		lastUpdated: "2024-01-15",
-		documents: {
-			required: ["CV", "Transcript", "Personal Statement", "Reference Letters"],
-			uploaded: ["CV", "Transcript"],
-			pending: ["Personal Statement", "Reference Letters"],
-		},
-		timeline: [
-			{ date: "2024-01-10", action: "Application started", type: "info" },
-			{ date: "2024-01-12", action: "CV uploaded", type: "success" },
-			{ date: "2024-01-15", action: "Transcript uploaded", type: "success" },
-		],
-		reminders: [
-			{ date: "2024-02-01", message: "Personal Statement due in 2 weeks" },
-			{ date: "2024-02-15", message: "Reference letters due in 4 weeks" },
-		],
-	},
-	{
-		id: "app2",
-		scholarshipId: "s2",
-		scholarshipTitle: "MIT Graduate Fellowship",
-		provider: "Massachusetts Institute of Technology",
-		country: "United States",
-		amount: "Full tuition + $40,000 stipend",
-		deadline: "2024-02-01",
-		status: "submitted",
-		progress: 100,
-		lastUpdated: "2024-01-20",
-		documents: {
-			required: ["CV", "Transcript", "Research Proposal", "Reference Letters"],
-			uploaded: ["CV", "Transcript", "Research Proposal", "Reference Letters"],
-			pending: [],
-		},
-		timeline: [
-			{ date: "2024-01-05", action: "Application started", type: "info" },
-			{ date: "2024-01-10", action: "All documents uploaded", type: "success" },
-			{ date: "2024-01-20", action: "Application submitted", type: "success" },
-		],
-		reminders: [],
-	},
-	{
-		id: "app3",
-		scholarshipId: "s3",
-		scholarshipTitle: "DAAD Study Scholarship",
-		provider: "German Academic Exchange Service",
-		country: "Germany",
-		amount: "€850/month + tuition coverage",
-		deadline: "2024-04-30",
-		status: "not-started",
-		progress: 0,
-		lastUpdated: "2024-01-08",
-		documents: {
-			required: [
-				"CV",
-				"Transcript",
-				"Motivation Letter",
-				"Language Certificate",
-			],
-			uploaded: [],
-			pending: [
-				"CV",
-				"Transcript",
-				"Motivation Letter",
-				"Language Certificate",
-			],
-		},
-		timeline: [
-			{ date: "2024-01-08", action: "Added to applications", type: "info" },
-		],
-		reminders: [
-			{ date: "2024-02-01", message: "Start preparing application documents" },
-		],
-	},
-	{
-		id: "app4",
-		scholarshipId: "s4",
-		scholarshipTitle: "Cambridge Trust Scholarship",
-		provider: "University of Cambridge",
-		country: "United Kingdom",
-		amount: "Full funding + living costs",
-		deadline: "2024-01-31",
-		status: "interview",
-		progress: 90,
-		lastUpdated: "2024-01-18",
-		documents: {
-			required: ["CV", "Transcript", "Research Proposal", "Reference Letters"],
-			uploaded: ["CV", "Transcript", "Research Proposal", "Reference Letters"],
-			pending: [],
-		},
-		timeline: [
-			{ date: "2024-01-01", action: "Application submitted", type: "success" },
-			{
-				date: "2024-01-18",
-				action: "Interview invitation received",
-				type: "success",
-			},
-		],
-		reminders: [
-			{ date: "2024-01-25", message: "Interview scheduled for January 30th" },
-		],
-	},
-	{
-		id: "app5",
-		scholarshipId: "s5",
-		scholarshipTitle: "Fulbright Scholarship",
-		provider: "Fulbright Commission",
-		country: "United States",
-		amount: "Full funding + research support",
-		deadline: "2024-01-15",
-		status: "result",
-		progress: 100,
-		lastUpdated: "2024-01-22",
-		documents: {
-			required: ["CV", "Transcript", "Project Proposal", "Reference Letters"],
-			uploaded: ["CV", "Transcript", "Project Proposal", "Reference Letters"],
-			pending: [],
-		},
-		timeline: [
-			{ date: "2023-12-01", action: "Application submitted", type: "success" },
-			{ date: "2024-01-10", action: "Interview completed", type: "success" },
-			{ date: "2024-01-22", action: "Acceptance received", type: "success" },
-		],
-		reminders: [],
-	},
-];
 
 import { useTranslations } from "next-intl";
 
 export default function ApplicationsPage() {
 	const t = useTranslations("application");
-	const [applications, setApplications] = useState(mockApplications);
+	const [applications, setApplications] = useState<ApplicationSummary[]>(mockApplicationSummaries);
 	const [viewMode, setViewMode] = useState<"kanban" | "table">("kanban");
 	const [searchQuery, setSearchQuery] = useState("");
-	const [statusFilter, setStatusFilter] = useState("all");
+	const [statusFilter, setStatusFilter] = useState<"all" | ApplicationStatus>("all");
 	const [sortBy, setSortBy] = useState("deadline");
 
 	const filteredApplications = applications.filter((app) => {
@@ -190,7 +55,7 @@ export default function ApplicationsPage() {
 		}
 	});
 
-	const updateApplicationStatus = (appId: string, newStatus: string) => {
+	const updateApplicationStatus = (appId: string, newStatus: ApplicationStatus) => {
 		setApplications((prev) =>
 			prev.map((app) =>
 				app.id === appId
@@ -251,7 +116,10 @@ export default function ApplicationsPage() {
 
 							{/* Filters */}
 							<div className="flex gap-2">
-								<Select value={statusFilter} onValueChange={setStatusFilter}>
+								<Select
+									value={statusFilter}
+									onValueChange={(value) => setStatusFilter(value as "all" | ApplicationStatus)}
+								>
 									<SelectTrigger className="w-40">
 										<SelectValue placeholder={t("status")} />
 									</SelectTrigger>

@@ -20,62 +20,47 @@ import {
 import { useTranslations } from "next-intl";
 import { Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
+import {
+	educationDegreeTypes,
+	educationEntries,
+	educationGpaScales,
+} from "@/modules/profile/data/profile-mocks";
+import type {
+	EducationEntry,
+	EducationStatus,
+} from "@/modules/profile/data/profile-types";
 
 interface EducationTabProps {
 	isEditMode: boolean;
 }
 
-interface Education {
-	id: string;
-	institution: string;
-	degree: string;
-	major: string;
-	gpa: string;
-	gpaScale: string;
-	startDate: string;
-	endDate: string;
-	status: "completed" | "in-progress" | "planned";
-}
-
-const gpaScales = ["4.0", "10.0", "100"];
-const degreeTypes = [
-	"Bachelor's",
-	"Master's",
-	"PhD",
-	"Professional",
-	"Diploma",
-	"Certificate",
-];
+const formatMonth = (value: string) => {
+	if (!value) {
+		return "Not set";
+	}
+	const [year, month] = value.split("-");
+	const yearNum = Number(year);
+	const monthNum = Number(month);
+	if (!year || !month || Number.isNaN(yearNum) || Number.isNaN(monthNum)) {
+		return "Not set";
+	}
+	const date = new Date(yearNum, monthNum - 1);
+	if (Number.isNaN(date.getTime())) {
+		return "Not set";
+	}
+	return date.toLocaleDateString(undefined, { year: "numeric", month: "short" });
+};
 
 export function EducationTab({ isEditMode }: EducationTabProps) {
-	const t = useTranslations("profile");
-	const [educations, setEducations] = useState<Education[]>([
-		{
-			id: "1",
-			institution: "University of Technology",
-			degree: "Bachelor's",
-			major: "Computer Science",
-			gpa: "3.4",
-			gpaScale: "4.0",
-			startDate: "2018-09",
-			endDate: "2022-06",
-			status: "completed",
-		},
-		{
-			id: "2",
-			institution: "National University",
-			degree: "Master's",
-			major: "Data Science",
-			gpa: "3.7",
-			gpaScale: "4.0",
-			startDate: "2022-09",
-			endDate: "2024-06",
-			status: "in-progress",
-		},
-	]);
+	const [educations, setEducations] = useState<EducationEntry[]>(() =>
+		educationEntries.map((education) => ({ ...education }))
+	);
+
+	const gpaScales = educationGpaScales;
+	const degreeTypes = educationDegreeTypes;
 
 	const addEducation = () => {
-		const newEducation: Education = {
+		const newEducation: EducationEntry = {
 			id: Date.now().toString(),
 			institution: "",
 			degree: "",
@@ -86,26 +71,24 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 			endDate: "",
 			status: "planned",
 		};
-		setEducations([...educations, newEducation]);
+		setEducations((prev) => [...prev, newEducation]);
 	};
 
 	const removeEducation = (id: string) => {
-		setEducations(educations.filter((edu) => edu.id !== id));
+		setEducations((prev) => prev.filter((edu) => edu.id !== id));
 	};
 
 	const updateEducation = (
 		id: string,
-		field: keyof Education,
+		field: keyof EducationEntry,
 		value: string,
 	) => {
-		setEducations(
-			educations.map((edu) =>
-				edu.id === id ? { ...edu, [field]: value } : edu,
-			),
+		setEducations((prev) =>
+			prev.map((edu) => (edu.id === id ? { ...edu, [field]: value } : edu)),
 		);
 	};
 
-	const getStatusColor = (status: string) => {
+	const getStatusColor = (status: EducationStatus) => {
 		switch (status) {
 			case "completed":
 				return "default";
@@ -172,11 +155,7 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 										<Input
 											value={education.institution}
 											onChange={(e) =>
-												updateEducation(
-													education.id,
-													"institution",
-													e.target.value,
-												)
+												updateEducation(education.id, "institution", e.target.value)
 											}
 											placeholder={t("university_name")}
 										/>
@@ -218,7 +197,7 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 											onChange={(e) =>
 												updateEducation(education.id, "major", e.target.value)
 											}
-											placeholder={t("computer_science")}
+											placeholder="e.g. Computer Science"
 										/>
 									) : (
 										<div className="p-2 text-sm">{education.major}</div>
@@ -226,58 +205,24 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 								</div>
 
 								<div className="space-y-2">
-									<Label>{t("status")}</Label>
-									{isEditMode ? (
-										<Select
-											value={education.status}
-											onValueChange={(value) =>
-												updateEducation(
-													education.id,
-													"status",
-													value as Education["status"],
-												)
-											}
-										>
-											<SelectTrigger>
-												<SelectValue />
-											</SelectTrigger>
-											<SelectContent>
-												<SelectItem value="completed">
-													{t("completed")}
-												</SelectItem>
-												<SelectItem value="in-progress">
-													{t("in_progress")}
-												</SelectItem>
-												<SelectItem value="planned">{t("planned")}</SelectItem>
-											</SelectContent>
-										</Select>
-									) : (
-										<div className="p-2 text-sm capitalize">
-											{education.status.replace("-", " ")}
-										</div>
-									)}
-								</div>
-
-								<div className="space-y-2">
 									<Label>{t("gpa")}</Label>
 									{isEditMode ? (
-										<div className="flex space-x-2">
+										<div className="flex items-center space-x-2">
 											<Input
 												value={education.gpa}
 												onChange={(e) =>
 													updateEducation(education.id, "gpa", e.target.value)
-												}
-												placeholder="3.50"
-												className="flex-1"
+											}
+												placeholder="3.5"
 											/>
 											<Select
 												value={education.gpaScale}
 												onValueChange={(value) =>
 													updateEducation(education.id, "gpaScale", value)
-												}
+											}
 											>
-												<SelectTrigger className="w-20">
-													<SelectValue />
+												<SelectTrigger className="w-24">
+													<SelectValue placeholder="Scale" />
 												</SelectTrigger>
 												<SelectContent>
 													{gpaScales.map((scale) => (
@@ -296,37 +241,39 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 								</div>
 
 								<div className="space-y-2">
-									<Label>{t("duration")}</Label>
+									<Label>Start Date</Label>
 									{isEditMode ? (
-										<div className="flex space-x-2">
-											<Input
-												type="month"
-												value={education.startDate}
-												onChange={(e) =>
-													updateEducation(
-														education.id,
-														"startDate",
-														e.target.value,
-													)
-												}
-												className="flex-1"
-											/>
-											<Input
-												type="month"
-												value={education.endDate}
-												onChange={(e) =>
-													updateEducation(
-														education.id,
-														"endDate",
-														e.target.value,
-													)
-												}
-												className="flex-1"
-											/>
-										</div>
+										<Input
+											type="month"
+											value={education.startDate}
+											onChange={(e) =>
+												updateEducation(education.id, "startDate", e.target.value)
+											}
+										/>
 									) : (
 										<div className="p-2 text-sm">
-											{education.startDate} - {education.endDate || t("present")}
+											{formatMonth(education.startDate)}
+										</div>
+									)}
+								</div>
+
+								<div className="space-y-2">
+									<Label>End Date</Label>
+									{isEditMode ? (
+										<Input
+											type="month"
+											value={education.endDate}
+											onChange={(e) =>
+												updateEducation(education.id, "endDate", e.target.value)
+											}
+										/>
+									) : (
+										<div className="p-2 text-sm">
+											{education.endDate
+													? formatMonth(education.endDate)
+												: education.status === "in-progress"
+													? "Present"
+												: "Not set"}
 										</div>
 									)}
 								</div>

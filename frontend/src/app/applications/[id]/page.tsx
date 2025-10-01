@@ -19,6 +19,8 @@ import { Textarea } from "@/core/components/ui/textarea";
 import { ApplicationDocuments } from "@/modules/applications/components/application-documents";
 import { ApplicationReminders } from "@/modules/applications/components/application-reminders";
 import { ApplicationTimeline } from "@/modules/applications/components/application-timeline";
+import { mockApplicationDetailMap } from "@/modules/applications/data/application-mocks";
+import type { ApplicationDetail, ApplicationStatus } from "@/modules/applications/data/application-types";
 import {
 	ArrowLeft,
 	Bell,
@@ -37,99 +39,11 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 
-// Mock application data - in real app this would come from API
-const mockApplicationData = {
-	app1: {
-		id: "app1",
-		scholarshipId: "s1",
-		scholarshipTitle: "University of Oxford Graduate Scholarship",
-		provider: "University of Oxford",
-		country: "United Kingdom",
-		amount: "Full tuition + £15,000 stipend",
-		deadline: "2024-03-15",
-		status: "in-progress",
-		progress: 65,
-		lastUpdated: "2024-01-15",
-		documents: {
-			required: [
-				{
-					name: "CV/Resume",
-					status: "uploaded",
-					uploadDate: "2024-01-12",
-					fileSize: "245 KB",
-					fileName: "John_Doe_CV.pdf",
-				},
-				{
-					name: "Academic Transcripts",
-					status: "uploaded",
-					uploadDate: "2024-01-15",
-					fileSize: "1.2 MB",
-					fileName: "Transcripts_Official.pdf",
-				},
-				{
-					name: "Personal Statement",
-					status: "pending",
-					uploadDate: null,
-					fileSize: null,
-					fileName: null,
-				},
-				{
-					name: "Reference Letters",
-					status: "pending",
-					uploadDate: null,
-					fileSize: null,
-					fileName: null,
-				},
-			],
-		},
-		timeline: [
-			{
-				date: "2024-01-10",
-				action: "Application started",
-				type: "info",
-				description: "Added scholarship to applications list",
-			},
-			{
-				date: "2024-01-12",
-				action: "CV uploaded",
-				type: "success",
-				description: "Successfully uploaded CV document",
-			},
-			{
-				date: "2024-01-15",
-				action: "Transcript uploaded",
-				type: "success",
-				description: "Official transcripts uploaded and verified",
-			},
-		],
-		reminders: [
-			{
-				id: "r1",
-				date: "2024-02-01",
-				message: "Personal Statement due in 2 weeks",
-				type: "deadline",
-				isActive: true,
-			},
-			{
-				id: "r2",
-				date: "2024-02-15",
-				message: "Reference letters due in 4 weeks",
-				type: "deadline",
-				isActive: true,
-			},
-		],
-		notes:
-			"Focus on research experience in personal statement. Contact Prof. Smith for reference letter.",
-		applicationUrl: "https://oxford.edu/apply/12345",
-	},
-};
-
 export default function ApplicationDetailPage() {
 	const t = useTranslations("application");
 	const params = useParams();
 	const applicationId = params.id as string;
-	const application =
-		mockApplicationData[applicationId as keyof typeof mockApplicationData];
+	const application = mockApplicationDetailMap[applicationId] as ApplicationDetail | undefined;
 
 	const [notes, setNotes] = useState(application?.notes || "");
 	const [activeTab, setActiveTab] = useState("overview");
@@ -166,7 +80,7 @@ export default function ApplicationDetailPage() {
 	const isUrgent = daysLeft <= 30 && daysLeft > 0;
 	const isExpired = daysLeft < 0;
 
-	const getStatusBadge = (status: string) => {
+	const getStatusBadge = (status: ApplicationStatus) => {
 		const statusConfig = {
 			"not-started": { label: t("not_started"), variant: "outline" as const },
 			"in-progress": { label: t("in_progress"), variant: "secondary" as const },

@@ -20,16 +20,12 @@ import {
 	Upload,
 } from "lucide-react";
 import { useState } from "react";
+import { parsedCVFields } from "@/modules/profile/data/profile-mocks";
+import type { ParsedCVField } from "@/modules/profile/data/profile-types";
 
 interface CVUploadModalProps {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-}
-
-interface ParsedField {
-	field: string;
-	value: string;
-	confidence: number;
 }
 
 export function CVUploadModal({ open, onOpenChange }: CVUploadModalProps) {
@@ -37,29 +33,8 @@ export function CVUploadModal({ open, onOpenChange }: CVUploadModalProps) {
 		"idle" | "uploading" | "parsing" | "complete" | "error"
 	>("idle");
 	const [uploadProgress, setUploadProgress] = useState(0);
-	const [parsedFields, setParsedFields] = useState<ParsedField[]>([]);
+	const [parsedFields, setParsedFields] = useState<ParsedCVField[]>([]);
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-	const mockParsedFields: ParsedField[] = [
-		{ field: "Name", value: "John Doe", confidence: 95 },
-		{ field: "Email", value: "john.doe@example.com", confidence: 98 },
-		{ field: "Phone", value: "+84 123 456 789", confidence: 90 },
-		{
-			field: "Education",
-			value: "Master's in Computer Science",
-			confidence: 92,
-		},
-		{
-			field: "Experience",
-			value: "3 years software development",
-			confidence: 88,
-		},
-		{
-			field: "Skills",
-			value: "Python, JavaScript, Machine Learning",
-			confidence: 85,
-		},
-	];
 
 	const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
@@ -90,7 +65,7 @@ export function CVUploadModal({ open, onOpenChange }: CVUploadModalProps) {
 	const simulateParsing = async () => {
 		// Simulate parsing delay
 		setTimeout(() => {
-			setParsedFields(mockParsedFields);
+			setParsedFields(parsedCVFields);
 			setUploadStatus("complete");
 		}, 2000);
 	};
