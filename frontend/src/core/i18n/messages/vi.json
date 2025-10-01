@@ -9,7 +9,14 @@
     "vietnamese": "Tiếng Việt",
     "english": "English",
     "user_name": "John Doe",
-    "user_email": "john.doe@example.com"
+    "user_email": "john.doe@example.com",
+    "login": "Đăng nhập",
+    "get_started": "Đăng ký",
+    "notifications": "Thông báo",
+    "new_scholarship": "Học bổng phù hợp mới",
+    "new_scholarship_description": "Chúng tôi tìm thấy một suất học bổng phù hợp với hồ sơ của bạn.",
+    "application_update": "Cập nhật hồ sơ",
+    "application_update_description": "Trạng thái hồ sơ của bạn đã thay đổi."
   },
   "home": {
     "badge": "Cánh cửa đến với giáo dục toàn cầu",
@@ -395,7 +402,16 @@
     "ielts": "IELTS",
     "toefl": "TOEFL",
     "gre": "GRE",
-    "gmat": "GMAT"
+    "gmat": "GMAT",
+    "login_required_message": "Vui lòng đăng nhập để tiếp tục đến {destination}.",
+    "already_have_account": "Bạn đã có tài khoản?",
+    "login_cta": "Đăng nhập",
+    "login_dialog_title": "Chào mừng trở lại",
+    "login_dialog_description": "Hãy đăng nhập để truy cập hồ sơ đã lưu và tiếp tục hành trình của bạn.",
+    "login_form_name_label": "Họ và tên",
+    "login_form_email_label": "Email",
+    "login_cancel": "Hủy",
+    "login_submit": "Đăng nhập"
   },
   "profile": {
     "complete": "Hoàn thành",

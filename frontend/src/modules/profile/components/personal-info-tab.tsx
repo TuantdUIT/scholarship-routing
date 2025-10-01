@@ -26,6 +26,24 @@ interface PersonalInfoTabProps {
 	isEditMode: boolean;
 }
 
+const formatDateOfBirth = (value: string) => {
+	if (!value) {
+		return value;
+	}
+
+	const parts = value.split("-");
+	if (parts.length !== 3) {
+		return value;
+	}
+
+	const [year, month, day] = parts;
+	if (!year || !month || !day) {
+		return value;
+	}
+
+	return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
+};
+
 export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 	const t = useTranslations("profile");
 	const [formData, setFormData] = useState<PersonalInfo>(() => ({ ...personalInfoDefaults }));
@@ -96,7 +114,7 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 								/>
 							) : (
 								<div className="p-2 text-sm">
-									{new Date(formData.dateOfBirth).toLocaleDateString()}
+									{formatDateOfBirth(formData.dateOfBirth)}
 								</div>
 							)}
 						</div>
@@ -182,3 +200,6 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 		</div>
 	);
 }
+
+
+

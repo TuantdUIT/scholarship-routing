@@ -1,4 +1,5 @@
 import { Header } from "@/core/components/layout/header";
+import { AuthProvider } from "@/core/providers/auth-provider";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro } from "next/font/google";
@@ -27,16 +28,19 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={beVietnamPro.className}>
-				<NextIntlClientProvider>
-					<div className="min-h-screen bg-background">
-						<Suspense fallback={<div>Loading...</div>}>
-							<Header />
-							<main className="flex-1">{children}</main>
-						</Suspense>
-					</div>
-					<Analytics />
-				</NextIntlClientProvider>
+				<AuthProvider>
+					<NextIntlClientProvider>
+						<div className="min-h-screen bg-background">
+							<Suspense fallback={<div>Loading...</div>}>
+								<Header />
+								<main className="flex-1">{children}</main>
+							</Suspense>
+						</div>
+						<Analytics />
+					</NextIntlClientProvider>
+				</AuthProvider>
 			</body>
 		</html>
 	);
 }
+

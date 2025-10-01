@@ -52,6 +52,7 @@ const formatMonth = (value: string) => {
 };
 
 export function EducationTab({ isEditMode }: EducationTabProps) {
+	const t = useTranslations("profile");
 	const [educations, setEducations] = useState<EducationEntry[]>(() =>
 		educationEntries.map((education) => ({ ...education }))
 	);
@@ -285,3 +286,4 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 		</div>
 	);
 }
+

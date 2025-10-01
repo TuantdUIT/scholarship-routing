@@ -9,7 +9,14 @@
     "vietnamese": "Tiếng Việt",
     "english": "English",
     "user_name": "John Doe",
-    "user_email": "john.doe@example.com"
+    "user_email": "john.doe@example.com",
+    "login": "Log In",
+    "get_started": "Register",
+    "notifications": "Notifications",
+    "new_scholarship": "New Scholarship Match",
+    "new_scholarship_description": "We found a scholarship that matches your profile.",
+    "application_update": "Application Update",
+    "application_update_description": "Your application status has changed."
   },
   "home": {
     "badge": "Your Gateway to Global Education",
@@ -394,7 +401,16 @@
     "ielts": "IELTS",
     "toefl": "TOEFL",
     "gre": "GRE",
-    "gmat": "GMAT"
+    "gmat": "GMAT",
+    "login_required_message": "Please log in to continue to {destination}.",
+    "already_have_account": "Already have an account?",
+    "login_cta": "Log in",
+    "login_dialog_title": "Welcome back",
+    "login_dialog_description": "Log in with your details to access your saved profile and continue where you left off.",
+    "login_form_name_label": "Full name",
+    "login_form_email_label": "Email",
+    "login_cancel": "Cancel",
+    "login_submit": "Log in"
   },
   "profile": {
     "complete": "Complete",
