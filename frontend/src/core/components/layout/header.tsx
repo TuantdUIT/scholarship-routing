@@ -49,6 +49,15 @@ export function Header() {
 
   const navigationItems = useMemo(() => buildNavigationItems(t), [t]);
 
+  const isRoutePublic = (href: string) => href.startsWith("/scholarships") || href === "/";
+
+  const getNavigationHref = (href: string) => {
+    if (isRoutePublic(href)) {
+      return href;
+    }
+    return isAuthenticated ? href : `/onboarding?redirect=${encodeURIComponent(href)}`;
+  };
+
   const loginHref = "/onboarding?mode=login";
   const registerHref = "/onboarding";
 
@@ -61,8 +70,6 @@ export function Header() {
     router.push("/");
   };
 
-  const getNavigationHref = (href: string) =>
-    isAuthenticated ? href : `/onboarding?redirect=${encodeURIComponent(href)}`;
 
   const userInitials = user?.name
     ?.split(" ")

@@ -15,14 +15,14 @@ export interface UserProfileSummary {
 }
 
 export interface PersonalInfo {
-  name: string;
-  email: string;
-  phone: string;
-  nationality: string;
-  currentLevel: string;
-  dateOfBirth: string;
-  address: string;
-  bio: string;
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+  nationality: string | null;
+  currentLevel: string | null;
+  dateOfBirth: string | null;
+  address: string | null;
+  bio: string | null;
 }
 
 export type EducationStatus = "completed" | "in-progress" | "planned";
@@ -148,3 +148,4 @@ export interface ParsedCVField {
   value: string;
   confidence: number;
 }
+

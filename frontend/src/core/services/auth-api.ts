@@ -1,4 +1,4 @@
-﻿import axios from "axios";
+import axios from "axios";
 
 const AUTH_BASE_URL = "http://159.223.60.221:8000/api/v1/auth";
 
@@ -45,10 +45,57 @@ export interface VerifyPayload {
 
 export type VerifyResponse = Record<string, unknown>;
 
-export type UserProfile = Record<string, unknown> | null;
+export interface UserProfile {
+  uid: string;
+  email: string;
+  display_name?: string | null;
+  name?: string | null;
+  gender?: string | null;
+  birth_date?: string | null;
+  gpa_range_4?: number | null;
+  desired_scholarship_type?: string[] | null;
+  desired_countries?: string[] | null;
+  desired_funding_level?: string[] | null;
+  desired_application_mode?: string[] | null;
+  desired_application_month?: number | null;
+  desired_field_of_study?: string[] | null;
+  notes?: string | null;
+  degree?: string | null;
+  field_of_study?: string | null;
+  language_certificates?: string | null;
+  academic_certificates?: string | null;
+  academic_awards?: string | null;
+  publications?: string | null;
+  years_of_experience?: number | null;
+  total_working_hours?: number | null;
+  tags?: string[] | null;
+  special_things?: string | null;
+}
+
+export type UserProfileResponse = UserProfile | null;
 
 export interface UpdateProfilePayload {
-  [key: string]: unknown;
+  name?: string;
+  gender?: string;
+  birth_date?: string;
+  gpa_range_4?: number;
+  desired_scholarship_type?: string[];
+  desired_countries?: string[];
+  desired_funding_level?: string[];
+  desired_application_mode?: string[];
+  desired_application_month?: number;
+  desired_field_of_study?: string[];
+  notes?: string;
+  degree?: string;
+  field_of_study?: string;
+  language_certificates?: string;
+  academic_certificates?: string;
+  academic_awards?: string;
+  publications?: string;
+  years_of_experience?: number;
+  total_working_hours?: number;
+  tags?: string[];
+  special_things?: string;
 }
 
 export const authApi = {
@@ -63,7 +110,7 @@ export const authApi = {
   },
 
   async getProfile(uid: string) {
-    const response = await axios.get<UserProfile>(`${PROFILE_URL}/${uid}`);
+    const response = await axios.get<UserProfileResponse>(`${PROFILE_URL}/${uid}`);
     return response.data;
   },
 
