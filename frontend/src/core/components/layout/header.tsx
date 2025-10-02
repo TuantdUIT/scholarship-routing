@@ -44,7 +44,7 @@ const buildNavigationItems = (t: ReturnType<typeof useTranslations>) => [
 export function Header() {
   const t = useTranslations();
   const router = useRouter();
-  const { isAuthenticated, user, signOut } = useAuth();
+  const { isAuthenticated, user, signOut, isLoading } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigationItems = useMemo(() => buildNavigationItems(t), [t]);
@@ -53,6 +53,11 @@ export function Header() {
 
   const getNavigationHref = (href: string) => {
     if (isRoutePublic(href)) {
+      return href;
+    }
+    // During loading, always return the protected route to avoid hydration mismatch
+    // The actual redirect will be handled by middleware or route protection
+    if (isLoading) {
       return href;
     }
     return isAuthenticated ? href : `/onboarding?redirect=${encodeURIComponent(href)}`;
@@ -119,7 +124,13 @@ export function Header() {
           </DropdownMenu>
           <ThemeToggle />
 
-          {isAuthenticated ? (
+          {isLoading ? (
+            // Show loading skeleton to prevent hydration mismatch
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-full bg-muted animate-pulse" />
+              <div className="h-4 w-16 bg-muted rounded animate-pulse hidden sm:block" />
+            </div>
+          ) : isAuthenticated ? (
             <>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -152,7 +163,7 @@ export function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="flex items-center gap-2">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={user?.avatar} alt={user?.name ?? "User"} />
+                      <AvatarImage src={user?.avatar || undefined} alt={user?.name ?? "User"} />
                       <AvatarFallback>{userInitials}</AvatarFallback>
                     </Avatar>
                     <span className="hidden text-sm font-medium sm:inline">
@@ -233,7 +244,7 @@ export function Header() {
                 <span>{item.label}</span>
               </Link>
             ))}
-            {!isAuthenticated && (
+            {!isLoading && !isAuthenticated && (
               <div className="flex flex-col gap-2 pt-2">
                 <Button asChild variant="outline" onClick={closeMobileMenu}>
                   <Link href={loginHref}>{t("header.login")}</Link>

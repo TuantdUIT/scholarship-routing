@@ -5,6 +5,7 @@ import {
   AUTH_COOKIE_MAX_AGE,
   AUTH_STORAGE_KEY,
 } from "@/core/config/auth";
+import type { UserProfile } from "@/core/services/auth-api";
 
 export interface AuthUser {
   id: string;
@@ -12,7 +13,7 @@ export interface AuthUser {
   email?: string | null;
   avatar?: string | null;
   token?: string;
-  profile?: Record<string, unknown> | null;
+  profile?: UserProfile | null;
 }
 
 const isBrowser = typeof window !== "undefined";

@@ -303,6 +303,8 @@ export default function ProfilePage() {
       major,
       gpa,
       gpaScale: gpa !== null ? 4 : null,
+      ielts: null, // TODO: Add IELTS score from test scores
+      gre: null, // TODO: Add GRE score from test scores
       avatar,
       matchScore: 0,
       profileCompleteness: completeness,

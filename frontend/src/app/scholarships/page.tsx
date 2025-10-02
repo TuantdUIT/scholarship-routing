@@ -15,115 +15,11 @@ import {
 import { ScholarshipCard } from "@/modules/scholarships/components/scholarship-card";
 import { ScholarshipFilters } from "@/modules/scholarships/components/scholarship-filters";
 import { ScholarshipSort } from "@/modules/scholarships/components/scholarship-sort";
-import { Filter, Search } from "lucide-react";
+import { Filter, Search, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-
-// Mock scholarship data
-const mockScholarships = [
-	{
-		id: "s1",
-		title: "University of Oxford Graduate Scholarship",
-		provider: "University of Oxford",
-		country: "Vương quốc Anh",
-		degreeLevel: "Thạc sĩ",
-		amount: "Toàn phần học phí + £15,000 sinh hoạt phí",
-		deadline: "2025-10-19",
-		hardConditions: {
-			minGpa: 3.5,
-			minIelts: 7.0,
-			requiredField: ["Computer Science", "Engineering"],
-			allowedNationalities: ["Vietnam", "Thailand", "Malaysia"],
-		},
-		softWeights: {
-			gpa: 0.3,
-			publication: 0.3,
-			experience: 0.2,
-			extracurricular: 0.2,
-		},
-		requiredDocuments: [
-			"CV",
-			"Bảng điểm",
-			"Bài luận cá nhân",
-			"Thư giới thiệu",
-		],
-		link: "https://oxford.edu/scholarships",
-		matchScore: 85,
-		hardConditionsPassed: true,
-		failedConditions: [],
-		description:
-			"Học bổng danh giá cho sinh viên sau đại học xuất sắc trong lĩnh vực STEM.",
-		tags: ["STEM", "Nghiên cứu", "Tài trợ toàn phần"],
-	},
-	{
-		id: "s2",
-		title: "MIT Graduate Fellowship",
-		provider: "Massachusetts Institute of Technology",
-		country: "Hoa Kỳ",
-		degreeLevel: "Tiến sĩ",
-		amount: "Toàn phần học phí + $40,000 sinh hoạt phí",
-		deadline: "2026-03-22",
-		hardConditions: {
-			minGpa: 3.7,
-			minIelts: 7.5,
-			requiredField: ["Computer Science", "Data Science", "AI"],
-			allowedNationalities: ["Any"],
-		},
-		softWeights: {
-			gpa: 0.25,
-			publication: 0.4,
-			experience: 0.2,
-			extracurricular: 0.15,
-		},
-		requiredDocuments: [
-			"CV",
-			"Bảng điểm",
-			"Đề cương nghiên cứu",
-			"Thư giới thiệu",
-		],
-		link: "https://mit.edu/fellowships",
-		matchScore: 72,
-		hardConditionsPassed: false,
-		failedConditions: ["GPA 3.4 < tối thiểu 3.7"],
-		description:
-			"Học bổng ưu tú cho nghiên cứu sinh tiến sĩ trong lĩnh vực công nghệ tiên tiến.",
-		tags: ["PhD", "Nghiên cứu", "Công nghệ"],
-	},
-	{
-		id: "s3",
-		title: "DAAD Study Scholarship",
-		provider: "German Academic Exchange Service",
-		country: "Đức",
-		degreeLevel: "Thạc sĩ",
-		amount: "€850/tháng + miễn học phí",
-		deadline: "2025-07-05",
-		hardConditions: {
-			minGpa: 3.0,
-			minIelts: 6.5,
-			requiredField: ["Any"],
-			allowedNationalities: ["Vietnam", "Thailand", "Indonesia"],
-		},
-		softWeights: {
-			gpa: 0.2,
-			publication: 0.2,
-			experience: 0.3,
-			extracurricular: 0.3,
-		},
-		requiredDocuments: [
-			"CV",
-			"Bảng điểm",
-			"Thư động lực",
-			"Chứng chỉ ngôn ngữ",
-		],
-		link: "https://daad.de/scholarships",
-		matchScore: 91,
-		hardConditionsPassed: true,
-		failedConditions: [],
-		description:
-			"Chương trình học bổng toàn diện cho sinh viên quốc tế tại Đức.",
-		tags: ["Châu Âu", "Sinh hoạt phí", "Trao đổi văn hóa"],
-	},
-];
+import { useState, useEffect, useCallback } from "react";
+import { ScholarshipApi, UIScholarship } from "@/core/services/scholarship-api";
+import { useToast } from "@/core/hooks/use-toast";
 
 interface ScholarFilter {
 	countries: string[];
@@ -138,10 +34,16 @@ interface ScholarFilter {
 
 export default function ScholarshipsPage() {
 	const t = useTranslations("scholarships_page");
+	const { toast } = useToast();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [showFilters, setShowFilters] = useState(false);
 	const [sortBy, setSortBy] = useState("match-score");
-	const [scholarships, setScholarships] = useState(mockScholarships);
+	const [scholarships, setScholarships] = useState<UIScholarship[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [loadingMore, setLoadingMore] = useState(false);
+	const [hasMore, setHasMore] = useState(true);
+	const [total, setTotal] = useState(0);
+	const [offset, setOffset] = useState(0);
 	const [filters, setFilters] = useState<ScholarFilter>({
 		countries: [],
 		degreeLevel: "",
@@ -153,16 +55,78 @@ export default function ScholarshipsPage() {
 		onlyPassed: false,
 	});
 
-	const filteredScholarships = scholarships.filter((scholarship) => {
-		// Search query filter
-		if (searchQuery) {
-			const query = searchQuery.toLowerCase();
-			const searchableText =
-				`${scholarship.title} ${scholarship.provider} ${scholarship.country} ${scholarship.description}`.toLowerCase();
-			if (!searchableText.includes(query)) return false;
-		}
+	const PAGE_SIZE = 10;
 
-		// Apply other filters here
+	// Load initial scholarships
+	const loadScholarships = useCallback(async (resetOffset = false) => {
+		try {
+			setLoading(resetOffset);
+			const currentOffset = resetOffset ? 0 : offset;
+			
+			let response;
+			if (searchQuery.trim()) {
+				// Use search API when there's a search query
+				response = await ScholarshipApi.searchScholarships({
+					q: searchQuery.trim(),
+					size: PAGE_SIZE,
+					offset: currentOffset,
+					collection: "scholarships",
+				});
+			} else {
+				// Use filter API for default view (latest scholarships)
+				response = await ScholarshipApi.getLatestScholarships(PAGE_SIZE, currentOffset);
+			}
+
+			const transformedData = ScholarshipApi.transformResponseToUI(response);
+			
+			if (resetOffset) {
+				setScholarships(transformedData.scholarships);
+				setOffset(PAGE_SIZE);
+			} else {
+				setScholarships(prev => [...prev, ...transformedData.scholarships]);
+				setOffset(prev => prev + PAGE_SIZE);
+			}
+			
+			setTotal(transformedData.total);
+			setHasMore(transformedData.scholarships.length === PAGE_SIZE && (currentOffset + PAGE_SIZE) < transformedData.total);
+		} catch (error) {
+			console.error("Error loading scholarships:", error);
+			toast({
+				variant: "destructive",
+				title: "Lỗi tải dữ liệu",
+				description: "Không thể tải danh sách học bổng. Vui lòng thử lại.",
+			});
+		} finally {
+			setLoading(false);
+			setLoadingMore(false);
+		}
+	}, [searchQuery, offset, toast]);
+
+	// Load more scholarships
+	const loadMoreScholarships = async () => {
+		if (loadingMore || !hasMore) return;
+		setLoadingMore(true);
+		await loadScholarships(false);
+	};
+
+	// Search with debounce
+	useEffect(() => {
+		const timeoutId = setTimeout(() => {
+			setOffset(0);
+			loadScholarships(true);
+		}, 500);
+
+		return () => clearTimeout(timeoutId);
+	}, [searchQuery]);
+
+	// Initial load
+	useEffect(() => {
+		loadScholarships(true);
+	}, []);
+
+	// Apply client-side filters and sorting
+	const filteredScholarships = scholarships.filter((scholarship) => {
+		// Apply filters here (client-side filtering on already loaded data)
 		if (filters.onlyPassed && !scholarship.hardConditionsPassed) return false;
 		if (filters.degreeLevel && scholarship.degreeLevel !== filters.degreeLevel)
 			return false;
@@ -263,43 +227,47 @@ export default function ScholarshipsPage() {
 							</div>
 
 							{/* Results Summary */}
-							<div className="space-y-4">
-								<div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-muted-foreground">
-									<div className="flex flex-wrap items-center gap-2 sm:gap-4">
-										<span>
-											{t("scholarships_found", { totalCount: totalCount })}
-										</span>
-										<Separator
-											orientation="vertical"
-											className="h-4 hidden sm:block"
-										/>
-										<span className="text-green-600">
-											{t("match_your_profile", { passedCount: passedCount })}
-										</span>
-										<Separator
-											orientation="vertical"
-											className="h-4 hidden sm:block"
-										/>
-										<span>
-											{t("need_improvement", {
-												improvementCount: totalCount - passedCount,
-											})}
-										</span>
+							{!loading && (
+								<div className="space-y-4">
+									<div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-muted-foreground">
+										<div className="flex flex-wrap items-center gap-2 sm:gap-4">
+											<span>
+												{t("scholarships_found", { totalCount: total })}
+											</span>
+											<Separator
+												orientation="vertical"
+												className="h-4 hidden sm:block"
+											/>
+											<span className="text-green-600">
+												{t("match_your_profile", { passedCount: passedCount })}
+											</span>
+											<Separator
+												orientation="vertical"
+												className="h-4 hidden sm:block"
+											/>
+											<span>
+												{t("need_improvement", {
+													improvementCount: totalCount - passedCount,
+												})}
+											</span>
+										</div>
 									</div>
+									{totalCount > 0 && (
+										<div className="flex items-center space-x-2">
+											<span className="text-sm text-muted-foreground">
+												{t("match_rate")}
+											</span>
+											<Progress
+												value={(passedCount / totalCount) * 100}
+												className="flex-1 sm:w-20 h-2"
+											/>
+											<span className="text-sm font-medium">
+												{Math.round((passedCount / totalCount) * 100)}%
+											</span>
+										</div>
+									)}
 								</div>
-								<div className="flex items-center space-x-2">
-									<span className="text-sm text-muted-foreground">
-										{t("match_rate")}
-									</span>
-									<Progress
-										value={(passedCount / totalCount) * 100}
-										className="flex-1 sm:w-20 h-2"
-									/>
-									<span className="text-sm font-medium">
-										{Math.round((passedCount / totalCount) * 100)}%
-									</span>
-								</div>
-							</div>
+							)}
 						</div>
 					</CardContent>
 				</Card>
@@ -316,7 +284,12 @@ export default function ScholarshipsPage() {
 
 					{/* Results */}
 					<div className="flex-1 min-w-0">
-						{sortedScholarships.length === 0 ? (
+						{loading ? (
+							<div className="flex items-center justify-center py-12">
+								<Loader2 className="h-8 w-8 animate-spin" />
+								<span className="ml-2">Đang tải học bổng...</span>
+							</div>
+						) : sortedScholarships.length === 0 ? (
 							<Card className="text-center py-12">
 								<CardContent>
 									<Search className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
@@ -329,7 +302,8 @@ export default function ScholarshipsPage() {
 									<Button
 										variant="outline"
 										className="min-h-[44px] bg-transparent"
-										onClick={() =>
+										onClick={() => {
+											setSearchQuery("");
 											setFilters({
 												countries: [],
 												degreeLevel: "",
@@ -339,8 +313,8 @@ export default function ScholarshipsPage() {
 												fields: [],
 												deadlineRange: "",
 												onlyPassed: false,
-											})
-										}
+											});
+										}}
 									>
 										{t("clear_all_filters")}
 									</Button>
@@ -354,6 +328,34 @@ export default function ScholarshipsPage() {
 										scholarship={scholarship}
 									/>
 								))}
+								
+								{/* Show More Button */}
+								{hasMore && (
+									<div className="flex justify-center pt-4">
+										<Button
+											onClick={loadMoreScholarships}
+											disabled={loadingMore}
+											variant="outline"
+											className="min-h-[44px] bg-transparent"
+										>
+											{loadingMore ? (
+												<>
+													<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+													Đang tải...
+												</>
+											) : (
+												"Xem thêm"
+											)}
+										</Button>
+									</div>
+								)}
+								
+								{/* End of results indicator */}
+								{!hasMore && scholarships.length > 0 && (
+									<div className="text-center py-4 text-sm text-muted-foreground">
+										Đã hiển thị tất cả {total} học bổng
+									</div>
+								)}
 							</div>
 						)}
 					</div>

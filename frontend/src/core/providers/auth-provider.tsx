@@ -18,7 +18,7 @@ import {
   type User as FirebaseUser,
 } from "firebase/auth";
 
-import { authApi } from "@/core/services/auth-api";
+import { authApi, type UserProfile } from "@/core/services/auth-api";
 import { firebaseAuth } from "@/core/services/firebase-client";
 import {
   type AuthUser,
@@ -39,7 +39,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 const deriveDisplayName = (
   firebaseUser: FirebaseUser,
-  profile: Record<string, unknown> | null,
+  profile: UserProfile | null,
 ): string | null => {
   if (firebaseUser.displayName) {
     return firebaseUser.displayName;
@@ -53,7 +53,7 @@ const deriveDisplayName = (
 
 const deriveEmail = (
   firebaseUser: FirebaseUser,
-  profile: Record<string, unknown> | null,
+  profile: UserProfile | null,
 ): string | null => {
   if (firebaseUser.email) {
     return firebaseUser.email;
@@ -63,8 +63,10 @@ const deriveEmail = (
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<AuthUser | null>(userService.getUser());
+  // Initialize with null user and loading=true to avoid hydration mismatch
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const syncUser = useCallback(async (firebaseUser: FirebaseUser | null) => {
     if (!firebaseUser) {
@@ -77,7 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const token = await firebaseUser.getIdToken();
       await authApi.verify({ id_token: token });
 
-      let profile: Record<string, unknown> | null = null;
+      let profile: UserProfile | null = null;
       try {
         profile = await authApi.getProfile(firebaseUser.uid);
       } catch (profileError) {
@@ -101,6 +103,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       userService.clearUser();
       setUser(null);
       return null;
+    }
+  }, []);
+
+  // Handle client-side hydration
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Load user from storage after hydration
+      const storedUser = userService.getUser();
+      setUser(storedUser);
+      setIsHydrated(true);
     }
   }, []);
 
