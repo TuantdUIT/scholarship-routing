@@ -18,20 +18,48 @@ import {
 } from "@/core/components/ui/select";
 import { Textarea } from "@/core/components/ui/textarea";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-import { personalInfoDefaults, profileCountries, profileCurrentLevels } from "@/modules/profile/data/profile-mocks";
+import { profileCountries, profileCurrentLevels } from "@/modules/profile/data/profile-mocks";
 import type { PersonalInfo } from "@/modules/profile/data/profile-types";
 
 interface PersonalInfoTabProps {
 	isEditMode: boolean;
+	data: PersonalInfo;
+	onChange: (update: Partial<PersonalInfo>) => void;
+	isSaving?: boolean;
 }
 
-export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
-	const t = useTranslations("profile");
-	const [formData, setFormData] = useState<PersonalInfo>(() => ({ ...personalInfoDefaults }));
+const formatDateOfBirth = (value?: string | null) => {
+	if (!value) {
+		return "";
+	}
 
-	const updateField = (field: string, value: string) => {
-		setFormData((prev) => ({ ...prev, [field]: value }));
+	const parts = value.split("-");
+	if (parts.length !== 3) {
+		return value;
+	}
+
+	const [year, month, day] = parts;
+	if (!year || !month || !day) {
+		return value;
+	}
+
+	return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
+};
+
+const displayValue = (value?: string | null) => (value && value.trim().length > 0 ? value : "-");
+
+const toInputValue = (value?: string | null) => value ?? "";
+
+const toNullable = (value: string) => {
+	const trimmed = value.trim();
+	return trimmed.length > 0 ? trimmed : null;
+};
+
+export function PersonalInfoTab({ isEditMode, data, onChange, isSaving = false }: PersonalInfoTabProps) {
+	const t = useTranslations("profile");
+
+	const updateField = (field: keyof PersonalInfo, value: string) => {
+		onChange({ [field]: toNullable(value) } as Partial<PersonalInfo>);
 	};
 
 	return (
@@ -50,11 +78,12 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 							{isEditMode ? (
 								<Input
 									id="name"
-									value={formData.name}
+									value={toInputValue(data.name)}
 									onChange={(e) => updateField("name", e.target.value)}
+									disabled={isSaving}
 								/>
 							) : (
-								<div className="p-2 text-sm">{formData.name}</div>
+								<div className="p-2 text-sm">{displayValue(data.name)}</div>
 							)}
 						</div>
 
@@ -64,11 +93,12 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 								<Input
 									id="email"
 									type="email"
-									value={formData.email}
+									value={toInputValue(data.email)}
 									onChange={(e) => updateField("email", e.target.value)}
+									disabled={isSaving}
 								/>
 							) : (
-								<div className="p-2 text-sm">{formData.email}</div>
+								<div className="p-2 text-sm">{displayValue(data.email)}</div>
 							)}
 						</div>
 
@@ -77,11 +107,12 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 							{isEditMode ? (
 								<Input
 									id="phone"
-									value={formData.phone}
+									value={toInputValue(data.phone)}
 									onChange={(e) => updateField("phone", e.target.value)}
+									disabled={isSaving}
 								/>
 							) : (
-								<div className="p-2 text-sm">{formData.phone}</div>
+								<div className="p-2 text-sm">{displayValue(data.phone)}</div>
 							)}
 						</div>
 
@@ -91,12 +122,13 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 								<Input
 									id="dateOfBirth"
 									type="date"
-									value={formData.dateOfBirth}
+									value={toInputValue(data.dateOfBirth)}
 									onChange={(e) => updateField("dateOfBirth", e.target.value)}
+									disabled={isSaving}
 								/>
 							) : (
 								<div className="p-2 text-sm">
-									{new Date(formData.dateOfBirth).toLocaleDateString()}
+									{displayValue(formatDateOfBirth(data.dateOfBirth ?? undefined))}
 								</div>
 							)}
 						</div>
@@ -105,7 +137,7 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 							<Label htmlFor="nationality">{t("nationality")}</Label>
 							{isEditMode ? (
 								<Select
-									value={formData.nationality}
+									value={toInputValue(data.nationality)}
 									onValueChange={(value) => updateField("nationality", value)}
 								>
 									<SelectTrigger>
@@ -120,7 +152,7 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 									</SelectContent>
 								</Select>
 							) : (
-								<div className="p-2 text-sm">{formData.nationality}</div>
+								<div className="p-2 text-sm">{displayValue(data.nationality)}</div>
 							)}
 						</div>
 
@@ -130,7 +162,7 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 							</Label>
 							{isEditMode ? (
 								<Select
-									value={formData.currentLevel}
+									value={toInputValue(data.currentLevel)}
 									onValueChange={(value) => updateField("currentLevel", value)}
 								>
 									<SelectTrigger>
@@ -145,7 +177,7 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 									</SelectContent>
 								</Select>
 							) : (
-								<div className="p-2 text-sm">{formData.currentLevel}</div>
+								<div className="p-2 text-sm">{displayValue(data.currentLevel)}</div>
 							)}
 						</div>
 					</div>
@@ -155,11 +187,12 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 						{isEditMode ? (
 							<Input
 								id="address"
-								value={formData.address}
+								value={toInputValue(data.address)}
 								onChange={(e) => updateField("address", e.target.value)}
+								disabled={isSaving}
 							/>
 						) : (
-							<div className="p-2 text-sm">{formData.address}</div>
+							<div className="p-2 text-sm">{displayValue(data.address)}</div>
 						)}
 					</div>
 
@@ -169,12 +202,13 @@ export function PersonalInfoTab({ isEditMode }: PersonalInfoTabProps) {
 							<Textarea
 								id="bio"
 								rows={4}
-								value={formData.bio}
+								value={toInputValue(data.bio)}
 								onChange={(e) => updateField("bio", e.target.value)}
+								disabled={isSaving}
 								placeholder={t("tell_us_about_yourself")}
 							/>
 						) : (
-							<div className="p-2 text-sm">{formData.bio}</div>
+							<div className="p-2 text-sm">{displayValue(data.bio)}</div>
 						)}
 					</div>
 				</CardContent>
