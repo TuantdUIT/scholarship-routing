@@ -134,7 +134,7 @@ export function ApplicationTable({
 										<Select
 											value={application.status}
 											onValueChange={(value) =>
-												onStatusChange(application.id, value)
+												onStatusChange(application.id, value as ApplicationStatus)
 											}
 										>
 											<SelectTrigger className="w-32 h-8">

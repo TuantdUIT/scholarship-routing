@@ -1,7 +1,7 @@
 import type {
   ApplicationDetail,
   ApplicationSummary,
-} from "../models/application";
+} from "./application-types";
 
 export const mockApplicationSummaries: ApplicationSummary[] = [
   {

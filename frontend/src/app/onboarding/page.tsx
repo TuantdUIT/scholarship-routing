@@ -60,6 +60,12 @@ export interface OnboardingData {
   academicAwards: string;
   publications: string;
 
+  // Standardized Tests
+  ieltsScore?: string;
+  toeflScore?: string;
+  greScore?: string;
+  gmatScore?: string;
+
   // Preferences
   desiredCountries: string[];
   desiredDegree: string;
