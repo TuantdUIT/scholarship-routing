@@ -1,6 +1,7 @@
 import axios from "axios";
+import { API_BASE_URL } from "@/core/config/api";
 
-const AUTH_BASE_URL = "http://159.223.60.221:8000/api/v1/auth";
+const AUTH_BASE_URL = `${API_BASE_URL}/auth`;
 
 const REGISTER_URL = `${AUTH_BASE_URL}/register`;
 const VERIFY_URL = `${AUTH_BASE_URL}/verify`;
@@ -119,3 +120,4 @@ export const authApi = {
     return response.data;
   },
 };
+
