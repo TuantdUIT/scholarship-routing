@@ -44,7 +44,7 @@ const buildNavigationItems = (t: ReturnType<typeof useTranslations>) => [
 export function Header() {
   const t = useTranslations();
   const router = useRouter();
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, signOut } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navigationItems = useMemo(() => buildNavigationItems(t), [t]);
@@ -55,8 +55,8 @@ export function Header() {
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await signOut();
     setIsMobileMenuOpen(false);
     router.push("/");
   };
@@ -179,9 +179,9 @@ export function Header() {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onSelect={(event) => {
+                    onSelect={async (event) => {
                       event.preventDefault();
-                      handleLogout();
+                      await handleLogout();
                     }}
                   >
                     {t("header.logout")}
@@ -242,3 +242,5 @@ export function Header() {
     </header>
   );
 }
+
+

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import {
   AUTH_COOKIE_KEY,
@@ -8,9 +8,11 @@ import {
 
 export interface AuthUser {
   id: string;
-  name: string;
-  email: string;
-  avatar?: string;
+  name?: string | null;
+  email?: string | null;
+  avatar?: string | null;
+  token?: string;
+  profile?: Record<string, unknown> | null;
 }
 
 const isBrowser = typeof window !== "undefined";
@@ -81,11 +83,11 @@ export const userService = {
     return readUserFromStorage();
   },
 
-  login(user: AuthUser) {
+  saveUser(user: AuthUser) {
     persistUser(user);
   },
 
-  logout() {
+  clearUser() {
     persistUser(null);
   },
 

@@ -23,6 +23,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/core/components/ui/alert"
 import { authApi } from "@/core/services/auth-api";
 import { useAuth } from "@/core/providers/auth-provider";
 import axios from "axios";
+import { FirebaseError } from "firebase/app";
 import { AcademicStep } from "@/modules/onboarding/components/academic-step";
 import { BasicInfoStep } from "@/modules/onboarding/components/basic-info-step";
 import { LanguageTestsStep } from "@/modules/onboarding/components/language-tests-step";
@@ -86,7 +87,7 @@ export default function OnboardingPage() {
   const t = useTranslations("onboarding");
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { login, isAuthenticated } = useAuth();
+  const { signInWithEmail, signInWithGoogle, isAuthenticated } = useAuth();
 
   const redirectParam = searchParams.get("redirect");
   const redirectTarget = redirectParam && redirectParam.startsWith("/") ? redirectParam : "/profile";
@@ -163,12 +164,33 @@ export default function OnboardingPage() {
   });
 
   const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
-  const [loginForm, setLoginForm] = useState({ name: "", email: "" });
+  const [loginForm, setLoginForm] = useState({ email: "", password: "" });
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [isGoogleSigningIn, setIsGoogleSigningIn] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionError, setSubmissionError] = useState<string | null>(null);
 
+  const closeLoginDialog = () => {
+    setIsLoginDialogOpen(false);
+    setLoginError(null);
+    setLoginForm({ email: "", password: "" });
+    setIsGoogleSigningIn(false);
+  };
+
+  const handleLoginDialogChange = (open: boolean) => {
+    if (open) {
+      setIsLoginDialogOpen(true);
+      return;
+    }
+    closeLoginDialog();
+  };
+
+
   useEffect(() => {
     if (loginMode === "login") {
+      setLoginError(null);
+      setLoginForm({ email: "", password: "" });
+      setIsGoogleSigningIn(false);
       setIsLoginDialogOpen(true);
     }
   }, [loginMode]);
@@ -179,35 +201,88 @@ export default function OnboardingPage() {
     }
   }, [isAuthenticated, redirectTarget, router]);
 
-  const isLoginValid = loginForm.name.trim().length > 0 && loginForm.email.trim().length > 0;
+  const isLoginValid =
+    loginForm.email.trim().length > 0 && loginForm.password.trim().length >= 6;
 
-  const updateLoginField = (field: "name" | "email") =>
+  const updateLoginField = (field: "email" | "password") =>
     (value: string) => setLoginForm((prev) => ({ ...prev, [field]: value }));
 
-  const handleLoginSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleLoginSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoginError(null);
     if (!isLoginValid) {
       return;
     }
 
     const normalizedEmail = loginForm.email.trim().toLowerCase();
-    const trimmedName = loginForm.name.trim();
 
-    login({
-      id: normalizedEmail,
-      name: trimmedName,
-      email: normalizedEmail,
-    });
+    try {
+      await signInWithEmail(normalizedEmail, loginForm.password);
+      closeLoginDialog();
+      if (redirectParam) {
+        router.replace(redirectTarget);
+      }
+    } catch (error) {
+      setLoginError(formatErrorMessage(error));
+    }
+  };
+  const handleGoogleSignIn = async () => {
+    setLoginError(null);
+    setIsGoogleSigningIn(true);
+    try {
+      await signInWithGoogle();
+      closeLoginDialog();
+      if (redirectParam) {
+        router.replace(redirectTarget);
+      }
+    } catch (error) {
+      setLoginError(formatErrorMessage(error));
+    } finally {
+      setIsGoogleSigningIn(false);
+    }
+  };
 
-    setIsLoginDialogOpen(false);
-    setLoginForm({ name: "", email: "" });
+  const formatErrorMessage = (error: unknown) => {
+    if (axios.isAxiosError(error)) {
+      const data = error.response?.data as { detail?: string; message?: string } | undefined;
+      if (data?.detail) {
+        return data.detail;
+      }
+      if (data?.message) {
+        return data.message;
+      }
+      return error.message;
+    }
+
+    if (error instanceof FirebaseError) {
+      switch (error.code) {
+        case "auth/invalid-credential":
+        case "auth/user-not-found":
+        case "auth/wrong-password":
+          return "Incorrect email or password.";
+        case "auth/too-many-requests":
+          return "Too many attempts. Please try again later.";
+        case "auth/popup-blocked":
+        case "auth/popup-closed-by-user":
+        case "auth/cancelled-popup-request":
+          return "Google sign-in was cancelled. Please try again.";
+        default:
+          return error.message;
+      }
+    }
+
+    if (error instanceof Error) {
+      return error.message;
+    }
+
+    return "Something went wrong. Please try again.";
   };
 
   const updateData = (newData: Partial<OnboardingData>) => {
     setSubmissionError(null);
     setData((prev) => {
       const next = { ...prev, ...newData };
-      if (newData.name && !prev.displayName) {
+      if (typeof newData.name === "string" && !prev.displayName) {
         next.displayName = newData.name;
       }
       return next;
@@ -273,7 +348,9 @@ export default function OnboardingPage() {
       tags,
       special_things: form.specialThings,
     };
-  };  const nextStep = () => {
+  };
+
+  const nextStep = () => {
     if (currentStep < steps.length) {
       setSubmissionError(null);
       setCurrentStep(currentStep + 1);
@@ -297,24 +374,16 @@ export default function OnboardingPage() {
 
     try {
       const payload = buildRegisterPayload(data);
-      const response = await authApi.register(payload);
-      login({
-        id: response.user.id,
-        name: response.user.name ?? data.name,
-        email: response.user.email ?? data.email,
-      });
+      await authApi.register(payload);
+      await signInWithEmail(payload.email, data.password);
       router.replace(redirectTarget);
     } catch (error) {
-      const message = axios.isAxiosError(error)
-        ? (error.response?.data as { message?: string })?.message ?? error.message
-        : error instanceof Error
-          ? error.message
-          : "Unable to complete registration. Please try again.";
-      setSubmissionError(message);
+      setSubmissionError(formatErrorMessage(error));
     } finally {
       setIsSubmitting(false);
     }
   };
+
   const progress = (currentStep / steps.length) * 100;
 
   const renderStep = () => {
@@ -390,7 +459,16 @@ export default function OnboardingPage() {
             <div className="flex items-center gap-2">
               <LogIn className="h-4 w-4" />
               <span>{t("already_have_account")}</span>
-              <Button variant="link" className="px-1 font-semibold" onClick={() => setIsLoginDialogOpen(true)}>
+              <Button
+                variant="link"
+                className="px-1 font-semibold"
+                onClick={() => {
+                  setLoginError(null);
+                  setLoginForm({ email: "", password: "" });
+                  setIsGoogleSigningIn(false);
+                  setIsLoginDialogOpen(true);
+                }}
+              >
                 {t("login_cta")}
               </Button>
             </div>
@@ -490,7 +568,7 @@ export default function OnboardingPage() {
         </div>
       </div>
 
-      <Dialog open={isLoginDialogOpen} onOpenChange={setIsLoginDialogOpen}>
+      <Dialog open={isLoginDialogOpen} onOpenChange={handleLoginDialogChange}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{t("login_dialog_title")}</DialogTitle>
@@ -499,17 +577,6 @@ export default function OnboardingPage() {
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleLoginSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="login-name">{t("login_form_name_label")}</Label>
-              <Input
-                id="login-name"
-                value={loginForm.name}
-                onChange={(event) => updateLoginField("name")(event.target.value)}
-                placeholder="Nguyen Van A"
-                autoComplete="name"
-                required
-              />
-            </div>
             <div className="space-y-2">
               <Label htmlFor="login-email">{t("login_form_email_label")}</Label>
               <Input
@@ -522,13 +589,51 @@ export default function OnboardingPage() {
                 required
               />
             </div>
-            <DialogFooter className="sm:justify-between">
-              <Button type="button" variant="outline" onClick={() => setIsLoginDialogOpen(false)}>
+            <div className="space-y-2">
+              <Label htmlFor="login-password">{t("login_form_password_label")}</Label>
+              <Input
+                id="login-password"
+                type="password"
+                value={loginForm.password}
+                onChange={(event) => updateLoginField("password")(event.target.value)}
+                placeholder="Enter your password"
+                autoComplete="current-password"
+                required
+              />
+            </div>
+            {loginError ? (
+              <p className="text-sm text-destructive">{loginError}</p>
+            ) : null}
+            <DialogFooter className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <Button
+                type="button"
+                variant="ghost"
+                className="w-full sm:w-auto sm:px-4"
+                onClick={closeLoginDialog}
+              >
                 {t("login_cancel")}
               </Button>
-              <Button type="submit" disabled={!isLoginValid}>
-                {t("login_submit")}
-              </Button>
+              <div className="flex w-full flex-col gap-2 sm:flex-row sm:flex-1 sm:gap-3">
+                <Button
+                  type="submit"
+                  className="w-full sm:flex-1 sm:px-6"
+                  disabled={!isLoginValid || isGoogleSigningIn}
+                >
+                  {t("login_submit")}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex w-full items-center justify-center gap-2 sm:flex-1 sm:px-6"
+                  onClick={handleGoogleSignIn}
+                  disabled={isGoogleSigningIn}
+                >
+                  <span className="font-semibold text-base leading-none">G</span>
+                  <span>
+                    {isGoogleSigningIn ? t("login_google_loading") : t("login_google_cta")}
+                  </span>
+                </Button>
+              </div>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -536,16 +641,4 @@ export default function OnboardingPage() {
     </>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
