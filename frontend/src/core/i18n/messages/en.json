@@ -65,6 +65,8 @@
 		"only_show_qualified": "Only show scholarships I'm qualified for",
 		"degree_level": "Degree Level",
 		"any_degree_level": "Any Degree Level",
+		"select_degree_level": "Select Degree Level",
+		"uncheck": "Uncheck",
 		"max_gpa_required": "Min GPA Required",
 		"min_ielts_required": "Min IELTS Required",
 		"countries": "Countries",

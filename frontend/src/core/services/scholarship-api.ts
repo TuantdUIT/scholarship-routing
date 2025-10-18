@@ -90,7 +90,7 @@ export interface UIScholarship {
   degreeLevel: string;
   amount: string;
   deadline: string;
-  matchScore: number;
+  matchScore: number; 
   hardConditionsPassed: boolean;
   failedConditions: string[];
   description: string;

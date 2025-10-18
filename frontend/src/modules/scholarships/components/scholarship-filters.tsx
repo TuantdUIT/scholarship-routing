@@ -40,38 +40,38 @@ interface ScholarshipFiltersProps {
 }
 
 const countries = [
-	"United States",
-	"United Kingdom",
+	"Hoa Kỳ",
+	"Vương quốc Anh",
 	"Canada",
-	"Australia",
-	"Germany",
-	"Netherlands",
-	"Sweden",
-	"Norway",
-	"Denmark",
-	"Switzerland",
-	"France",
-	"Japan",
-	"South Korea",
+	"Úc",
+	"Đức",
+	"Hà Lan",
+	"Thụy Điển",
+	"Na Uy",
+	"Đan Mạch",
+	"Thụy Sĩ",
+	"Pháp",
+	"Nhật Bản",
+	"Hàn Quốc",
 	"Singapore",
 ];
 
 const fields = [
-	"Computer Science",
-	"Data Science",
-	"Engineering",
-	"Business Administration",
-	"Economics",
-	"Medicine",
-	"Law",
-	"Psychology",
-	"Biology",
-	"Chemistry",
-	"Physics",
-	"Mathematics",
+	"Khoa học máy tính",
+	"Khoa học dữ liệu",
+	"Kỹ thuật",
+	"Quản trị kinh doanh",
+	"Kinh tế",
+	"Y học",
+	"Luật",
+	"Tâm lý học",
+	"Sinh học",
+	"Hóa học",
+	"Vật lý",
+	"Toán học",
 ];
 
-const degreeLevels = ["Bachelor's", "Master's", "PhD", "Professional Degree"];
+const degreeLevels = ["Cử nhân", "Thạc sĩ", "Tiến sĩ", "Bằng cấp chuyên nghiệp"];
 
 export function ScholarshipFilters({
 	filters,
@@ -146,10 +146,9 @@ export function ScholarshipFilters({
 							onValueChange={(value) => updateFilter("degreeLevel", value)}
 						>
 							<SelectTrigger>
-								<SelectValue placeholder={t("any_degree_level")} />
+								<SelectValue placeholder={t("select_degree_level")} />
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value="any">{t("any_degree_level")}</SelectItem>
 								{degreeLevels.map((level) => (
 									<SelectItem key={level} value={level}>
 										{level}
@@ -157,9 +156,17 @@ export function ScholarshipFilters({
 								))}
 							</SelectContent>
 						</Select>
-					</div>
-
-					<div className="grid grid-cols-2 gap-2">
+						{filters.degreeLevel && (
+							<Button
+								variant="ghost"
+								size="sm"
+								onClick={() => updateFilter("degreeLevel", "")}
+								className="text-xs"
+							>
+								{t("uncheck")}
+							</Button>
+						)}
+					</div>					<div className="grid grid-cols-2 gap-2">
 						<div className="space-y-2">
 							<Label className="text-sm">{t("max_gpa_required")}</Label>
 							<Input
@@ -301,72 +308,7 @@ export function ScholarshipFilters({
 				</CardContent>
 			</Card>
 
-			{/* Soft Weights Customization */}
-			<Card>
-				<CardHeader className="pb-3">
-					<CardTitle className="text-base">
-						{t("matching_preferences")}
-					</CardTitle>
-					<CardDescription>
-						{t("matching_preferences_description")}
-					</CardDescription>
-				</CardHeader>
-				<CardContent className="space-y-4">
-					<div className="space-y-3">
-						<div className="space-y-2">
-							<div className="flex justify-between text-sm">
-								<Label>{t("gpa_weight")}</Label>
-								<span>30%</span>
-							</div>
-							<Slider
-								defaultValue={[30]}
-								max={100}
-								step={5}
-								className="w-full"
-							/>
-						</div>
-						<div className="space-y-2">
-							<div className="flex justify-between text-sm">
-								<Label>{t("publications_weight")}</Label>
-								<span>25%</span>
-							</div>
-							<Slider
-								defaultValue={[25]}
-								max={100}
-								step={5}
-								className="w-full"
-							/>
-						</div>
-						<div className="space-y-2">
-							<div className="flex justify-between text-sm">
-								<Label>{t("experience_weight")}</Label>
-								<span>25%</span>
-							</div>
-							<Slider
-								defaultValue={[25]}
-								max={100}
-								step={5}
-								className="w-full"
-							/>
-						</div>
-						<div className="space-y-2">
-							<div className="flex justify-between text-sm">
-								<Label>{t("activities_weight")}</Label>
-								<span>20%</span>
-							</div>
-							<Slider
-								defaultValue={[20]}
-								max={100}
-								step={5}
-								className="w-full"
-							/>
-						</div>
-					</div>
-					<div className="text-xs text-muted-foreground">
-						{t("weights_description")}
-					</div>
-				</CardContent>
-			</Card>
+
 		</div>
 	);
 }
