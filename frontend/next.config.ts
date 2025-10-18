@@ -2,6 +2,17 @@
 import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        // Bạn có thể thêm port và pathname nếu muốn giới hạn chặt chẽ hơn
+        // port: '',
+        // pathname: '/dvy0exilo/image/upload/**', // Ví dụ: Chỉ cho phép ảnh từ account của bạn
+      },
+    ],
+  },
   experimental: {
     // ppr: true,
     // Faster TypeScript compilation

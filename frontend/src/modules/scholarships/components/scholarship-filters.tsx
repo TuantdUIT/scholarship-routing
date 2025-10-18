@@ -19,7 +19,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/core/components/ui/select";
-import { Slider } from "@/core/components/ui/slider";
+
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
 

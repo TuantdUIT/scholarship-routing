@@ -22,13 +22,13 @@ import {
   Calendar,
   FileText,
   Globe,
-  GraduationCap,
   Menu,
   Search,
   Settings,
   User,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -88,9 +88,13 @@ export function Header() {
       <div className="w-full flex h-16 items-center justify-between px-4 sm:px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-            <GraduationCap className="h-5 w-5 text-primary-foreground" />
-          </div>
+          <Image
+            src="https://res.cloudinary.com/dvy0exilo/image/upload/v1760778541/Logo_noBG_jcmdns.png"
+            alt="Scholarship Logo"
+            width={32}
+            height={32}
+            className="h-8 w-8"
+          />
           <span className="text-lg font-bold">ScholarshipRouting</span>
         </Link>
 
