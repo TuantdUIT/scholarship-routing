@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Badge } from "@/core/components/ui/badge";
@@ -22,7 +21,7 @@ interface TestsTabProps {
 
 export function TestsTab({ isEditMode }: TestsTabProps) {
 	const [testScores, setTestScores] = useState<TestScore[]>(() =>
-		profileTestScores.map((test) => ({ ...test }))
+		profileTestScores.map((test) => ({ ...test })),
 	);
 
 	const updateTestScore = (
@@ -108,23 +107,28 @@ export function TestsTab({ isEditMode }: TestsTabProps) {
 										<Input
 											type="number"
 											value={test.score}
-											onChange={(e) => updateTestScore(index, "score", e.target.value)}
+											onChange={(e) =>
+												updateTestScore(index, "score", e.target.value)
+											}
 											placeholder={"Max: " + test.maxScore}
 											step={test.type === "IELTS" ? "0.5" : "1"}
-									/>
+										/>
 									) : (
 										<div className="flex items-center space-x-2">
-										<span
-											className={["text-lg font-semibold", getScoreColor(scorePercentage)].join(" ")}
-										>
-											{test.score || "Not taken"}
-										</span>
-										{test.score && (
-											<span className="text-sm text-muted-foreground">
-												/ {test.maxScore}
+											<span
+												className={[
+													"text-lg font-semibold",
+													getScoreColor(scorePercentage),
+												].join(" ")}
+											>
+												{test.score || "Not taken"}
 											</span>
-										)}
-									</div>
+											{test.score && (
+												<span className="text-sm text-muted-foreground">
+													/ {test.maxScore}
+												</span>
+											)}
+										</div>
 									)}
 								</div>
 
@@ -144,18 +148,24 @@ export function TestsTab({ isEditMode }: TestsTabProps) {
 										<Input
 											type="date"
 											value={test.date}
-											onChange={(e) => updateTestScore(index, "date", e.target.value)}
-									/>
+											onChange={(e) =>
+												updateTestScore(index, "date", e.target.value)
+											}
+										/>
 									) : (
 										<div className="p-2 text-sm">
-										{test.date ? new Date(test.date).toLocaleDateString() : "Not scheduled"}
-									</div>
+											{test.date
+												? new Date(test.date).toLocaleDateString()
+												: "Not scheduled"}
+										</div>
 									)}
 								</div>
 
 								{test.date && (
 									<div className="text-xs text-muted-foreground">
-										{test.type === "IELTS" || test.type === "TOEFL iBT" ? "Valid for 2 years" : "Valid for 5 years"}
+										{test.type === "IELTS" || test.type === "TOEFL iBT"
+											? "Valid for 2 years"
+											: "Valid for 5 years"}
 									</div>
 								)}
 							</CardContent>

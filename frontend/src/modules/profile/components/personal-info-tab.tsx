@@ -18,7 +18,10 @@ import {
 } from "@/core/components/ui/select";
 import { Textarea } from "@/core/components/ui/textarea";
 import { useTranslations } from "next-intl";
-import { profileCountries, profileCurrentLevels } from "@/modules/profile/data/profile-mocks";
+import {
+	profileCountries,
+	profileCurrentLevels,
+} from "@/modules/profile/data/profile-mocks";
 import type { PersonalInfo } from "@/modules/profile/data/profile-types";
 
 interface PersonalInfoTabProps {
@@ -46,7 +49,8 @@ const formatDateOfBirth = (value?: string | null) => {
 	return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
 };
 
-const displayValue = (value?: string | null) => (value && value.trim().length > 0 ? value : "-");
+const displayValue = (value?: string | null) =>
+	value && value.trim().length > 0 ? value : "-";
 
 const toInputValue = (value?: string | null) => value ?? "";
 
@@ -55,7 +59,12 @@ const toNullable = (value: string) => {
 	return trimmed.length > 0 ? trimmed : null;
 };
 
-export function PersonalInfoTab({ isEditMode, data, onChange, isSaving = false }: PersonalInfoTabProps) {
+export function PersonalInfoTab({
+	isEditMode,
+	data,
+	onChange,
+	isSaving = false,
+}: PersonalInfoTabProps) {
 	const t = useTranslations("profile");
 
 	const updateField = (field: keyof PersonalInfo, value: string) => {
@@ -67,9 +76,7 @@ export function PersonalInfoTab({ isEditMode, data, onChange, isSaving = false }
 			<Card>
 				<CardHeader>
 					<CardTitle>{t("basic_information")}</CardTitle>
-					<CardDescription>
-						{t("personal_details_contact")}
-					</CardDescription>
+					<CardDescription>{t("personal_details_contact")}</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -128,7 +135,9 @@ export function PersonalInfoTab({ isEditMode, data, onChange, isSaving = false }
 								/>
 							) : (
 								<div className="p-2 text-sm">
-									{displayValue(formatDateOfBirth(data.dateOfBirth ?? undefined))}
+									{displayValue(
+										formatDateOfBirth(data.dateOfBirth ?? undefined),
+									)}
 								</div>
 							)}
 						</div>
@@ -152,7 +161,9 @@ export function PersonalInfoTab({ isEditMode, data, onChange, isSaving = false }
 									</SelectContent>
 								</Select>
 							) : (
-								<div className="p-2 text-sm">{displayValue(data.nationality)}</div>
+								<div className="p-2 text-sm">
+									{displayValue(data.nationality)}
+								</div>
 							)}
 						</div>
 
@@ -177,7 +188,9 @@ export function PersonalInfoTab({ isEditMode, data, onChange, isSaving = false }
 									</SelectContent>
 								</Select>
 							) : (
-								<div className="p-2 text-sm">{displayValue(data.currentLevel)}</div>
+								<div className="p-2 text-sm">
+									{displayValue(data.currentLevel)}
+								</div>
 							)}
 						</div>
 					</div>

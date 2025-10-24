@@ -137,12 +137,13 @@ export function DeadlineList({ deadlines, onStatusChange }: DeadlineListProps) {
 				deadlines.map((deadline) => (
 					<Card
 						key={deadline.id}
-						className={`hover:shadow-md transition-shadow ${deadline.daysLeft <= 7
+						className={`hover:shadow-md transition-shadow ${
+							deadline.daysLeft <= 7
 								? "border-red-200"
 								: deadline.daysLeft <= 14
 									? "border-orange-200"
 									: ""
-							}`}
+						}`}
 					>
 						<CardContent className="p-6">
 							<div className="flex items-start justify-between">
@@ -191,18 +192,19 @@ export function DeadlineList({ deadlines, onStatusChange }: DeadlineListProps) {
 											</div>
 											<div className="flex items-center gap-2">
 												<span
-													className={`font-medium ${deadline.daysLeft <= 0
+													className={`font-medium ${
+														deadline.daysLeft <= 0
 															? "text-red-600"
 															: deadline.daysLeft <= 7
 																? "text-orange-600"
 																: "text-muted-foreground"
-														}`}
+													}`}
 												>
 													{deadline.daysLeft <= 0
 														? t("overdue")
 														: t("days_left", {
-															daysLeft: deadline.daysLeft,
-														})}
+																daysLeft: deadline.daysLeft,
+															})}
 												</span>
 											</div>
 											{deadline.amount && (
@@ -217,12 +219,13 @@ export function DeadlineList({ deadlines, onStatusChange }: DeadlineListProps) {
 											<div className="flex justify-between text-xs">
 												<span>{t("urgency_level")}</span>
 												<span
-													className={`font-medium ${deadline.daysLeft <= 7
+													className={`font-medium ${
+														deadline.daysLeft <= 7
 															? "text-red-600"
 															: deadline.daysLeft <= 14
 																? "text-orange-600"
 																: "text-muted-foreground"
-														}`}
+													}`}
 												>
 													{deadline.daysLeft <= 0
 														? t("overdue")
@@ -291,8 +294,12 @@ export function DeadlineList({ deadlines, onStatusChange }: DeadlineListProps) {
 													>
 														{t("mark_as_pending")}
 													</DropdownMenuItem>
-													<DropdownMenuItem>{t("set_reminder")}</DropdownMenuItem>
-													<DropdownMenuItem>{t("edit_deadline")}</DropdownMenuItem>
+													<DropdownMenuItem>
+														{t("set_reminder")}
+													</DropdownMenuItem>
+													<DropdownMenuItem>
+														{t("edit_deadline")}
+													</DropdownMenuItem>
 												</DropdownMenuContent>
 											</DropdownMenu>
 										</div>

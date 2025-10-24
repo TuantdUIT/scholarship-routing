@@ -3,10 +3,12 @@ import { AuthProvider } from "@/core/providers/auth-provider";
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro } from "next/font/google";
-import { NextIntlClientProvider } from "next-intl";
+import { NextIntlClientProvider, hasLocale } from "next-intl";
 import type React from "react";
 import { Suspense } from "react";
 import "./globals.css";
+import { notFound } from "next/navigation";
+import { routing } from "@/core/i18n/routing";
 
 const beVietnamPro = Be_Vietnam_Pro({
 	subsets: ["latin", "vietnamese"],
@@ -20,13 +22,15 @@ export const metadata: Metadata = {
 	generator: "v0.app",
 };
 
-export default function RootLayout({
-	children,
-	params: { locale },
-}: Readonly<{
+type Props = {
 	children: React.ReactNode;
-	params: { locale: string };
-}>) {
+	params: Promise<{ locale: string }>;
+};
+export default async function RootLayout({ children, params }: Props) {
+	const { locale } = await params;
+	if (!hasLocale(routing.locales, locale)) {
+		notFound();
+	}
 	return (
 		<html lang={locale}>
 			<body className={beVietnamPro.className}>

@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import type { OnboardingData } from "@/app/onboarding/page";
+import type { OnboardingData } from "@/app/[locale]/onboarding/page";
 import { Badge } from "@/core/components/ui/badge";
 import { Button } from "@/core/components/ui/button";
 import {
@@ -45,9 +45,7 @@ export function ReviewStep({ data, updateData }: ReviewStepProps) {
 						<CardTitle className="text-base">
 							{t("basic_information")}
 						</CardTitle>
-						<CardDescription>
-							{t("personal_details_education")}
-						</CardDescription>
+						<CardDescription>{t("personal_details_education")}</CardDescription>
 					</div>
 					<Button variant="ghost" size="sm">
 						<Edit className="h-4 w-4" />
@@ -66,7 +64,9 @@ export function ReviewStep({ data, updateData }: ReviewStepProps) {
 							{data.nationality}
 						</div>
 						<div>
-							<span className="font-medium">{t("current_education_level")}</span>{" "}
+							<span className="font-medium">
+								{t("current_education_level")}
+							</span>{" "}
 							{data.currentLevel}
 						</div>
 					</div>

@@ -38,7 +38,9 @@ export function ApplicationDocuments({
 	application,
 }: ApplicationDocumentsProps) {
 	const t = useTranslations("application");
-	const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({});
+	const [uploadProgress, setUploadProgress] = useState<Record<string, number>>(
+		{},
+	);
 
 	const getDocumentStatusIcon = (status: string) => {
 		switch (status) {
@@ -69,7 +71,9 @@ export function ApplicationDocuments({
 				);
 			case "required":
 				return (
-					<Badge className="bg-red-100 text-red-800 border-0">{t("required")}</Badge>
+					<Badge className="bg-red-100 text-red-800 border-0">
+						{t("required")}
+					</Badge>
 				);
 			default:
 				return <Badge variant="outline">{status}</Badge>;
@@ -108,7 +112,9 @@ export function ApplicationDocuments({
 				<CardContent>
 					<div className="space-y-4">
 						<div className="flex justify-between items-center">
-							<span className="text-sm font-medium">{t("overall_progress")}</span>
+							<span className="text-sm font-medium">
+								{t("overall_progress")}
+							</span>
 							<span className="text-sm text-muted-foreground">
 								{t("documents_count", {
 									uploaded: uploadedCount,
@@ -147,7 +153,9 @@ export function ApplicationDocuments({
 													<>
 														{" • "}
 														{t("uploaded_on", {
-															date: new Date(document.uploadDate).toLocaleDateString(),
+															date: new Date(
+																document.uploadDate,
+															).toLocaleDateString(),
 														})}
 													</>
 												)}
@@ -204,7 +212,9 @@ export function ApplicationDocuments({
 														<p className="text-sm text-muted-foreground mb-2">
 															{t("drag_and_drop")}
 														</p>
-														<Button variant="outline">{t("choose_file")}</Button>
+														<Button variant="outline">
+															{t("choose_file")}
+														</Button>
 													</div>
 
 													{uploadProgress[document.name] !== undefined && (

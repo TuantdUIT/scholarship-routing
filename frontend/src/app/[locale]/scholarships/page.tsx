@@ -58,49 +58,58 @@ export default function ScholarshipsPage() {
 	const PAGE_SIZE = 10;
 
 	// Load initial scholarships
-	const loadScholarships = useCallback(async (resetOffset = false) => {
-		try {
-			setLoading(resetOffset);
-			const currentOffset = resetOffset ? 0 : offset;
-			
-			let response;
-			if (searchQuery.trim()) {
-				// Use search API when there's a search query
-				response = await ScholarshipApi.searchScholarships({
-					q: searchQuery.trim(),
-					size: PAGE_SIZE,
-					offset: currentOffset,
-					collection: "scholarships",
-				});
-			} else {
-				// Use filter API for default view (latest scholarships)
-				response = await ScholarshipApi.getLatestScholarships(PAGE_SIZE, currentOffset);
-			}
+	const loadScholarships = useCallback(
+		async (resetOffset = false) => {
+			try {
+				setLoading(resetOffset);
+				const currentOffset = resetOffset ? 0 : offset;
 
-			const transformedData = ScholarshipApi.transformResponseToUI(response);
-			
-			if (resetOffset) {
-				setScholarships(transformedData.scholarships);
-				setOffset(PAGE_SIZE);
-			} else {
-				setScholarships(prev => [...prev, ...transformedData.scholarships]);
-				setOffset(prev => prev + PAGE_SIZE);
+				let response;
+				if (searchQuery.trim()) {
+					// Use search API when there's a search query
+					response = await ScholarshipApi.searchScholarships({
+						q: searchQuery.trim(),
+						size: PAGE_SIZE,
+						offset: currentOffset,
+						collection: "scholarships",
+					});
+				} else {
+					// Use filter API for default view (latest scholarships)
+					response = await ScholarshipApi.getLatestScholarships(
+						PAGE_SIZE,
+						currentOffset,
+					);
+				}
+
+				const transformedData = ScholarshipApi.transformResponseToUI(response);
+
+				if (resetOffset) {
+					setScholarships(transformedData.scholarships);
+					setOffset(PAGE_SIZE);
+				} else {
+					setScholarships((prev) => [...prev, ...transformedData.scholarships]);
+					setOffset((prev) => prev + PAGE_SIZE);
+				}
+
+				setTotal(transformedData.total);
+				setHasMore(
+					transformedData.scholarships.length === PAGE_SIZE &&
+						currentOffset + PAGE_SIZE < transformedData.total,
+				);
+			} catch (error) {
+				console.error("Error loading scholarships:", error);
+				toast({
+					variant: "destructive",
+					title: "Lỗi tải dữ liệu",
+					description: "Không thể tải danh sách học bổng. Vui lòng thử lại.",
+				});
+			} finally {
+				setLoading(false);
+				setLoadingMore(false);
 			}
-			
-			setTotal(transformedData.total);
-			setHasMore(transformedData.scholarships.length === PAGE_SIZE && (currentOffset + PAGE_SIZE) < transformedData.total);
-		} catch (error) {
-			console.error("Error loading scholarships:", error);
-			toast({
-				variant: "destructive",
-				title: "Lỗi tải dữ liệu",
-				description: "Không thể tải danh sách học bổng. Vui lòng thử lại.",
-			});
-		} finally {
-			setLoading(false);
-			setLoadingMore(false);
-		}
-	}, [searchQuery, offset, toast]);
+		},
+		[searchQuery, offset, toast],
+	);
 
 	// Load more scholarships
 	const loadMoreScholarships = async () => {
@@ -328,7 +337,7 @@ export default function ScholarshipsPage() {
 										scholarship={scholarship}
 									/>
 								))}
-								
+
 								{/* Show More Button */}
 								{hasMore && (
 									<div className="flex justify-center pt-4">
@@ -349,7 +358,7 @@ export default function ScholarshipsPage() {
 										</Button>
 									</div>
 								)}
-								
+
 								{/* End of results indicator */}
 								{!hasMore && scholarships.length > 0 && (
 									<div className="text-center py-4 text-sm text-muted-foreground">

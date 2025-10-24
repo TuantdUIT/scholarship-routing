@@ -1,6 +1,6 @@
 "use client";
 
-import type { OnboardingData } from "@/app/onboarding/page";
+import type { OnboardingData } from "@/app/[locale]/onboarding/page";
 import {
 	Card,
 	CardContent,
@@ -69,9 +69,7 @@ export function PreferencesStep({ data, updateData }: PreferencesStepProps) {
 			<Card>
 				<CardHeader>
 					<CardTitle className="text-lg">{t("study_destinations")}</CardTitle>
-					<CardDescription>
-						{t("select_study_destinations")}
-					</CardDescription>
+					<CardDescription>{t("select_study_destinations")}</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<div className="grid grid-cols-2 md:grid-cols-3 gap-3">

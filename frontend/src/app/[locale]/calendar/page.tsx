@@ -225,7 +225,9 @@ export default function CalendarPage() {
 				<div className="mb-8">
 					<div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
 						<div>
-							<h1 className="text-3xl font-bold mb-2">{t("deadline_tracker")}</h1>
+							<h1 className="text-3xl font-bold mb-2">
+								{t("deadline_tracker")}
+							</h1>
 							<p className="text-muted-foreground">
 								{t("deadline_tracker_description")}
 							</p>
@@ -284,7 +286,9 @@ export default function CalendarPage() {
 													{t("applications")}
 												</SelectItem>
 												<SelectItem value="task">{t("tasks")}</SelectItem>
-												<SelectItem value="interview">{t("interviews")}</SelectItem>
+												<SelectItem value="interview">
+													{t("interviews")}
+												</SelectItem>
 												<SelectItem value="result">{t("results")}</SelectItem>
 											</SelectContent>
 										</Select>
@@ -299,9 +303,13 @@ export default function CalendarPage() {
 											<SelectContent style={{ maxHeight: "unset" }}>
 												<SelectItem value="all">{t("all_status")}</SelectItem>
 												<SelectItem value="urgent">{t("urgent")}</SelectItem>
-												<SelectItem value="upcoming">{t("upcoming")}</SelectItem>
+												<SelectItem value="upcoming">
+													{t("upcoming")}
+												</SelectItem>
 												<SelectItem value="pending">{t("pending")}</SelectItem>
-												<SelectItem value="completed">{t("completed")}</SelectItem>
+												<SelectItem value="completed">
+													{t("completed")}
+												</SelectItem>
 											</SelectContent>
 										</Select>
 

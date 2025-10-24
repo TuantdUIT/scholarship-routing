@@ -35,7 +35,10 @@ import {
 	Upload,
 } from "lucide-react";
 import Link from "next/link";
-import type { ApplicationStatus, ApplicationSummary } from "@/modules/applications/data/application-types";
+import type {
+	ApplicationStatus,
+	ApplicationSummary,
+} from "@/modules/applications/data/application-types";
 
 interface ApplicationTableProps {
 	applications: ApplicationSummary[];
@@ -134,7 +137,10 @@ export function ApplicationTable({
 										<Select
 											value={application.status}
 											onValueChange={(value) =>
-												onStatusChange(application.id, value as ApplicationStatus)
+												onStatusChange(
+													application.id,
+													value as ApplicationStatus,
+												)
 											}
 										>
 											<SelectTrigger className="w-32 h-8">

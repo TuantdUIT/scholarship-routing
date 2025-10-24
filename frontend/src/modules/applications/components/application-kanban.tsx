@@ -29,14 +29,21 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import type { ApplicationStatus, ApplicationSummary } from "@/modules/applications/data/application-types";
+import type {
+	ApplicationStatus,
+	ApplicationSummary,
+} from "@/modules/applications/data/application-types";
 
 interface ApplicationKanbanProps {
 	applications: ApplicationSummary[];
 	onStatusChange: (appId: string, newStatus: ApplicationStatus) => void;
 }
 
-const statusColumns: Array<{ id: ApplicationStatus; title: string; color: string }> = [
+const statusColumns: Array<{
+	id: ApplicationStatus;
+	title: string;
+	color: string;
+}> = [
 	{ id: "not-started", title: "Not Started", color: "bg-gray-100" },
 	{ id: "in-progress", title: "In Progress", color: "bg-blue-100" },
 	{ id: "submitted", title: "Submitted", color: "bg-yellow-100" },
@@ -80,7 +87,11 @@ export function ApplicationKanban({
 		}
 	};
 
-	const ApplicationCard = ({ application }: { application: ApplicationSummary }) => {
+	const ApplicationCard = ({
+		application,
+	}: {
+		application: ApplicationSummary;
+	}) => {
 		const daysLeft = getDaysUntilDeadline(application.deadline);
 		const isUrgent = daysLeft <= 30 && daysLeft > 0;
 		const isExpired = daysLeft < 0;

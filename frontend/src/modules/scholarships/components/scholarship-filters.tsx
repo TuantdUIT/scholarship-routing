@@ -71,7 +71,12 @@ const fields = [
 	"Toán học",
 ];
 
-const degreeLevels = ["Cử nhân", "Thạc sĩ", "Tiến sĩ", "Bằng cấp chuyên nghiệp"];
+const degreeLevels = [
+	"Cử nhân",
+	"Thạc sĩ",
+	"Tiến sĩ",
+	"Bằng cấp chuyên nghiệp",
+];
 
 export function ScholarshipFilters({
 	filters,
@@ -166,7 +171,8 @@ export function ScholarshipFilters({
 								{t("uncheck")}
 							</Button>
 						)}
-					</div>					<div className="grid grid-cols-2 gap-2">
+					</div>{" "}
+					<div className="grid grid-cols-2 gap-2">
 						<div className="space-y-2">
 							<Label className="text-sm">{t("max_gpa_required")}</Label>
 							<Input
@@ -236,9 +242,7 @@ export function ScholarshipFilters({
 			<Card>
 				<CardHeader className="pb-3">
 					<CardTitle className="text-base">{t("fields_of_study")}</CardTitle>
-					<CardDescription>
-						{t("fields_of_study_description")}
-					</CardDescription>
+					<CardDescription>{t("fields_of_study_description")}</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<div className="space-y-3">
@@ -307,8 +311,6 @@ export function ScholarshipFilters({
 					</Select>
 				</CardContent>
 			</Card>
-
-
 		</div>
 	);
 }

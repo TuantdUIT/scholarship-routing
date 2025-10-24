@@ -20,7 +20,10 @@ import { ApplicationDocuments } from "@/modules/applications/components/applicat
 import { ApplicationReminders } from "@/modules/applications/components/application-reminders";
 import { ApplicationTimeline } from "@/modules/applications/components/application-timeline";
 import { mockApplicationDetailMap } from "@/modules/applications/data/application-mocks";
-import type { ApplicationDetail, ApplicationStatus } from "@/modules/applications/data/application-types";
+import type {
+	ApplicationDetail,
+	ApplicationStatus,
+} from "@/modules/applications/data/application-types";
 import {
 	ArrowLeft,
 	Bell,
@@ -43,7 +46,9 @@ export default function ApplicationDetailPage() {
 	const t = useTranslations("application");
 	const params = useParams();
 	const applicationId = params.id as string;
-	const application = mockApplicationDetailMap[applicationId] as ApplicationDetail | undefined;
+	const application = mockApplicationDetailMap[applicationId] as
+		| ApplicationDetail
+		| undefined;
 
 	const [notes, setNotes] = useState(application?.notes || "");
 	const [activeTab, setActiveTab] = useState("overview");
@@ -144,7 +149,9 @@ export default function ApplicationDetailPage() {
 									<div className="text-3xl font-bold text-primary">
 										{application.progress}%
 									</div>
-									<div className="text-sm text-muted-foreground">{t("complete")}</div>
+									<div className="text-sm text-muted-foreground">
+										{t("complete")}
+									</div>
 									<Progress
 										value={application.progress}
 										className="w-20 h-2 mt-1"
@@ -181,7 +188,9 @@ export default function ApplicationDetailPage() {
 									>
 										{new Date(application.deadline).toLocaleDateString()}
 										{!isExpired && (
-											<span className="ml-1">({t("days_left", { daysLeft })})</span>
+											<span className="ml-1">
+												({t("days_left", { daysLeft })})
+											</span>
 										)}
 									</div>
 								</div>

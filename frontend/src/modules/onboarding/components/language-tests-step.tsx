@@ -1,6 +1,6 @@
 "use client";
 
-import type { OnboardingData } from "@/app/onboarding/page";
+import type { OnboardingData } from "@/app/[locale]/onboarding/page";
 import { Badge } from "@/core/components/ui/badge";
 import {
 	Card,

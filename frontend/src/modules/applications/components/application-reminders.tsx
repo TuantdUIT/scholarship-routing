@@ -20,7 +20,11 @@ import { Input } from "@/core/components/ui/input";
 import { Textarea } from "@/core/components/ui/textarea";
 import { AlertTriangle, Bell, Clock, Edit, Plus, X } from "lucide-react";
 import { useState } from "react";
-import type { ApplicationDetail, ApplicationReminder, ApplicationReminderType } from "@/modules/applications/data/application-types";
+import type {
+	ApplicationDetail,
+	ApplicationReminder,
+	ApplicationReminderType,
+} from "@/modules/applications/data/application-types";
 
 // Helper function to safely format the date
 const formatDate = (dateString: string) => {
@@ -53,7 +57,9 @@ interface ApplicationRemindersProps {
 export function ApplicationReminders({
 	application,
 }: ApplicationRemindersProps) {
-	const [reminders, setReminders] = useState<ApplicationReminder[]>(application.reminders);
+	const [reminders, setReminders] = useState<ApplicationReminder[]>(
+		application.reminders,
+	);
 	const [newReminder, setNewReminder] = useState<{
 		date: string;
 		message: string;
@@ -84,9 +90,7 @@ export function ApplicationReminders({
 	const toggleReminder = (id?: string) => {
 		if (!id) return;
 		setReminders(
-			reminders.map((r) =>
-				r.id === id ? { ...r, isActive: !r.isActive } : r,
-			),
+			reminders.map((r) => (r.id === id ? { ...r, isActive: !r.isActive } : r)),
 		);
 	};
 

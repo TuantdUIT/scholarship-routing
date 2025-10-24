@@ -48,13 +48,16 @@ const formatMonth = (value: string) => {
 	if (Number.isNaN(date.getTime())) {
 		return "Not set";
 	}
-	return date.toLocaleDateString(undefined, { year: "numeric", month: "short" });
+	return date.toLocaleDateString(undefined, {
+		year: "numeric",
+		month: "short",
+	});
 };
 
 export function EducationTab({ isEditMode }: EducationTabProps) {
 	const t = useTranslations("profile");
 	const [educations, setEducations] = useState<EducationEntry[]>(() =>
-		educationEntries.map((education) => ({ ...education }))
+		educationEntries.map((education) => ({ ...education })),
 	);
 
 	const gpaScales = educationGpaScales;
@@ -156,7 +159,11 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 										<Input
 											value={education.institution}
 											onChange={(e) =>
-												updateEducation(education.id, "institution", e.target.value)
+												updateEducation(
+													education.id,
+													"institution",
+													e.target.value,
+												)
 											}
 											placeholder={t("university_name")}
 										/>
@@ -213,14 +220,14 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 												value={education.gpa}
 												onChange={(e) =>
 													updateEducation(education.id, "gpa", e.target.value)
-											}
+												}
 												placeholder="3.5"
 											/>
 											<Select
 												value={education.gpaScale}
 												onValueChange={(value) =>
 													updateEducation(education.id, "gpaScale", value)
-											}
+												}
 											>
 												<SelectTrigger className="w-24">
 													<SelectValue placeholder="Scale" />
@@ -248,7 +255,11 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 											type="month"
 											value={education.startDate}
 											onChange={(e) =>
-												updateEducation(education.id, "startDate", e.target.value)
+												updateEducation(
+													education.id,
+													"startDate",
+													e.target.value,
+												)
 											}
 										/>
 									) : (
@@ -271,10 +282,10 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 									) : (
 										<div className="p-2 text-sm">
 											{education.endDate
-													? formatMonth(education.endDate)
+												? formatMonth(education.endDate)
 												: education.status === "in-progress"
 													? "Present"
-												: "Not set"}
+													: "Not set"}
 										</div>
 									)}
 								</div>
@@ -286,4 +297,3 @@ export function EducationTab({ isEditMode }: EducationTabProps) {
 		</div>
 	);
 }
-

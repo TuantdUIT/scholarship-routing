@@ -20,8 +20,14 @@ import {
 	Upload,
 } from "lucide-react";
 import { useState } from "react";
-import { profileDocumentTypes, profileDocuments } from "@/modules/profile/data/profile-mocks";
-import type { DocumentRequirement, ProfileDocument } from "@/modules/profile/data/profile-types";
+import {
+	profileDocumentTypes,
+	profileDocuments,
+} from "@/modules/profile/data/profile-mocks";
+import type {
+	DocumentRequirement,
+	ProfileDocument,
+} from "@/modules/profile/data/profile-types";
 
 interface DocumentsTabProps {
 	isEditMode: boolean;
@@ -29,7 +35,7 @@ interface DocumentsTabProps {
 
 export function DocumentsTab({ isEditMode }: DocumentsTabProps) {
 	const [documents, setDocuments] = useState<ProfileDocument[]>(() =>
-		profileDocuments.map((document) => ({ ...document }))
+		profileDocuments.map((document) => ({ ...document })),
 	);
 
 	const documentTypes: DocumentRequirement[] = profileDocumentTypes;

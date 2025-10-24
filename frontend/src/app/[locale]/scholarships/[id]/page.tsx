@@ -218,7 +218,7 @@ export default function ScholarshipDetailPage() {
 	const daysLeft = getDaysUntilDeadline(scholarship.deadline);
 	const isUrgent = daysLeft <= 30;
 	const isExpired = daysLeft < 0;
-	const notExpired = daysLeft > 0
+	const notExpired = daysLeft > 0;
 
 	return (
 		<div className="min-h-screen bg-background">

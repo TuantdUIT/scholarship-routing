@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import type { OnboardingData } from "@/app/onboarding/page";
+import type { OnboardingData } from "@/app/[locale]/onboarding/page";
 import { Button } from "@/core/components/ui/button";
 import { Input } from "@/core/components/ui/input";
 import { Label } from "@/core/components/ui/label";

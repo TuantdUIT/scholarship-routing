@@ -14,7 +14,10 @@ import { ApplicationKanban } from "@/modules/applications/components/application
 import { ApplicationStats } from "@/modules/applications/components/application-stats";
 import { ApplicationTable } from "@/modules/applications/components/application-table";
 import { mockApplicationSummaries } from "@/modules/applications/data/application-mocks";
-import type { ApplicationStatus, ApplicationSummary } from "@/modules/applications/data/application-types";
+import type {
+	ApplicationStatus,
+	ApplicationSummary,
+} from "@/modules/applications/data/application-types";
 import { Plus, Search } from "lucide-react";
 import { useState } from "react";
 
@@ -22,10 +25,14 @@ import { useTranslations } from "next-intl";
 
 export default function ApplicationsPage() {
 	const t = useTranslations("application");
-	const [applications, setApplications] = useState<ApplicationSummary[]>(mockApplicationSummaries);
+	const [applications, setApplications] = useState<ApplicationSummary[]>(
+		mockApplicationSummaries,
+	);
 	const [viewMode, setViewMode] = useState<"kanban" | "table">("kanban");
 	const [searchQuery, setSearchQuery] = useState("");
-	const [statusFilter, setStatusFilter] = useState<"all" | ApplicationStatus>("all");
+	const [statusFilter, setStatusFilter] = useState<"all" | ApplicationStatus>(
+		"all",
+	);
 	const [sortBy, setSortBy] = useState("deadline");
 
 	const filteredApplications = applications.filter((app) => {
@@ -55,7 +62,10 @@ export default function ApplicationsPage() {
 		}
 	});
 
-	const updateApplicationStatus = (appId: string, newStatus: ApplicationStatus) => {
+	const updateApplicationStatus = (
+		appId: string,
+		newStatus: ApplicationStatus,
+	) => {
 		setApplications((prev) =>
 			prev.map((app) =>
 				app.id === appId
@@ -84,10 +94,10 @@ export default function ApplicationsPage() {
 				<div className="mb-8">
 					<div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
 						<div>
-							<h1 className="text-3xl font-bold mb-2">{t("my_applications")}</h1>
-							<p className="text-muted-foreground">
-								{t("track_and_manage")}
-							</p>
+							<h1 className="text-3xl font-bold mb-2">
+								{t("my_applications")}
+							</h1>
+							<p className="text-muted-foreground">{t("track_and_manage")}</p>
 						</div>
 						<Button className="w-fit">
 							<Plus className="mr-2 h-4 w-4" />
@@ -118,15 +128,21 @@ export default function ApplicationsPage() {
 							<div className="flex gap-2">
 								<Select
 									value={statusFilter}
-									onValueChange={(value) => setStatusFilter(value as "all" | ApplicationStatus)}
+									onValueChange={(value) =>
+										setStatusFilter(value as "all" | ApplicationStatus)
+									}
 								>
 									<SelectTrigger className="w-40">
 										<SelectValue placeholder={t("status")} />
 									</SelectTrigger>
 									<SelectContent>
 										<SelectItem value="all">{t("all_status")}</SelectItem>
-										<SelectItem value="not-started">{t("not_started")}</SelectItem>
-										<SelectItem value="in-progress">{t("in_progress")}</SelectItem>
+										<SelectItem value="not-started">
+											{t("not_started")}
+										</SelectItem>
+										<SelectItem value="in-progress">
+											{t("in_progress")}
+										</SelectItem>
 										<SelectItem value="submitted">{t("submitted")}</SelectItem>
 										<SelectItem value="interview">{t("interview")}</SelectItem>
 										<SelectItem value="result">{t("result")}</SelectItem>
