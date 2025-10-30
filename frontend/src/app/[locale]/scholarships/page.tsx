@@ -94,7 +94,7 @@ export default function ScholarshipsPage() {
 				setTotal(transformedData.total);
 				setHasMore(
 					transformedData.scholarships.length === PAGE_SIZE &&
-						currentOffset + PAGE_SIZE < transformedData.total,
+					currentOffset + PAGE_SIZE < transformedData.total,
 				);
 			} catch (error) {
 				console.error("Error loading scholarships:", error);
@@ -240,41 +240,27 @@ export default function ScholarshipsPage() {
 								<div className="space-y-4">
 									<div className="flex flex-col sm:flex-row sm:items-center gap-4 text-sm text-muted-foreground">
 										<div className="flex flex-wrap items-center gap-2 sm:gap-4">
-											<span>
+											<span className="text-gray-700 font-bold">
 												{t("scholarships_found", { totalCount: total })}
 											</span>
 											<Separator
 												orientation="vertical"
 												className="h-4 hidden sm:block"
 											/>
-											<span className="text-green-600">
+											{/* <span className="text-green-600">
 												{t("match_your_profile", { passedCount: passedCount })}
-											</span>
+											</span> */}
 											<Separator
 												orientation="vertical"
 												className="h-4 hidden sm:block"
 											/>
-											<span>
+											{/* <span>
 												{t("need_improvement", {
 													improvementCount: totalCount - passedCount,
 												})}
-											</span>
+											</span> */}
 										</div>
 									</div>
-									{totalCount > 0 && (
-										<div className="flex items-center space-x-2">
-											<span className="text-sm text-muted-foreground">
-												{t("match_rate")}
-											</span>
-											<Progress
-												value={(passedCount / totalCount) * 100}
-												className="flex-1 sm:w-20 h-2"
-											/>
-											<span className="text-sm font-medium">
-												{Math.round((passedCount / totalCount) * 100)}%
-											</span>
-										</div>
-									)}
 								</div>
 							)}
 						</div>

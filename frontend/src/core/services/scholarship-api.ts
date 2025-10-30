@@ -208,4 +208,46 @@ export class ScholarshipApi {
 			),
 		};
 	}
+
+	/**
+	 * Get a single scholarship by its ID from the API using the filter endpoint
+	 */
+	static async getScholarshipById(
+		id: string,
+		collection = "scholarships",
+	): Promise<ScholarshipItem> {
+		const filterParams: ScholarshipFilterParams = {
+			collection: collection,
+			size: 1,
+			offset: 0,
+			filters: [
+				{
+					field: "id", // Assuming the document ID field is named 'id'
+					values: [id],
+					operator: "AND",
+				},
+			],
+		};
+
+		const response = await this.filterScholarships(filterParams);
+
+		if (response.items.length === 0) {
+			throw new Error(`Scholarship with id ${id} not found`);
+		}
+
+		return response.items[0];
+	}
 }
+
+export const getScholarship = async (id: string) => {
+	try {
+		const scholarshipData = await ScholarshipApi.getScholarshipById(id);
+		// The detail page needs more fields than what transformToUIFormat provides.
+		// For now, we can just return the raw source data and the page can adapt.
+		// This avoids creating a complex transformer without knowing the exact API response structure for all fields.
+		return scholarshipData.source;
+	} catch (error) {
+		console.error("Failed to fetch scholarship:", error);
+		return null;
+	}
+};
