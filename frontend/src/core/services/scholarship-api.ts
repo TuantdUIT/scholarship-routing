@@ -142,7 +142,7 @@ export class ScholarshipApi {
 	): Promise<ScholarshipSearchResponse> {
 		// Use filter with empty filters to get all scholarships, sorted by newest
 		return this.filterScholarships({
-			collection: "scholarships",
+			collection: "scholarships_en",
 			size,
 			offset,
 			filters: [],
@@ -214,7 +214,7 @@ export class ScholarshipApi {
 	 */
 	static async getScholarshipById(
 		id: string,
-		collection = "scholarships",
+		collection = "scholarships_en",
 	): Promise<ScholarshipItem> {
 		const filterParams: ScholarshipFilterParams = {
 			collection: collection,

@@ -23,7 +23,6 @@ import {
 	Award,
 	BookmarkPlus,
 	Calendar,
-	CheckCircle,
 	DollarSign,
 	ExternalLink,
 	FileText,
@@ -35,6 +34,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getScholarship } from "@/core/services/scholarship-api";
 import { Skeleton } from "@/core/components/ui/skeleton";
+// Đã thêm import ChatWidget
+import { ChatWidget } from './ChatWidget'; 
 
 export default function ScholarshipDetailPage() {
 	const params = useParams();
@@ -51,7 +52,8 @@ export default function ScholarshipDetailPage() {
 			const fetchScholarship = async () => {
 				try {
 					setLoading(true);
-					const data = await getScholarship(scholarshipId);
+					// Giả định hàm getScholarship đã được định nghĩa
+					const data = await getScholarship(scholarshipId); 
 					if (data) {
 						setScholarship(data);
 					} else {
@@ -253,8 +255,7 @@ export default function ScholarshipDetailPage() {
 								<div>
 									<div className="font-medium">Application Deadline</div>
 									<div
-										className={`text-sm ${isUrgent && !isExpired ? "text-gray-600" : "text-muted-foreground"
-											}`}
+										className={`text-sm ${isUrgent && !isExpired ? "text-orange-600" : "text-muted-foreground"}`}
 									>
 										{scholarship?.End_Date
 											? new Date(scholarship.End_Date).toLocaleDateString("en-GB")
@@ -379,6 +380,22 @@ export default function ScholarshipDetailPage() {
 					</TabsContent>
 				</Tabs>
 			</div>
+			
+			{/* -------------------------------------------------------------------------- */}
+			{/* CHÈN CHAT WIDGETS Ở CUỐI TRANG */}
+			{/* -------------------------------------------------------------------------- */}
+			{/* Widget 1: Cấu hình mặc định */}
+			<ChatWidget />
+
+			{/* Widget 2: Cấu hình tùy chỉnh */}
+			{/* LƯU Ý: Nếu cần 2 widget, bạn phải đảm bảo logic trong ChatWidget
+			được thiết kế để chỉ 1 widget được hiển thị trên mỗi trang, 
+			hoặc thay đổi vị trí (position) để chúng không chồng lên nhau. */}
+			<ChatWidget 
+				title="Hỗ trợ Bán hàng 💸" 
+				position="bottom-left" 
+				buttonColor="#329bbeff" // Màu đỏ
+			/>
 		</div>
 	);
 }
