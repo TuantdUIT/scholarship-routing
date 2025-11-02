@@ -2,6 +2,7 @@ import { apiClient } from "./api-client";
 import axios from "axios";
 import { API_BASE_URL, API_TIMEOUT } from "@/core/config/api";
 
+import dayjs from "dayjs";
 // Create a separate API client for public endpoints (without credentials)
 const publicApiClient = axios.create({
 	baseURL: API_BASE_URL,
@@ -89,13 +90,15 @@ export interface UIScholarship {
 	country: string;
 	degreeLevel: string;
 	amount: string;
-	deadline: string;
+	End_Date: string;
+	startDate: string;
 	matchScore: number;
 	hardConditionsPassed: boolean;
 	failedConditions: string[];
 	description: string;
 	tags: string[];
 	link: string;
+	isInterested: boolean;
 }
 
 export class ScholarshipApi {
@@ -168,12 +171,21 @@ export class ScholarshipApi {
 		if (source.Field_Restriction === "Có") tags.push("Hạn chế ngành");
 
 		// Format deadline
-		let deadline = "";
+		let End_Date = "";
 		if (source.End_Date) {
 			try {
-				deadline = new Date(source.End_Date).toISOString().split("T")[0];
+				End_Date = dayjs(source.End_Date).format('DD/MM/YYYY').toString();
 			} catch {
-				deadline = source.End_Date;
+				End_Date = source.End_Date;
+			}
+		}
+
+		let startDate = "";
+		if (source.Start_Date) {
+			try {
+				startDate = dayjs(source.Start_Date).format('DD/MM/YYYY').toString();
+			} catch {
+				startDate = source.Start_Date;
 			}
 		}
 
@@ -184,13 +196,15 @@ export class ScholarshipApi {
 			country: source.Country || "Không rõ",
 			degreeLevel: source.Required_Degree || "Không rõ",
 			amount: source.Funding_Details || source.Funding_Level || "Không rõ",
-			deadline: deadline,
+			End_Date: End_Date,
+			startDate: startDate,
 			matchScore: matchScore,
 			hardConditionsPassed: hardConditionsPassed,
 			failedConditions: hardConditionsPassed ? [] : ["Cần kiểm tra điều kiện"],
 			description: source.Scholarship_Info || "Không có mô tả",
 			tags: tags,
 			link: source.Url || "#",
+			isInterested: source.isInterested || false, // Default to false if not provided
 		};
 	}
 
@@ -237,6 +251,7 @@ export class ScholarshipApi {
 
 		return response.items[0];
 	}
+
 }
 
 export const getScholarship = async (id: string) => {

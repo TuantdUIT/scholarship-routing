@@ -6,6 +6,7 @@ import {
 	AUTH_STORAGE_KEY,
 } from "@/core/config/auth";
 import type { UserProfile } from "@/core/services/auth-api";
+import { apiClient } from "./api-client";
 
 export interface AuthUser {
 	id: string;
@@ -103,5 +104,31 @@ export const userService = {
 		}
 
 		return !!readUserFromStorage();
+	},
+
+	async addScholarshipToInterest(user_id: string,
+		interestData: {
+		scholarship_id: string;
+		name: string;
+		open_date: string;
+		close_date: string;
+	}): Promise<any> {
+		const response = await apiClient.post(`/user/interests/${user_id}/add`, interestData);
+		return response.data;
+	},
+
+	async removeScholarshipFromInterest(
+		scholarshipId: string,
+		userId: string,
+	): Promise<any> {
+		const response = await apiClient.delete(`/user/interests/${userId}/{scholarship_id}`, {
+			data: { scholarship_id: scholarshipId, user_id: userId },
+		});
+		return response.data;
+	},
+
+	async getInterestedScholarships(userId: string): Promise<any> {
+		const response = await apiClient.get(`/user/interests/${userId}`);
+		return response.data;
 	},
 };

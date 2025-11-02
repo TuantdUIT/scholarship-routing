@@ -49,6 +49,7 @@
     "cmdk": "1.0.4",
     "critters": "^0.0.25",
     "date-fns": "^4.1.0",
+    "dayjs": "^1.11.19",
     "embla-carousel-react": "8.5.1",
     "firebase": "^11.10.0",
     "geist": "latest",

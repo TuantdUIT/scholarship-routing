@@ -13,177 +13,78 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/core/components/ui/select";
+import { userService } from "@/core/services/user-service";
 import { Calendar, Filter, List, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-// Mock deadline data combining scholarships and applications
-const mockDeadlines = [
-	{
-		id: "d1",
-		title: "University of Oxford Graduate Scholarship",
-		type: "application",
-		date: "15/03/2024",
-		time: "23:59",
-		status: "pending",
-		priority: "high",
-		description: "Final application deadline",
-		applicationId: "app1",
-		scholarshipId: "s1",
-		daysLeft: 45,
-		category: "Application Deadline",
-		provider: "University of Oxford",
-		amount: "Full tuition + £15,000 stipend",
-	},
-	{
-		id: "d2",
-		title: "MIT Graduate Fellowship",
-		type: "application",
-		date: "01/02/2024",
-		time: "17:00",
-		status: "urgent",
-		priority: "critical",
-		description: "Application submission deadline",
-		applicationId: "app2",
-		scholarshipId: "s2",
-		daysLeft: 12,
-		category: "Application Deadline",
-		provider: "MIT",
-		amount: "Full tuition + $40,000 stipend",
-	},
-	{
-		id: "d3",
-		title: "Personal Statement - Oxford",
-		type: "task",
-		date: "15/02/2024",
-		time: "12:00",
-		status: "pending",
-		priority: "medium",
-		description: "Complete personal statement for Oxford application",
-		applicationId: "app1",
-		scholarshipId: "s1",
-		daysLeft: 26,
-		category: "Document Deadline",
-		provider: "University of Oxford",
-	},
-	{
-		id: "d4",
-		title: "Reference Letters - Cambridge",
-		type: "task",
-		date: "20/02/2024",
-		time: "15:00",
-		status: "pending",
-		priority: "medium",
-		description: "Collect reference letters from professors",
-		applicationId: "app4",
-		scholarshipId: "s4",
-		daysLeft: 31,
-		category: "Document Deadline",
-		provider: "University of Cambridge",
-	},
-	{
-		id: "d5",
-		title: "DAAD Study Scholarship",
-		type: "application",
-		date: "30/04/2024",
-		time: "23:59",
-		status: "future",
-		priority: "medium",
-		description: "Application deadline for DAAD scholarship",
-		applicationId: "app3",
-		scholarshipId: "s3",
-		daysLeft: 90,
-		category: "Application Deadline",
-		provider: "DAAD",
-		amount: "€850/month + tuition coverage",
-	},
-	{
-		id: "d6",
-		title: "Cambridge Interview",
-		type: "interview",
-		date: "30/01/2024",
-		time: "14:00",
-		status: "upcoming",
-		priority: "critical",
-		description: "Virtual interview for Cambridge Trust Scholarship",
-		applicationId: "app4",
-		scholarshipId: "s4",
-		daysLeft: 5,
-		category: "Interview",
-		provider: "University of Cambridge",
-	},
-	{
-		id: "d7",
-		title: "Language Certificate Upload",
-		type: "task",
-		date: "01/03/2024",
-		time: "18:00",
-		status: "pending",
-		priority: "low",
-		description: "Upload IELTS certificate for DAAD application",
-		applicationId: "app3",
-		scholarshipId: "s3",
-		daysLeft: 31,
-		category: "Document Deadline",
-		provider: "DAAD",
-	},
-	{
-		id: "d8",
-		title: "Fulbright Result Notification",
-		type: "Interview",
-		date: "10/02/2024",
-		time: "09:00",
-		status: "waiting",
-		priority: "high",
-		description: "Expected result notification date",
-		applicationId: "app5",
-		scholarshipId: "s5",
-		daysLeft: 21,
-		category: "Result",
-		provider: "Fulbright Commission",
-	},
-	{
-		id: "d9",
-		title: "Chevening Scholarship",
-		type: "application",
-		date: "01/11/2025",
-		time: "12:00",
-		status: "future",
-		priority: "high",
-		description: "Application deadline for Chevening scholarship",
-		applicationId: "app6",
-		scholarshipId: "s6",
-		daysLeft: 400,
-		category: "Application Deadline",
-		provider: "Chevening",
-		amount: "Full tuition + monthly stipend",
-	},
-	{
-		id: "d10",
-		title: "Erasmus Mundus Scholarship",
-		type: "application",
-		date: "15/01/2026",
-		time: "17:00",
-		status: "future",
-		priority: "high",
-		description: "Application deadline for Erasmus Mundus scholarship",
-		applicationId: "app7",
-		scholarshipId: "s7",
-		daysLeft: 800,
-		category: "Application Deadline",
-		provider: "Erasmus Mundus",
-		amount: "Full tuition + travel + living allowance",
-	},
-];
+interface Deadline {
+	id: string;
+	title: string;
+	type: string;
+	date: string;
+	time: string;
+	status: string;
+	priority: string;
+	description: string;
+	applicationId: string;
+	scholarshipId: string;
+	daysLeft: number;
+	category: string;
+	provider: string;
+	amount: string;
+}
 
 export default function CalendarPage() {
 	const t = useTranslations("deadline");
-	const [deadlines, setDeadlines] = useState(mockDeadlines);
+	const [deadlines, setDeadlines] = useState<Deadline[]>([]);
 	const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar");
 	const [filterType, setFilterType] = useState("all");
 	const [filterStatus, setFilterStatus] = useState("all");
 	const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
 	const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+
+	useEffect(() => {
+		const fetchDeadlines = async () => {
+			const user = userService.getUser();
+			if (user) {
+				try {
+					const interestedScholarships =
+						await userService.getInterestedScholarships(user.id);
+					const formattedDeadlines = interestedScholarships.map(
+						(scholarship: any) => {
+							const closeDate = new Date(scholarship.close_date);
+							const now = new Date();
+							const daysLeft = Math.ceil(
+								(closeDate.getTime() - now.getTime()) / (1000 * 3600 * 24),
+							);
+							return {
+								id: scholarship.scholarship_id,
+								title: scholarship.name,
+								type: "application",
+								date: closeDate.toLocaleDateString("en-GB"),
+								time: "23:59",
+								status: daysLeft <= 7 ? "urgent" : "pending",
+								priority: daysLeft <= 7 ? "high" : "medium",
+								description: `Application deadline for ${scholarship.name}`,
+								applicationId: scholarship.scholarship_id,
+								scholarshipId: scholarship.scholarship_id,
+								daysLeft: daysLeft,
+								category: "Application Deadline",
+								provider: "N/A",
+								amount: "N/A",
+							};
+						},
+					);
+					setDeadlines(formattedDeadlines);
+				} catch (error) {
+					console.error("Failed to fetch interested scholarships:", error);
+				}
+			}
+		};
+
+		fetchDeadlines();
+	}, []);
 
 	const filteredDeadlines = deadlines.filter((deadline) => {
 		const matchesType = filterType === "all" || deadline.type === filterType;

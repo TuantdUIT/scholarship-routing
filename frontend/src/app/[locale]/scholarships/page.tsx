@@ -71,7 +71,7 @@ export default function ScholarshipsPage() {
 						q: searchQuery.trim(),
 						size: PAGE_SIZE,
 						offset: currentOffset,
-						collection: "scholarships",
+						collection: "scholarships_en",
 					});
 				} else {
 					// Use filter API for default view (latest scholarships)
@@ -153,7 +153,7 @@ export default function ScholarshipsPage() {
 			case "match-score":
 				return b.matchScore - a.matchScore;
 			case "deadline":
-				return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+				return new Date(a.End_Date).getTime() - new Date(b.End_Date).getTime();
 			case "amount":
 				return b.title.localeCompare(a.title); // Simplified sorting
 			default:
