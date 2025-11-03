@@ -153,7 +153,7 @@ export default function ScholarshipsPage() {
 			case "match-score":
 				return b.matchScore - a.matchScore;
 			case "deadline":
-				return new Date(a.End_Date).getTime() - new Date(b.End_Date).getTime();
+				return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
 			case "amount":
 				return b.title.localeCompare(a.title); // Simplified sorting
 			default:

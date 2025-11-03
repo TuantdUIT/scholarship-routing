@@ -184,7 +184,7 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 								className={`${isUrgent && !isExpired ? "text-black-600" : "text-muted-foreground"}`}
 							>
 								<div className="truncate">
-									{new Date(scholarship.deadline).toLocaleDateString("en-GB")}
+									{scholarship.deadline}
 								</div>
 								{/* {!isExpired && (
 									<div className="text-xs">

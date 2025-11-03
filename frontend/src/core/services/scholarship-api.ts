@@ -1,8 +1,9 @@
 import { apiClient } from "./api-client";
 import axios from "axios";
 import { API_BASE_URL, API_TIMEOUT } from "@/core/config/api";
-
 import dayjs from "dayjs";
+import { formatDate } from "../lib/date";
+
 // Create a separate API client for public endpoints (without credentials)
 const publicApiClient = axios.create({
 	baseURL: API_BASE_URL,
@@ -90,7 +91,7 @@ export interface UIScholarship {
 	country: string;
 	degreeLevel: string;
 	amount: string;
-	End_Date: string;
+	deadline: string;
 	startDate: string;
 	matchScore: number;
 	hardConditionsPassed: boolean;
@@ -174,7 +175,7 @@ export class ScholarshipApi {
 		let End_Date = "";
 		if (source.End_Date) {
 			try {
-				End_Date = dayjs(source.End_Date).format('DD/MM/YYYY').toString();
+				End_Date = formatDate(source.End_Date);
 			} catch {
 				End_Date = source.End_Date;
 			}
@@ -183,7 +184,7 @@ export class ScholarshipApi {
 		let startDate = "";
 		if (source.Start_Date) {
 			try {
-				startDate = dayjs(source.Start_Date).format('DD/MM/YYYY').toString();
+				startDate = formatDate(source.Start_Date);
 			} catch {
 				startDate = source.Start_Date;
 			}
@@ -196,7 +197,7 @@ export class ScholarshipApi {
 			country: source.Country || "Không rõ",
 			degreeLevel: source.Required_Degree || "Không rõ",
 			amount: source.Funding_Details || source.Funding_Level || "Không rõ",
-			End_Date: End_Date,
+			deadline: End_Date,
 			startDate: startDate,
 			matchScore: matchScore,
 			hardConditionsPassed: hardConditionsPassed,
