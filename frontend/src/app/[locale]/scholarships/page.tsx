@@ -71,7 +71,7 @@ export default function ScholarshipsPage() {
 						q: searchQuery.trim(),
 						size: PAGE_SIZE,
 						offset: currentOffset,
-						collection: "scholarships",
+						collection: "scholarships_en",
 					});
 				} else {
 					// Use filter API for default view (latest scholarships)
