@@ -28,6 +28,9 @@ import {
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
+import { useState } from "react";
+import { toast } from "sonner";
+import { userService } from "@/core/services/user-service";
 
 interface Scholarship {
 	id: string;
@@ -37,12 +40,14 @@ interface Scholarship {
 	degreeLevel: string;
 	amount: string;
 	deadline: string;
+	startDate: string;
 	matchScore: number;
 	hardConditionsPassed: boolean;
 	failedConditions: string[];
 	description: string;
 	tags: string[];
 	link: string;
+	isInterested: boolean;
 }
 
 interface ScholarshipCardProps {
@@ -51,6 +56,37 @@ interface ScholarshipCardProps {
 
 export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 	const t = useTranslations("scholarship");
+	const [isInterested, setIsInterested] = useState(scholarship.isInterested);
+	const [isLoading, setIsLoading] = useState(false);
+
+	const handleInterestClick = async () => {
+		const user = userService.getUser();
+		if (!user) {
+			toast.error("Please log in to save scholarships.");
+			return;
+		}
+
+		setIsLoading(true);
+		try {
+			if (isInterested) {
+				await userService.removeScholarshipFromInterest(scholarship.id, user.id);
+				toast.success(t("remove_from_interest_success"));
+			} else {
+				await userService.addScholarshipToInterest(user.id, {
+					scholarship_id: scholarship.id,
+					name: scholarship.title,
+					open_date: scholarship.startDate,
+					close_date: scholarship.deadline,
+				});
+				toast.success(t("add_to_interest_success"));
+			}
+			setIsInterested(!isInterested);
+		} catch (error) {
+			toast.error(t("interest_action_error"));
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
 	const getMatchScoreColor = (score: number) => {
 		if (score >= 80) return "text-green-600";
@@ -148,7 +184,7 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 								className={`${isUrgent && !isExpired ? "text-black-600" : "text-muted-foreground"}`}
 							>
 								<div className="truncate">
-									{new Date(scholarship.deadline).toLocaleDateString("en-GB")}
+									{scholarship.deadline}
 								</div>
 								{/* {!isExpired && (
 									<div className="text-xs">
@@ -176,11 +212,17 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 					</Button>
 					<div className="flex flex-col sm:flex-row gap-2">
 						<Button
-							variant="outline"
-							className="flex-1 min-h-[44px] bg-transparent"
+							variant={isInterested ? "default" : "outline"}
+							className="flex-1 min-h-[44px]"
+							onClick={handleInterestClick}
+							disabled={isLoading}
 						>
 							<BookmarkPlus className="mr-2 h-4 w-4" />
-							{t("save")}
+							{isLoading
+								? t("loading")
+								: isInterested
+									? t("delete")
+									: t("save")}
 						</Button>
 						<Button
 							variant="outline"
