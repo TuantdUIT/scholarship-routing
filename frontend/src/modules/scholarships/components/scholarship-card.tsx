@@ -9,22 +9,13 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/core/components/ui/card";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/core/components/ui/popover";
-import { Progress } from "@/core/components/ui/progress";
 import { Separator } from "@/core/components/ui/separator";
 import {
 	BookmarkPlus,
 	Calendar,
-	CheckCircle,
 	DollarSign,
 	ExternalLink,
-	Info,
 	MapPin,
-	XCircle,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -35,7 +26,8 @@ interface Scholarship {
 	provider: string;
 	country: string;
 	degreeLevel: string;
-	amount: string;
+	fundingLevel: string;
+	fundingDetails: string;
 	deadline: string;
 	matchScore: number;
 	hardConditionsPassed: boolean;
@@ -51,18 +43,6 @@ interface ScholarshipCardProps {
 
 export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 	const t = useTranslations("scholarship");
-
-	const getMatchScoreColor = (score: number) => {
-		if (score >= 80) return "text-green-600";
-		if (score >= 60) return "text-yellow-600";
-		return "text-red-600";
-	};
-
-	const getMatchScoreVariant = (score: number) => {
-		if (score >= 80) return "default";
-		if (score >= 60) return "secondary";
-		return "outline";
-	};
 
 	const getDaysUntilDeadline = (deadline: string) => {
 		const deadlineDate = new Date(deadline);
@@ -131,36 +111,36 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 					{scholarship.description}
 				</p>
 
-				{/* Key Info */}
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-					<div className="flex items-center gap-2">
-						<DollarSign className="h-4 w-4 text-green-600 flex-shrink-0" />
+				{/* Key Info - Horizontal Layout */}
+				<div className="flex flex-col lg:flex-row gap-4 text-sm">
+					{/* Funding Level */}
+					<div className="flex items-start gap-2 flex-1">
+						<DollarSign className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
 						<div className="min-w-0">
-							<div className="font-medium">{t("amount")}</div>
-							<div className="text-muted-foreground truncate">
-								{scholarship.amount}
+							<div className="font-medium mb-1">Funding Level</div>
+							<div className="flex flex-wrap gap-1">
+								{scholarship.fundingLevel.split(',').map((fundingItem, index) => (
+									<Badge key={`funding-${index}`} variant="outline" className="text-xs">
+										{fundingItem.trim()}
+									</Badge>
+								))}
 							</div>
 						</div>
 					</div>
-					<div className="flex items-center gap-2">
-						<Calendar className="h-4 w-4 text-blue-600 flex-shrink-0" />
+
+					{/* Deadline */}
+					<div className="flex items-start gap-2 flex-1">
+						<Calendar className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
 						<div className="min-w-0">
-							<div className="font-medium">{t("deadline")}</div>
-							<div
-								className={`${isUrgent && !isExpired ? "text-black-600" : "text-muted-foreground"}`}
-							>
-								<div className="truncate">
-									{new Date(scholarship.deadline).toLocaleDateString("en-GB")}
-								</div>
-								{/* {!isExpired && (
-									<div className="text-xs">
-										({t("days_left", { daysLeft: daysLeft })})
-									</div>
-								)} */}
+							<div className="font-medium mb-1">{t("deadline")}</div>
+							<div className={`${isUrgent && !isExpired ? "text-black-600" : "text-muted-foreground"}`}>
+								{new Date(scholarship.deadline).toLocaleDateString("en-GB")}
 							</div>
 						</div>
 					</div>
-					<div className="flex items-center gap-2 sm:col-span-2 lg:col-span-1 flex-wrap">
+
+					{/* Degree Level Badges */}
+					<div className="flex flex-wrap gap-1 items-start flex-1">
 						{scholarship.degreeLevel.split(',').map((degree, index) => (
 							<Badge key={`degree-${index}`} variant="outline" className="text-xs">
 								{degree.trim()}

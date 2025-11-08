@@ -88,7 +88,8 @@ export interface UIScholarship {
 	provider: string;
 	country: string;
 	degreeLevel: string;
-	amount: string;
+	fundingLevel: string;
+	fundingDetails: string;
 	deadline: string;
 	matchScore: number;
 	hardConditionsPassed: boolean;
@@ -183,7 +184,8 @@ export class ScholarshipApi {
 			provider: source.Scholarship_Type || "Không rõ",
 			country: source.Country || "Không rõ",
 			degreeLevel: source.Required_Degree || "Không rõ",
-			amount: source.Funding_Details || source.Funding_Level || "Không rõ",
+			fundingLevel: source.Funding_Level || "Không rõ",
+			fundingDetails: source.Funding_Details || "Không rõ",
 			deadline: deadline,
 			matchScore: matchScore,
 			hardConditionsPassed: hardConditionsPassed,
