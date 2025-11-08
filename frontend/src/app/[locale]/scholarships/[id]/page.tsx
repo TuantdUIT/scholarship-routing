@@ -34,8 +34,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getScholarship } from "@/core/services/scholarship-api";
 import { Skeleton } from "@/core/components/ui/skeleton";
-// Đã thêm import ChatWidget
-import { ChatWidget } from './ChatWidget'; 
+import { ChatWidget } from "./ChatWidget"; 
 
 export default function ScholarshipDetailPage() {
 	const params = useParams();
@@ -188,7 +187,11 @@ export default function ScholarshipDetailPage() {
 										<MapPin className="h-4 w-4" />
 										{scholarship.Country}
 									</span>
-									<Badge variant="outline">{scholarship.Required_Degree}</Badge>
+									{scholarship.Required_Degree?.split(',').map((degree: string, index: number) => (
+										<Badge key={`degree-${index}`} variant="outline">
+											{degree.trim()}
+										</Badge>
+									))}
 								</div>
 
 								<div className="flex flex-wrap gap-2">
@@ -218,15 +221,15 @@ export default function ScholarshipDetailPage() {
 										{isSaved ? "Saved" : "Save"}
 									</Button>
 									<Button variant="outline" asChild>
-										<a
-											href={scholarship.Url}
+										<Link
+											href={scholarship.Url || "#"}
 											target="_blank"
 											rel="noopener noreferrer"
 											className="flex items-center"
 										>
 											<ExternalLink className="mr-2 h-4 w-4" />
 											Official Site
-										</a>
+										</Link>
 									</Button>
 								</div>
 							</div>
@@ -381,21 +384,8 @@ export default function ScholarshipDetailPage() {
 				</Tabs>
 			</div>
 			
-			{/* -------------------------------------------------------------------------- */}
-			{/* CHÈN CHAT WIDGETS Ở CUỐI TRANG */}
-			{/* -------------------------------------------------------------------------- */}
-			{/* Widget 1: Cấu hình mặc định */}
+			{/* Chat Widget */}
 			<ChatWidget />
-
-			{/* Widget 2: Cấu hình tùy chỉnh */}
-			{/* LƯU Ý: Nếu cần 2 widget, bạn phải đảm bảo logic trong ChatWidget
-			được thiết kế để chỉ 1 widget được hiển thị trên mỗi trang, 
-			hoặc thay đổi vị trí (position) để chúng không chồng lên nhau. */}
-			<ChatWidget 
-				title="Hỗ trợ Bán hàng 💸" 
-				position="bottom-left" 
-				buttonColor="#329bbeff" // Màu đỏ
-			/>
 		</div>
 	);
 }

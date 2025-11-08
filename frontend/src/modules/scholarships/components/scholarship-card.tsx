@@ -115,8 +115,10 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 
 				{/* Tags */}
 				<div className="flex flex-wrap gap-1 mt-2">
-					{scholarship.tags.map((tag) => (
-						<Badge key={tag} variant="outline" className="text-xs">
+					{scholarship.tags.flatMap((tag) => 
+						tag.split(',').map((splitTag) => splitTag.trim())
+					).filter(tag => tag).map((tag, index) => (
+						<Badge key={`${tag}-${index}`} variant="outline" className="text-xs">
 							{tag}
 						</Badge>
 					))}
@@ -158,10 +160,12 @@ export function ScholarshipCard({ scholarship }: ScholarshipCardProps) {
 							</div>
 						</div>
 					</div>
-					<div className="flex items-center gap-2 sm:col-span-2 lg:col-span-1">
-						<Badge variant="outline" className="text-xs">
-							{scholarship.degreeLevel}
-						</Badge>
+					<div className="flex items-center gap-2 sm:col-span-2 lg:col-span-1 flex-wrap">
+						{scholarship.degreeLevel.split(',').map((degree, index) => (
+							<Badge key={`degree-${index}`} variant="outline" className="text-xs">
+								{degree.trim()}
+							</Badge>
+						))}
 					</div>
 				</div>
 
