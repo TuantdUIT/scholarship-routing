@@ -304,12 +304,11 @@ export default function ScholarshipDetailPage() {
 					onValueChange={setActiveTab}
 					className="space-y-6"
 				>
-					<TabsList className="grid w-full grid-cols-2 lg:grid-cols-5">
+					<TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
 						<TabsTrigger value="overview">Overview</TabsTrigger>
 						<TabsTrigger value="eligibility">Eligibility</TabsTrigger>
-						<TabsTrigger value="documents">Documents</TabsTrigger>
-						<TabsTrigger value="process">Process</TabsTrigger>
-						<TabsTrigger value="related">Similar</TabsTrigger>
+						<TabsTrigger value="documents">Document</TabsTrigger>
+						<TabsTrigger value="special">Special_Circumstances</TabsTrigger>
 					</TabsList>
 
 					<TabsContent value="overview" className="space-y-6">
@@ -318,68 +317,50 @@ export default function ScholarshipDetailPage() {
 								<CardTitle>About This Scholarship</CardTitle>
 							</CardHeader>
 							<CardContent className="space-y-4">
-								<p className="text-muted-foreground">
-									{scholarship.Scholarship_Info}
+								<p className="text-muted-foreground whitespace-pre-wrap">
+									{scholarship.Scholarship_Info || "No information available"}
 								</p>
-							</CardContent>
-						</Card>
-
-						<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-							<Card>
-								<CardHeader>
-									<CardTitle className="flex items-center gap-2">
-										<Award className="h-5 w-5" />
-										Benefits & Support
-									</CardTitle>
-								</CardHeader>
-								<CardContent>
-									<ul className="space-y-2">
-										{/* Placeholder for benefits */}
-									</ul>
-								</CardContent>
-							</Card>
-
-							<Card>
-								<CardHeader>
-									<CardTitle className="flex items-center gap-2">
-										<FileText className="h-5 w-5" />
-										Selection Criteria
-									</CardTitle>
-								</CardHeader>
-								<CardContent>
-									<ul className="space-y-2">
-										{/* Placeholder for selection criteria */}
-									</ul>
-								</CardContent>
-							</Card>
-						</div>
-
-						<Card>
-							<CardHeader>
-								<CardTitle>Application Statistics</CardTitle>
-							</CardHeader>
-							<CardContent>
-								<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-									{/* Placeholders for statistics */}
-								</div>
 							</CardContent>
 						</Card>
 					</TabsContent>
 
 					<TabsContent value="eligibility">
-						<EligibilityPanel scholarship={scholarship} />
+						<Card>
+							<CardHeader>
+								<CardTitle>Eligible Applicants</CardTitle>
+							</CardHeader>
+							<CardContent className="space-y-4">
+								<p className="text-muted-foreground whitespace-pre-wrap">
+									{scholarship.Eligible_Applicants || "No eligibility information available"}
+								</p>
+							</CardContent>
+						</Card>
 					</TabsContent>
 
 					<TabsContent value="documents">
-						<DocumentsChecklist scholarship={scholarship} />
+						<Card>
+							<CardHeader>
+								<CardTitle>Application Documents</CardTitle>
+							</CardHeader>
+							<CardContent className="space-y-4">
+								<p className="text-muted-foreground whitespace-pre-wrap">
+									{scholarship.Application_Documents || "No document information available"}
+								</p>
+							</CardContent>
+						</Card>
 					</TabsContent>
 
-					<TabsContent value="process">
-						<ApplicationTimeline scholarship={scholarship} />
-					</TabsContent>
-
-					<TabsContent value="related">
-						<RelatedScholarships currentScholarshipId={scholarshipId} />
+					<TabsContent value="special">
+						<Card>
+							<CardHeader>
+								<CardTitle>Special Circumstances</CardTitle>
+							</CardHeader>
+							<CardContent className="space-y-4">
+								<p className="text-muted-foreground whitespace-pre-wrap">
+									{scholarship.Special_Circumstances || "No special circumstances information available"}
+								</p>
+							</CardContent>
+						</Card>
 					</TabsContent>
 				</Tabs>
 			</div>

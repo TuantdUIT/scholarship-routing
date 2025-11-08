@@ -13,9 +13,13 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/core/components/ui/select";
-import { Calendar, Filter, List, Plus } from "lucide-react";
+import { Calendar, Filter, List, Plus, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { UserInterestsApi } from "@/core/services/user-interests-api";
+import { useToast } from "@/core/hooks/use-toast";
+import { firebaseAuth } from "@/core/services/firebase-client";
+import { setAuthToken } from "@/core/services/api-client";
 
 // Mock deadline data combining scholarships and applications
 const mockDeadlines = [
@@ -178,12 +182,69 @@ const mockDeadlines = [
 
 export default function CalendarPage() {
 	const t = useTranslations("deadline");
-	const [deadlines, setDeadlines] = useState(mockDeadlines);
+	const { toast } = useToast();
+	const [deadlines, setDeadlines] = useState<any[]>([]);
+	const [loading, setLoading] = useState(true);
 	const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar");
 	const [filterType, setFilterType] = useState("all");
 	const [filterStatus, setFilterStatus] = useState("all");
 	const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
 	const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+
+	// Fetch user interests/deadlines
+	useEffect(() => {
+		const fetchUserInterests = async () => {
+			try {
+				setLoading(true);
+				const user = firebaseAuth.currentUser;
+				
+				console.log("Current user:", user?.uid);
+				
+				if (!user) {
+					console.log("No user logged in, showing empty state");
+					setDeadlines([]);
+					return;
+				}
+
+				// Set auth token for API calls
+				const token = await user.getIdToken();
+				setAuthToken(token);
+				console.log("Auth token set for user:", user.uid);
+
+				console.log("Fetching user interests for UID:", user.uid);
+				const response = await UserInterestsApi.getUserInterests(user.uid);
+				console.log("API Response:", response);
+				
+				// Check if user has any scholar interests
+				if (!response.scholar_interests || response.scholar_interests.length === 0) {
+					console.log("No scholar interests found");
+					setDeadlines([]);
+					return;
+				}
+
+				console.log("Found scholar interests:", response.scholar_interests);
+				const transformedDeadlines =
+					await UserInterestsApi.transformToDeadlineFormat(
+						response.scholar_interests,
+					);
+				console.log("Transformed deadlines:", transformedDeadlines);
+				setDeadlines(transformedDeadlines);
+			} catch (error) {
+				console.error("Error fetching user interests:", error);
+				toast({
+					variant: "destructive",
+					title: "Error loading deadlines",
+					description: `Failed to load your deadlines: ${error instanceof Error ? error.message : 'Unknown error'}`,
+				});
+				// Show empty state on error instead of mock data
+				setDeadlines([]);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchUserInterests();
+	}, [toast]);
 
 	const filteredDeadlines = deadlines.filter((deadline) => {
 		const matchesType = filterType === "all" || deadline.type === filterType;
@@ -217,6 +278,17 @@ export default function CalendarPage() {
 			),
 		);
 	};
+
+	if (loading) {
+		return (
+			<div className="min-h-screen bg-background flex items-center justify-center">
+				<div className="text-center">
+					<Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+					<p className="text-muted-foreground">Loading deadlines...</p>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="min-h-screen bg-background">
