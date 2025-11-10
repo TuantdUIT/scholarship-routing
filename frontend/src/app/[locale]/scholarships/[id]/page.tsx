@@ -8,6 +8,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/core/components/ui/card";
+import { Skeleton } from "@/core/components/ui/skeleton";
 import {
 	Tabs,
 	TabsContent,
@@ -18,6 +19,7 @@ import { ApplicationTimeline } from "@/modules/scholarships/components/applicati
 import { DocumentsChecklist } from "@/modules/scholarships/components/documents-checklist";
 import { EligibilityPanel } from "@/modules/scholarships/components/eligibility-panel";
 import { RelatedScholarships } from "@/modules/scholarships/components/related-scholarships";
+import { ScholarshipApiHelpers } from "@/modules/scholarships/services/scholarship-api-helpers";
 import {
 	ArrowLeft,
 	Award,
@@ -32,10 +34,8 @@ import {
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getScholarship } from "@/core/services/scholarship-api";
-import { Skeleton } from "@/core/components/ui/skeleton";
 // Đã thêm import ChatWidget
-import { ChatWidget } from './ChatWidget'; 
+import { ChatWidget } from './ChatWidget';
 
 export default function ScholarshipDetailPage() {
 	const params = useParams();
@@ -52,8 +52,8 @@ export default function ScholarshipDetailPage() {
 			const fetchScholarship = async () => {
 				try {
 					setLoading(true);
-					// Giả định hàm getScholarship đã được định nghĩa
-					const data = await getScholarship(scholarshipId); 
+					// Assuming getScholarshipById is defined in ScholarshipApiHelpers
+					const data = await ScholarshipApiHelpers.getScholarshipById(scholarshipId);
 					if (data) {
 						setScholarship(data);
 					} else {
@@ -380,7 +380,7 @@ export default function ScholarshipDetailPage() {
 					</TabsContent>
 				</Tabs>
 			</div>
-			
+
 			{/* -------------------------------------------------------------------------- */}
 			{/* CHÈN CHAT WIDGETS Ở CUỐI TRANG */}
 			{/* -------------------------------------------------------------------------- */}
@@ -389,11 +389,11 @@ export default function ScholarshipDetailPage() {
 
 			{/* Widget 2: Cấu hình tùy chỉnh */}
 			{/* LƯU Ý: Nếu cần 2 widget, bạn phải đảm bảo logic trong ChatWidget
-			được thiết kế để chỉ 1 widget được hiển thị trên mỗi trang, 
+			được thiết kế để chỉ 1 widget được hiển thị trên mỗi trang,
 			hoặc thay đổi vị trí (position) để chúng không chồng lên nhau. */}
-			<ChatWidget 
-				title="Hỗ trợ Bán hàng 💸" 
-				position="bottom-left" 
+			<ChatWidget
+				title="Hỗ trợ Bán hàng 💸"
+				position="bottom-left"
 				buttonColor="#329bbeff" // Màu đỏ
 			/>
 		</div>

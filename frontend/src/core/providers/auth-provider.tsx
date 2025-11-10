@@ -19,7 +19,7 @@ import {
 } from "firebase/auth";
 
 import { authApi, type UserProfile } from "@/core/services/auth-api";
-import { firebaseAuth } from "@/core/services/firebase-client";
+import { firebaseAuth } from "@/core/lib/firebase-client";
 import { type AuthUser, userService } from "@/core/services/user-service";
 
 interface AuthContextValue {

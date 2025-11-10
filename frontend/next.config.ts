@@ -29,16 +29,16 @@ const nextConfig: NextConfig = {
     appNavFailHandling: true,
     // reactCompiler: true,
     cssChunking: true,
-    enablePrerenderSourceMaps: true,
+    // enablePrerenderSourceMaps: true,
 
     // Static page generation:
     staticGenerationRetryCount: 1,
     staticGenerationMaxConcurrency: 8,
     staticGenerationMinPagesPerWorker: 25,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // eslint: {
+  //   ignoreDuringBuilds: true,
+  // },
   logging: {
     fetches: {
       fullUrl: true,

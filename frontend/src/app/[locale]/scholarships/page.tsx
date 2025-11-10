@@ -3,7 +3,6 @@
 import { Button } from "@/core/components/ui/button";
 import { Card, CardContent } from "@/core/components/ui/card";
 import { Input } from "@/core/components/ui/input";
-import { Progress } from "@/core/components/ui/progress";
 import { Separator } from "@/core/components/ui/separator";
 import {
 	Sheet,
@@ -12,14 +11,17 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@/core/components/ui/sheet";
+import { useToast } from "@/core/hooks/use-toast";
 import { ScholarshipCard } from "@/modules/scholarships/components/scholarship-card";
 import { ScholarshipFilters } from "@/modules/scholarships/components/scholarship-filters";
 import { ScholarshipSort } from "@/modules/scholarships/components/scholarship-sort";
-import { Filter, Search, Loader2 } from "lucide-react";
+import { ScholarshipApiHelpers } from "@/modules/scholarships/services/scholarship-api-helpers";
+import { ScholarshipTransformers } from "@/modules/scholarships/services/scholarship-transformers";
+import { scholarshipSearchService } from "@/modules/scholarships/services/scholarship.service";
+import type { ScholarshipDto } from "@/modules/scholarships/types";
+import { Filter, Loader2, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState, useEffect, useCallback } from "react";
-import { ScholarshipApi, UIScholarship } from "@/core/services/scholarship-api";
-import { useToast } from "@/core/hooks/use-toast";
+import { useCallback, useEffect, useState } from "react";
 
 interface ScholarFilter {
 	countries: string[];
@@ -38,7 +40,7 @@ export default function ScholarshipsPage() {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [showFilters, setShowFilters] = useState(false);
 	const [sortBy, setSortBy] = useState("match-score");
-	const [scholarships, setScholarships] = useState<UIScholarship[]>([]);
+	const [scholarships, setScholarships] = useState<ScholarshipDto[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [loadingMore, setLoadingMore] = useState(false);
 	const [hasMore, setHasMore] = useState(true);
@@ -67,7 +69,7 @@ export default function ScholarshipsPage() {
 				let response;
 				if (searchQuery.trim()) {
 					// Use search API when there's a search query
-					response = await ScholarshipApi.searchScholarships({
+					response = await scholarshipSearchService.getScholarships({
 						q: searchQuery.trim(),
 						size: PAGE_SIZE,
 						offset: currentOffset,
@@ -75,13 +77,13 @@ export default function ScholarshipsPage() {
 					});
 				} else {
 					// Use filter API for default view (latest scholarships)
-					response = await ScholarshipApi.getLatestScholarships(
+					response = await ScholarshipApiHelpers.getLatestScholarships(
 						PAGE_SIZE,
 						currentOffset,
 					);
 				}
 
-				const transformedData = ScholarshipApi.transformResponseToUI(response);
+				const transformedData = ScholarshipTransformers.transformResponseToUI(response);
 
 				if (resetOffset) {
 					setScholarships(transformedData.scholarships);
